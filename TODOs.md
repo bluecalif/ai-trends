@@ -150,6 +150,7 @@ ai-trend/
 - [x] **단위 테스트**: 중복 체크 로직 테스트 - 통과
 - [x] **통합 테스트**: 실제 RSS 피드 수집 테스트 (DB 호환성 포함) - 3개 테스트 통과
 - [x] **E2E 테스트**: 초기 10개 RSS 소스 등록 및 수집 테스트 - 4개 테스트 통과
+- [ ] Supabase 연동 확인: 수집 후 `items` 행 증가 및 고유 인덱스 충돌 처리 검증 (스케줄러 포함)
 
 ### 1.4 요약 서비스 (MVP: RSS description만 사용)
 - [x] `backend/app/services/summarizer.py` 생성:
@@ -159,6 +160,7 @@ ai-trend/
 - [x] **단위 테스트**: description 사용 로직 테스트 (`test_summarizer.py`)
 - [x] **E2E 테스트**: 다양한 RSS 항목으로 요약 생성 → DB 저장 확인
 - [x] **결정 사항**: MVP에서는 RSS description만 사용, 원문 기반 AI 요약은 Phase 3로 이동
+- [ ] Supabase 연동 확인: `items.summary_short` 업데이트 반영 및 대량 커밋 성능 확인
 
 ### 1.5 엔티티 추출 서비스
 - [ ] `backend/app/services/entity_extractor.py` 생성:
@@ -168,6 +170,7 @@ ai-trend/
 - [ ] **단위 테스트**: 엔티티 추출 함수 테스트 (mock OpenAI API)
 - [ ] **통합 테스트**: 엔티티 DB 저장 및 관계 생성 테스트
 - [ ] **E2E 테스트**: 실제 아이템으로 엔티티 추출 → 저장 → 조회 확인
+- [ ] Supabase 연동 확인: `entities`, `item_entities` 쓰기 및 조인 조회 성능 확인
 
 ### 1.6 분류 서비스
 - [ ] `backend/app/services/classifier.py` 생성:
@@ -182,6 +185,7 @@ ai-trend/
 - [ ] **단위 테스트**: 커스텀 태그 추론 로직 테스트 (키워드 매칭)
 - [ ] **통합 테스트**: IPTC/IAB 분류 함수 테스트 (mock OpenAI API)
 - [ ] **E2E 테스트**: 실제 아이템으로 분류 수행 → JSON 필드 저장 확인
+- [ ] Supabase 연동 확인: `items.iptc_topics/iab_categories/custom_tags` JSONB contains 쿼리 + GIN 인덱스 효력 검증
 
 ### 1.7 중복/사건 묶음 서비스
 - [ ] `backend/app/services/deduplicator.py` 생성:
@@ -194,6 +198,7 @@ ai-trend/
 - [ ] **단위 테스트**: 그룹화 로직 테스트 (임계값 기반)
 - [ ] **통합 테스트**: dup_group_id 할당 및 업데이트 테스트
 - [ ] **E2E 테스트**: 실제 아이템으로 중복 그룹화 → 타임라인 조회 확인
+- [ ] Supabase 연동 확인: `dup_group_id` 배치 업데이트 및 타임라인 조회 성능
 
 ### 1.8 인물 트래킹 서비스
 - [ ] `backend/app/services/person_tracker.py` 생성:
@@ -204,6 +209,7 @@ ai-trend/
 - [ ] **단위 테스트**: 이벤트 타입 추론 함수 테스트
 - [ ] **통합 테스트**: 타임라인 이벤트 추가 및 조회 테스트
 - [ ] **E2E 테스트**: 초기 5명 인물 규칙으로 매칭 → 타임라인 생성 확인
+- [ ] Supabase 연동 확인: `person_timeline` 쓰기/조회 및 관련 조인 성능
 
 ### 1.9 API 엔드포인트
 - [ ] `backend/app/api/__init__.py` 생성
@@ -238,6 +244,7 @@ ai-trend/
 - [ ] **단위 테스트**: 각 API 엔드포인트별 테스트 (TestClient)
 - [ ] **통합 테스트**: 필터링, 페이지네이션, 정렬 기능 테스트
 - [ ] **E2E 테스트**: 전체 API 플로우 테스트 (소스 추가 → 수집 → 조회)
+- [ ] Supabase 연동 확인: 필터/페이지네이션/정렬이 Supabase에서 일관 동작
 
 ---
 
@@ -474,7 +481,8 @@ backend/app/
 ├── services/
 │   ├── rss_collector.py  ✅
 │   ├── summarizer.py     ✅
-│   └── [4개 서비스 미구현: entity_extractor, classifier, deduplicator, person_tracker]
+│   ├── entity_extractor.py ✅ (MVP 구현 중)
+│   └── [3개 서비스 미구현: classifier, deduplicator, person_tracker]
 ├── models/            ✅ (8개 모델 모두 완료)
 ├── schemas/           
 │   ├── rss.py         ✅
