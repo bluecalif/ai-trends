@@ -150,7 +150,7 @@ ai-trend/
 - [x] **단위 테스트**: 중복 체크 로직 테스트 - 통과
 - [x] **통합 테스트**: 실제 RSS 피드 수집 테스트 (DB 호환성 포함) - 3개 테스트 통과
 - [x] **E2E 테스트**: 초기 10개 RSS 소스 등록 및 수집 테스트 - 4개 테스트 통과
-- [ ] Supabase 연동 확인: 수집 후 `items` 행 증가 및 고유 인덱스 충돌 처리 검증 (스케줄러 포함)
+- [x] Supabase 연동 확인: 수집 후 `items` 행 증가 및 고유 인덱스 충돌 처리 검증 (스케줄러 포함)
 
 ### 1.4 요약 서비스 (MVP: RSS description만 사용)
 - [x] `backend/app/services/summarizer.py` 생성:
@@ -160,17 +160,17 @@ ai-trend/
 - [x] **단위 테스트**: description 사용 로직 테스트 (`test_summarizer.py`)
 - [x] **E2E 테스트**: 다양한 RSS 항목으로 요약 생성 → DB 저장 확인
 - [x] **결정 사항**: MVP에서는 RSS description만 사용, 원문 기반 AI 요약은 Phase 3로 이동
-- [ ] Supabase 연동 확인: `items.summary_short` 업데이트 반영 및 대량 커밋 성능 확인
+- [x] Supabase 연동 확인: `items.summary_short` 업데이트 반영 및 대량 커밋 성능 확인
 
 ### 1.5 엔티티 추출 서비스
-- [ ] `backend/app/services/entity_extractor.py` 생성:
-  - [ ] OpenAI API (NER)로 인물/기관/기술 추출 함수
-  - [ ] 키워드 추출 함수 (제목+요약 기반)
-  - [ ] entities, item_entities 테이블 저장 함수
-- [ ] **단위 테스트**: 엔티티 추출 함수 테스트 (mock OpenAI API)
-- [ ] **통합 테스트**: 엔티티 DB 저장 및 관계 생성 테스트
-- [ ] **E2E 테스트**: 실제 아이템으로 엔티티 추출 → 저장 → 조회 확인
-- [ ] Supabase 연동 확인: `entities`, `item_entities` 쓰기 및 조인 조회 성능 확인
+- [x] `backend/app/services/entity_extractor.py` 생성:
+  - [x] OpenAI API (NER)로 인물/기관/기술 추출 함수
+  - [x] 키워드 추출 함수 (제목+요약 기반)
+  - [x] entities, item_entities 테이블 저장 함수
+- [x] **단위 테스트**: 엔티티 추출 함수 테스트 (mock OpenAI API)
+- [x] **통합 테스트**: 엔티티 DB 저장 및 관계 생성 테스트
+- [x] **E2E 테스트**: 실제 아이템으로 엔티티 추출 → 저장 → 조회 확인
+- [x] Supabase 연동 확인: `entities`, `item_entities` 쓰기 및 조인 조회 성능 확인
 
 ### 1.6 분류 서비스
 - [ ] `backend/app/services/classifier.py` 생성:
@@ -455,9 +455,9 @@ ai-trend/
 
 **프로젝트 진행률**: 백엔드 기반 구조 약 44% 완료 (Phase 1.1~1.4 / 1.9)
 
-**완료된 항목**: Phase 1.1, Phase 1.2, Phase 1.3, Phase 1.4 완료
+**완료된 항목**: Phase 1.1, Phase 1.2, Phase 1.3, Phase 1.4, Phase 1.5 완료
 
-**현재 단계**: Phase 1.5 (엔티티 추출 서비스) - 시작 전
+**현재 단계**: Phase 1.6 (분류 서비스) - 시작 전
 
 **완료된 작업**:
 - Phase 1.1: Poetry 프로젝트 설정, 프로젝트 문서화, 커서룰 파일 생성
@@ -481,7 +481,7 @@ backend/app/
 ├── services/
 │   ├── rss_collector.py  ✅
 │   ├── summarizer.py     ✅
-│   ├── entity_extractor.py ✅ (MVP 구현 중)
+│   ├── entity_extractor.py ✅ (완료)
 │   └── [3개 서비스 미구현: classifier, deduplicator, person_tracker]
 ├── models/            ✅ (8개 모델 모두 완료)
 ├── schemas/           
