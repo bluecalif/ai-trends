@@ -9,6 +9,8 @@ from backend.app.main import app
 from fastapi.testclient import TestClient
 from backend.app.core.config import get_settings
 
+# Clear cache to ensure fresh settings load
+get_settings.cache_clear()
 settings = get_settings()
 
 # Use actual database URL for tests

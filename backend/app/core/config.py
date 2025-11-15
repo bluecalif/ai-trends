@@ -1,6 +1,7 @@
 """Application configuration from environment variables."""
 from pydantic_settings import BaseSettings
 from functools import lru_cache
+from pathlib import Path
 
 
 class Settings(BaseSettings):
@@ -29,7 +30,12 @@ class Settings(BaseSettings):
     RSS_COLLECTION_INTERVAL_MINUTES: int = 20
 
     class Config:
-        env_file = ".env"
+        # Find .env file relative to project root
+        # This file is at backend/app/core/config.py, so go up 2 levels to project root
+        _project_root = Path(__file__).parent.parent.parent.parent
+        _env_file = _project_root / "backend" / ".env"
+        env_file = str(_env_file) if _env_file.exists() else ".env"
+        env_file_encoding = "utf-8"
         case_sensitive = True
 
 

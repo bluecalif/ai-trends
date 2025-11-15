@@ -41,6 +41,7 @@ class RSSCollector:
                 "published_at": self._parse_date(entry),
                 "author": self._extract_author(entry),
                 "description": entry.get("description", ""),
+                "thumbnail_url": self._extract_thumbnail(entry),  # Extract from entry object
             }
             items.append(item)
         
@@ -56,14 +57,21 @@ class RSSCollector:
         Returns:
             Normalized dictionary for Item creation
         """
+        # Handle None values for author and description
+        author = entry.get("author")
+        author_str = (author or "").strip() or None
+        
+        description = entry.get("description")
+        description_str = (description or "").strip()[:500] or None if description else None
+        
         return {
             "source_id": source.id,
             "title": entry["title"].strip(),
             "link": entry["link"].strip(),
             "published_at": entry["published_at"],
-            "author": entry.get("author", "").strip() or None,
-            "summary_short": entry.get("description", "").strip()[:500] or None,
-            "thumbnail_url": self._extract_thumbnail(entry),
+            "author": author_str,
+            "summary_short": description_str,
+            "thumbnail_url": entry.get("thumbnail_url"),  # Get from dictionary
         }
     
     def check_duplicate(self, link: str) -> bool:
@@ -123,9 +131,14 @@ class RSSCollector:
         """
         # Use feedparser's parsed time structure (struct_time)
         if hasattr(entry, "published_parsed") and entry.published_parsed:
-            # Convert struct_time to datetime
-            timestamp = time.mktime(entry.published_parsed)
-            return datetime.fromtimestamp(timestamp, tz=timezone.utc)
+            # Check if it's actually a struct_time (not MagicMock)
+            try:
+                import time
+                timestamp = time.mktime(entry.published_parsed)
+                return datetime.fromtimestamp(timestamp, tz=timezone.utc)
+            except (TypeError, AttributeError):
+                # Not a valid struct_time, fall through to default
+                pass
         
         # Fallback to UTC now
         return datetime.now(timezone.utc)

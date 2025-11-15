@@ -136,18 +136,20 @@ ai-trend/
 - [x] **E2E 테스트**: 실제 데이터 CRUD 작업 테스트 (모든 모델, 10개 테스트 통과)
 
 ### 1.3 RSS 수집 서비스
-- [ ] `backend/app/services/__init__.py` 생성
-- [ ] `backend/app/services/rss_collector.py` 생성:
-  - [ ] `feedparser`로 RSS/Atom 파싱 함수
-  - [ ] 메타데이터 정규화 함수 (title, link, published_at, author, description)
-  - [ ] 중복 체크 함수 (link 해시 기반)
-  - [ ] 소스별 폴링 함수
-  - [ ] APScheduler 작업 등록 (10-30분 간격)
-- [ ] `backend/app/api/rss.py` 생성 (수동 수집 트리거 엔드포인트)
-- [ ] **단위 테스트**: RSS 파싱 함수 테스트 (mock feedparser)
-- [ ] **단위 테스트**: 중복 체크 로직 테스트
-- [ ] **통합 테스트**: 실제 RSS 피드 수집 테스트 (1-2개 소스)
-- [ ] **E2E 테스트**: 초기 10개 RSS 소스 등록 후 수집 → DB 저장 확인
+- [x] `backend/app/services/__init__.py` 생성
+- [x] `backend/app/services/rss_collector.py` 생성:
+  - [x] `feedparser`로 RSS/Atom 파싱 함수
+  - [x] 메타데이터 정규화 함수 (title, link, published_at, author, description, thumbnail_url)
+  - [x] 중복 체크 함수 (link 해시 기반)
+  - [x] 소스별 폴링 함수 (스케줄러 통합)
+  - [x] APScheduler 작업 등록 (일반 소스: 20분 간격, arXiv: 하루 2회)
+- [x] `backend/app/core/scheduler.py` 생성 (APScheduler 스케줄러 구현)
+- [x] `backend/app/main.py` 스케줄러 통합 (lifespan 이벤트)
+- [x] `backend/app/api/rss.py` 생성 (수동 수집 트리거 엔드포인트)
+- [x] **단위 테스트**: RSS 파싱 함수 테스트 (mock feedparser) - 11개 테스트 통과
+- [x] **단위 테스트**: 중복 체크 로직 테스트 - 통과
+- [x] **통합 테스트**: 실제 RSS 피드 수집 테스트 (DB 호환성 포함) - 3개 테스트 통과
+- [x] **E2E 테스트**: 초기 10개 RSS 소스 등록 및 수집 테스트 - 4개 테스트 통과
 
 ### 1.4 요약 서비스
 - [ ] `backend/app/services/summarizer.py` 생성:
@@ -434,15 +436,20 @@ ai-trend/
 
 ## 진행 상황 추적
 
-**마지막 업데이트**: 2025-11-15
+**마지막 업데이트**: 2025-01-XX
 
-**완료된 항목**: Phase 1.1, Phase 1.2 완료
+**완료된 항목**: Phase 1.1, Phase 1.2, Phase 1.3 완료
 
-**현재 단계**: Phase 1.3 (RSS 수집 서비스)
+**현재 단계**: Phase 1.4 (요약 서비스)
 
 **완료된 작업**:
 - Phase 1.1: Poetry 프로젝트 설정, 프로젝트 문서화, 커서룰 파일 생성
 - Phase 1.2: 데이터베이스 스키마 설정, Alembic 마이그레이션, 모든 모델 생성, 테스트 완료 (27개 테스트 통과)
+- Phase 1.3: RSS 수집 서비스 구현 완료
+  - RSS/Atom 피드 파싱 및 정규화
+  - 중복 체크 로직
+  - APScheduler 기반 자동 수집 스케줄러 (일반 소스: 20분 간격, arXiv: 하루 2회)
+  - 테스트 완료: 단위 11개, 통합 3개, E2E 4개 (총 18개 테스트 통과)
 
 ---
 
