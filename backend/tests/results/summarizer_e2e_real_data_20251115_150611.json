@@ -1,0 +1,61 @@
+{
+  "test_name": "test_summarize_real_rss_items_e2e",
+  "timestamp": "20251115_150611",
+  "source": {
+    "id": 250,
+    "title": "TechCrunch",
+    "feed_url": "https://techcrunch.com/feed/",
+    "site_url": "https://techcrunch.com"
+  },
+  "collection": {
+    "count": 20,
+    "status": "success"
+  },
+  "summarization": {
+    "total_items": 3,
+    "summarized_count": 0,
+    "items": [
+      {
+        "id": 2286,
+        "title": "Leaked documents shed light into how much OpenAI pays Microsoft",
+        "link": "https://techcrunch.com/2025/11/14/leaked-documents-shed-light-into-how-much-openai-pays-microsoft/",
+        "published_at": "2025-11-14T15:47:41",
+        "author": "Rebecca Bellan",
+        "original_summary": null,
+        "original_summary_length": 0,
+        "final_summary": "",
+        "final_summary_length": 0,
+        "was_summarized": false,
+        "created_at": "2025-11-15T15:06:11.864700"
+      },
+      {
+        "id": 2287,
+        "title": "Databricks co-founder argues US must go open source to beat China in AI",
+        "link": "https://techcrunch.com/2025/11/14/databricks-co-founder-argues-us-must-go-open-source-to-beat-china-in-ai/",
+        "published_at": "2025-11-14T13:52:18",
+        "author": "Marina Temkin",
+        "original_summary": null,
+        "original_summary_length": 0,
+        "final_summary": "",
+        "final_summary_length": 0,
+        "was_summarized": false,
+        "created_at": "2025-11-15T15:06:11.864700"
+      },
+      {
+        "id": 2288,
+        "title": "A comprehensive list of 2025 tech layoffs",
+        "link": "https://techcrunch.com/2025/11/14/tech-layoffs-2025-list/",
+        "published_at": "2025-11-14T13:29:56",
+        "author": "Cody Corrall, Alyssa Stringer, Kate Park",
+        "original_summary": null,
+        "original_summary_length": 0,
+        "final_summary": "",
+        "final_summary_length": 0,
+        "was_summarized": false,
+        "created_at": "2025-11-15T15:06:11.864700"
+      }
+    ]
+  },
+  "status": "passed",
+  "message": "Completed summarizer E2E (MVP). Items processed: 3, summarized_count: 0"
+}

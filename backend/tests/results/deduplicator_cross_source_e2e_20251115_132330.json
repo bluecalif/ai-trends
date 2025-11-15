@@ -1,0 +1,100 @@
+{
+  "test_name": "test_deduplicator_cross_source_e2e",
+  "timestamp": "20251115_132330",
+  "sources": [
+    {
+      "id": 225,
+      "title": "TechCrunch",
+      "feed_url": "https://techcrunch.com/feed/"
+    },
+    {
+      "id": 226,
+      "title": "The Verge",
+      "feed_url": "https://www.theverge.com/rss/index.xml"
+    },
+    {
+      "id": 227,
+      "title": "VentureBeat AI",
+      "feed_url": "https://venturebeat.com/category/ai/feed/"
+    }
+  ],
+  "collection": {
+    "total": 0,
+    "per_source": [
+      {
+        "source_id": 225,
+        "collected": 0
+      },
+      {
+        "source_id": 226,
+        "collected": 0
+      },
+      {
+        "source_id": 227,
+        "collected": 0
+      }
+    ]
+  },
+  "window_days": 10,
+  "params": {
+    "similarity_threshold": 0.2,
+    "lookback_days": 14,
+    "max_items_per_source": 15
+  },
+  "grouping": {
+    "candidates": 37,
+    "grouped": 7,
+    "groups": [
+      {
+        "item_id": 465,
+        "group_id": 466,
+        "title": "YouTube TV, ESPN, and Disney: the latest on the blackout that’s now over",
+        "source_id": 226,
+        "published_at": "2025-11-14T16:19:23"
+      },
+      {
+        "item_id": 466,
+        "group_id": 466,
+        "title": "Disney and ESPN are back on YouTube TV",
+        "source_id": 226,
+        "published_at": "2025-11-14T16:10:19"
+      },
+      {
+        "item_id": 467,
+        "group_id": 554,
+        "title": "The best early Black Friday deals we’ve found so far on laptops, TVs, and more",
+        "source_id": 226,
+        "published_at": "2025-11-14T13:02:20"
+      },
+      {
+        "item_id": 472,
+        "group_id": 554,
+        "title": "Apple’s last-gen AirPods Pro 2 are down to their lowest price to date",
+        "source_id": 226,
+        "published_at": "2025-11-14T07:42:27"
+      },
+      {
+        "item_id": 474,
+        "group_id": 623,
+        "title": "ChatGPT Group Chats are here … but not for everyone (yet)",
+        "source_id": 227,
+        "published_at": "2025-11-14T06:54:00"
+      },
+      {
+        "item_id": 458,
+        "group_id": 623,
+        "title": "ChatGPT launches pilot group chats across Japan, New Zealand, South Korea, and Taiwan",
+        "source_id": 225,
+        "published_at": "2025-11-14T01:58:08"
+      },
+      {
+        "item_id": 475,
+        "group_id": 621,
+        "title": "OpenAI experiment finds that sparse models could give AI builders the tools to debug neural networks",
+        "source_id": 227,
+        "published_at": "2025-11-13T20:00:00"
+      }
+    ]
+  },
+  "status": "passed"
+}

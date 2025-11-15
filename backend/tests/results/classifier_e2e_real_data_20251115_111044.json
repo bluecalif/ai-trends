@@ -1,0 +1,104 @@
+{
+  "test_name": "test_classifier_e2e_real_data",
+  "timestamp": "20251115_111044",
+  "source": {
+    "id": 216,
+    "title": "TechCrunch",
+    "feed_url": "https://techcrunch.com/feed/",
+    "site_url": "https://techcrunch.com"
+  },
+  "collection": {
+    "count": 0,
+    "status": "success"
+  },
+  "classification": {
+    "total_items": 5,
+    "processed": 5,
+    "items": [
+      {
+        "item_id": 370,
+        "title": "Leaked documents shed light into how much OpenAI pays Microsoft",
+        "summary_short_present": true,
+        "summary_short_length": 123,
+        "custom_tags": [
+          "foundational_models",
+          "inference_infra"
+        ],
+        "iptc_topics": [
+          "technology > artificial intelligence"
+        ],
+        "iab_categories": [
+          "Technology > Computing"
+        ]
+      },
+      {
+        "item_id": 371,
+        "title": "Databricks co-founder argues US must go open source to beat China in AI",
+        "summary_short_present": true,
+        "summary_short_length": 84,
+        "custom_tags": [
+          "foundational_models",
+          "inference_infra"
+        ],
+        "iptc_topics": [
+          "technology > artificial intelligence"
+        ],
+        "iab_categories": [
+          "Technology > Computing"
+        ]
+      },
+      {
+        "item_id": 372,
+        "title": "A comprehensive list of 2025 tech layoffs",
+        "summary_short_present": true,
+        "summary_short_length": 114,
+        "custom_tags": [
+          "agents",
+          "inference_infra"
+        ],
+        "iptc_topics": [
+          "technology > artificial intelligence"
+        ],
+        "iab_categories": [
+          "Technology > Computing"
+        ]
+      },
+      {
+        "item_id": 373,
+        "title": "ChatGPT: Everything you need to know about the AI-powered chatbot",
+        "summary_short_present": true,
+        "summary_short_length": 124,
+        "custom_tags": [
+          "foundational_models",
+          "inference_infra"
+        ],
+        "iptc_topics": [
+          "technology > artificial intelligence > conversational agents"
+        ],
+        "iab_categories": [
+          "Technology > Software"
+        ]
+      },
+      {
+        "item_id": 374,
+        "title": "Tesla releases detailed safety report after Waymo co-CEO called for more data",
+        "summary_short_present": true,
+        "summary_short_length": 138,
+        "custom_tags": [
+          "agents",
+          "foundational_models",
+          "inference_infra"
+        ],
+        "iptc_topics": [
+          "technology > artificial intelligence",
+          "technology > automotive industry"
+        ],
+        "iab_categories": [
+          "Technology > Automotive Technology",
+          "Technology > Computing"
+        ]
+      }
+    ]
+  },
+  "status": "passed"
+}

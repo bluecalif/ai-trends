@@ -1,0 +1,184 @@
+{
+  "test_name": "test_groups_api_e2e_backfill_and_incremental",
+  "timestamp": "20251115_150334",
+  "backfill": {
+    "processed": 181,
+    "window_days": 21
+  },
+  "incremental": {
+    "processed": 40
+  },
+  "api": {
+    "new": {
+      "total": 29,
+      "page": 1,
+      "page_size": 10,
+      "groups": [
+        {
+          "dup_group_id": 1415,
+          "first_seen_at": "2025-11-15T03:00:00",
+          "last_updated_at": "2025-11-15T15:05:23.272813",
+          "member_count": 12,
+          "representative": {
+            "id": 1415,
+            "title": "The 23 Best Shows on Amazon Prime, WIRED’s Picks (November 2025)",
+            "link": "https://www.wired.com/story/best-shows-amazon-prime/",
+            "published_at": "2025-11-15T03:00:00",
+            "summary_short": "Bat-Fam, The Girlfriend, and The Second Best Hospital in the Galaxy are just a few of the shows you should be watching on Amazon Prime Video this week."
+          }
+        },
+        {
+          "dup_group_id": 1414,
+          "first_seen_at": "2025-11-15T03:00:00",
+          "last_updated_at": "2025-11-15T14:27:44.930727",
+          "member_count": 2,
+          "representative": {
+            "id": 1414,
+            "title": "The 20 Best Movies on Amazon Prime, WIRED's Picks (November 2025)",
+            "link": "https://www.wired.com/story/best-amazon-prime-movies/",
+            "published_at": "2025-11-15T03:00:00",
+            "summary_short": "Nosferatu, Merry Little Batman, and Knives Out are just a few of the movies you should be watching on Amazon Prime Video this week."
+          }
+        },
+        {
+          "dup_group_id": 1471,
+          "first_seen_at": "2025-11-15T12:52:54",
+          "last_updated_at": "2025-11-15T12:52:54",
+          "member_count": 1,
+          "representative": {
+            "id": 1471,
+            "title": "실리콘 밸리 전문가 300명 \"가장 투자하고 싶은 곳은 앤트로픽\"",
+            "link": "https://www.aitimes.com/news/articleView.html?idxno=204018",
+            "published_at": "2025-11-15T12:52:54",
+            "summary_short": "실리콘 밸리의 인공지능(AI) 전문가들은 오픈AI보다 앤트로픽의 잠재력에 더 큰 점수를 주는 것으로 나타났다. 이는 13일(현지시간) 샌프란시스코에서 열린 한 행사에서 300여명의 참가자가 무기명으로 투표한 결과다.더 버지는 '세레브럴 밸리 컨퍼런스'라는 행사에서 참가자 설문을 실시, 현장에서 결과가 공개됐다고 전했다.설문 조사에 참여한 300명이 넘는 참석자는 주로 AI 스타트업 창립자들이었고, 투자자와 업계 전문가, 그리고 미디어 관계자도 포함됐다. 다니엘 루리 샌프란시스코 시장도 참석했다.설문 조사 결과 중 가장 눈에 띄는 것"
+          }
+        },
+        {
+          "dup_group_id": 1472,
+          "first_seen_at": "2025-11-15T11:29:43",
+          "last_updated_at": "2025-11-15T11:29:43",
+          "member_count": 1,
+          "representative": {
+            "id": 1472,
+            "title": "구글, 58조 투자해 텍사스에 데이터센터 3곳 구축",
+            "link": "https://www.aitimes.com/news/articleView.html?idxno=204017",
+            "published_at": "2025-11-15T11:29:43",
+            "summary_short": "구글이 대규모 데이터센터 설립 발표에 합류했다. 그동안 비교적 조용했던 구글도 미국 텍사스에 400억달러(약 58조2200억원)를 투자, 새로운 데이터센터 3곳을 짓는다고 밝혔다.구글은 14일(현지시간) 투자가 2027년까지 진행될 것이라고 발표했다. 데이터센터는 텍사스 팬핸들 지역 암스트롱 카운티에 한곳, 텍사스 서부 애빌린 인근 해스켈 카운티에 두곳이 구축될 ​​예정이다. 해스켈 시설 중 하나는 전력망에 미치는 영향을 완화하도록 태양광과 배터리 에너지 저장 시설이 함께 들어선다.순다르 피차이 구글 CEO는 \"이번 투자로 수천개의"
+          }
+        },
+        {
+          "dup_group_id": 1473,
+          "first_seen_at": "2025-11-15T10:52:16",
+          "last_updated_at": "2025-11-15T10:52:16",
+          "member_count": 1,
+          "representative": {
+            "id": 1473,
+            "title": "MS·아마존, 엔비디아 칩 수출 금지 법안에 지지 의사...\"빅테크 간 복잡한 갈등\"",
+            "link": "https://www.aitimes.com/news/articleView.html?idxno=204016",
+            "published_at": "2025-11-15T10:52:16",
+            "summary_short": "첨단 칩 중국 수출 금지를 지지한다는 이유로 앤트로픽과 날을 세웠던 엔비디아가 더 난처한 입장에 처했다. 새로운 칩 수출 금지 강화 법안에 마이크로소프트(MS)와 아마존까지 지지 의사를 밝혔기 때문이다.월스트리트 저널은 13일(현지시간) 짐 뱅크스 미국 상원의원이 발의한 'GAIN AI 법안(Guaranteeing Access and Innovation for National Artificial Intelligence Act)'에 MS와 아마존이 지지 의사를 밝혔다고 보도했다.GAIN AI 법은 엔비디아나 AMD와 같은 반도체 제조"
+          }
+        },
+        {
+          "dup_group_id": 1474,
+          "first_seen_at": "2025-11-15T09:47:19",
+          "last_updated_at": "2025-11-15T09:47:19",
+          "member_count": 1,
+          "representative": {
+            "id": 1474,
+            "title": "폴란드 VR 아티스트 모니카 마스원, 국내 첫 전시...”고정관념 벗어난 작품”",
+            "link": "https://www.aitimes.com/news/articleView.html?idxno=204001",
+            "published_at": "2025-11-15T09:47:19",
+            "summary_short": "서울 중구 미래에셋센터원빌딩 KF 갤러리에서는 2026년 2월27일까지 세계 각국의 특별한 가상현실(VR) 작품을 만나볼 수 있다. 폴란드 아티스트인 모니카 마스원은 이번 기회로 고정관념을 깨뜨린 작품을 국내에 선보이게 됐다. 한국국제교류재단(KF, 이사장 김기환)은 국내 대중들에게 양질의 확장현실(XR) 콘텐츠를 선보이기 위해 전시회를 마련했다. 지난해 10월에는 ‘비전 프로’로 감상하는 전용 콘텐츠를 국내에서 처음으로 선보이며 주목받은 바 있다. 이번에 진행하는 전시는 ‘플랫폼 : 보다 인간적인(PLATFORM : STILL H"
+          }
+        },
+        {
+          "dup_group_id": 1475,
+          "first_seen_at": "2025-11-15T09:06:57",
+          "last_updated_at": "2025-11-15T09:06:57",
+          "member_count": 1,
+          "representative": {
+            "id": 1475,
+            "title": "은퇴 앞둔 워렌 버핏, 애플 주식 팔고 구글 주식 사들여",
+            "link": "https://www.aitimes.com/news/articleView.html?idxno=204014",
+            "published_at": "2025-11-15T09:06:57",
+            "summary_short": "투자 회사 버크셔 해서웨이가 워렌 버핏 회장이 은퇴를 앞두고 애플 주식을 일부 매각하고, 대신 구글 주식을 사들인 것으로 알려졌다.로이터와 CNBC 등은 14일(현지시간) 버크셔 해서웨이가 구글 지분 4억3000만달러(약 6200억원)어치를 새로 확보했으며, 동시에 애플 지분은 2억3820만주로 줄이며 지속적으로 축소했다고 보도했다. 이는 버크셔가 60년간 이어온 버핏 시대를 마무리하며 공개한 주식 포트폴리오다.미국 증권거래위원회(SEC)에 제출한 자료에 따르면, 9월30일 기준 버크셔는 구글 주식 1785만주를 보유하고 있다. 구"
+          }
+        },
+        {
+          "dup_group_id": 1476,
+          "first_seen_at": "2025-11-15T08:51:17",
+          "last_updated_at": "2025-11-15T08:51:17",
+          "member_count": 1,
+          "representative": {
+            "id": 1476,
+            "title": "앤트로픽 \"AI가 주도한 최초의 사이버 공격 발생\"",
+            "link": "https://www.aitimes.com/news/articleView.html?idxno=204012",
+            "published_at": "2025-11-15T08:51:17",
+            "summary_short": "앤트로픽이 중국 해커가 클로드를 활용해 사이버 공격을 감행했다고 밝혔다. 특히, AI를 단순 지원 도구로 활용한 것을 아니라, AI가 사이버 공격을 주도한 첫 공식 확인 사례라고 강조했다.앤트로픽은 13일(현지시간) 발표한 보고서를 통해 중국 정부의 후원을 받는 해킹 조직이 코딩 도구인 '클로드 코드(Claude Code)'를 교묘히 속여 기술 기업, 금융기관, 화학 제조사, 일부 정부 기관 등 약 30개 글로벌 기관을 공격한 정황을 확인했다고 밝혔다. 앤트로픽은 이번 사건을 “AI가 공격 실행 주체로 활용된 최초의 대규모 사이버"
+          }
+        },
+        {
+          "dup_group_id": 1477,
+          "first_seen_at": "2025-11-15T08:28:22",
+          "last_updated_at": "2025-11-15T08:28:22",
+          "member_count": 1,
+          "representative": {
+            "id": 1477,
+            "title": "머스크 \"그록-5 출시 내년으로 연기...매개변수 6조개로 증가\"",
+            "link": "https://www.aitimes.com/news/articleView.html?idxno=204003",
+            "published_at": "2025-11-15T08:28:22",
+            "summary_short": "일론 머스크 CEO가 차세대 모델 ‘그록-5’를 내년 1분기 중 공개할 계획이라고 밝혔다. 이는 앞서 제시했던 것보다 다소 미뤄진 일정으로, 성능 향상을 위해 개발 기간을 늘린 것으로 볼 수 있다.머스크 CEO는 13일(현지시간) xAI의 주요 투자자인 론 배런과의 인터뷰에서 “그록-5는 내년 1분기쯤 출시될 것”이라고 말했다.그는 지난 8월에는 X(트위터)에서 “2025년 말 이전에 내놓겠다”라고 공언한 바 있어, 이번 발표는 공식적인 일정 조정으로 해석된다.또, 그록-5의 매개변수 규모가 6조개(6000B)가 될 것이라고 밝혔다"
+          }
+        },
+        {
+          "dup_group_id": 1478,
+          "first_seen_at": "2025-11-15T08:17:22",
+          "last_updated_at": "2025-11-15T08:17:22",
+          "member_count": 1,
+          "representative": {
+            "id": 1478,
+            "title": "삼성, 메모리칩 공급 부족 심화에 가격 최대 60% 인상",
+            "link": "https://www.aitimes.com/news/articleView.html?idxno=204004",
+            "published_at": "2025-11-15T08:17:22",
+            "summary_short": "삼성전자가 글로벌 인공지능(AI) 데이터센터 구축 경쟁에 따른 메모리 공급난 속에서 DDR5 등 주요 메모리 제품의 가격을 최대 60%까지 인상한 것으로 알려졌다. 로이터는 14일(현지시간) 정통한 관계자들을 인용, 삼성전자가 9월 대비 11월 계약 가격을 대폭 올렸으며, 이는 최근 몇달간 이어진 업계 전반의 공급 부족과 가격 급등 흐름을 반영한 조치라고 보도했다.업계에 따르면, 삼성전자의 32GB DDR5 모듈 계약가는 9월 149달러(약 21만원)에서 11월 239달러(약 34만원)로 약 60%나 상승했다.또 16GB DDR5와"
+          }
+        }
+      ]
+    },
+    "incremental": {
+      "total": 2,
+      "page": 1,
+      "page_size": 10,
+      "groups": [
+        {
+          "dup_group_id": 1408,
+          "first_seen_at": "2025-11-13T14:02:37",
+          "last_updated_at": "2025-11-15T15:04:16.337149",
+          "member_count": 9,
+          "representative": {
+            "id": 1408,
+            "title": "How to Build a Fully Self-Verifying Data Operations AI Agent Using Local Hugging Face Models for Automated Planning, Execution, and Testing",
+            "link": "https://www.marktechpost.com/2025/11/13/how-to-build-a-fully-self-verifying-data-operations-ai-agent-using-local-hugging-face-models-for-automated-planning-execution-and-testing/",
+            "published_at": "2025-11-13T14:02:37",
+            "summary_short": "<p>In this tutorial, we build a self-verifying DataOps AIAgent that can plan, execute, and test data operations automatically using local Hugging Face models. We design the agent with three intelligent roles: a Planner that creates an execution strategy, an Executor that writes and runs code using pandas, and a Tester that validates the results for [&#8230;]</p>\n<p>The post <a href=\"https://www.marktechpost.com/2025/11/13/how-to-build-a-fully-self-verifying-data-operations-ai-agent-using-local-h"
+          }
+        },
+        {
+          "dup_group_id": 1577,
+          "first_seen_at": "2025-10-28T15:00:00",
+          "last_updated_at": "2025-11-15T15:03:38.649046",
+          "member_count": 3,
+          "representative": {
+            "id": 1577,
+            "title": "Introducing gpt-oss-safeguard",
+            "link": "https://openai.com/index/introducing-gpt-oss-safeguard",
+            "published_at": "2025-10-28T15:00:00",
+            "summary_short": "OpenAI introduces gpt-oss-safeguard—open-weight reasoning models for safety classification that let developers apply and iterate on custom policies."
+          }
+        }
+      ]
+    }
+  },
+  "status": "passed"
+}

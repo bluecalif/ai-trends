@@ -1,0 +1,26 @@
+{
+  "test_name": "test_groups_api_e2e_backfill_and_incremental",
+  "timestamp": "20251115_141747",
+  "backfill": {
+    "processed": 0,
+    "window_days": 21
+  },
+  "incremental": {
+    "processed": 0
+  },
+  "api": {
+    "new": {
+      "total": 0,
+      "page": 1,
+      "page_size": 10,
+      "groups": []
+    },
+    "incremental": {
+      "total": 0,
+      "page": 1,
+      "page_size": 10,
+      "groups": []
+    }
+  },
+  "status": "passed"
+}

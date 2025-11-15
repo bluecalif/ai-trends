@@ -1,0 +1,81 @@
+{
+  "test_name": "test_deduplicator_e2e_real_data",
+  "timestamp": "20251115_150321",
+  "source": {
+    "id": 237,
+    "title": "TechCrunch",
+    "feed_url": "https://techcrunch.com/feed/",
+    "site_url": "https://techcrunch.com"
+  },
+  "collection": {
+    "count": 0,
+    "status": "success"
+  },
+  "grouping": {
+    "candidates": 10,
+    "grouped": 10,
+    "groups": [
+      {
+        "item_id": 1374,
+        "group_id": 1374,
+        "title": "Leaked documents shed light into how much OpenAI pays Microsoft",
+        "published_at": "2025-11-14T15:47:41"
+      },
+      {
+        "item_id": 1375,
+        "group_id": 1375,
+        "title": "Databricks co-founder argues US must go open source to beat China in AI",
+        "published_at": "2025-11-14T13:52:18"
+      },
+      {
+        "item_id": 1376,
+        "group_id": 1376,
+        "title": "A comprehensive list of 2025 tech layoffs",
+        "published_at": "2025-11-14T13:29:56"
+      },
+      {
+        "item_id": 1377,
+        "group_id": 1377,
+        "title": "ChatGPT: Everything you need to know about the AI-powered chatbot",
+        "published_at": "2025-11-14T13:06:57"
+      },
+      {
+        "item_id": 1378,
+        "group_id": 1378,
+        "title": "Tesla releases detailed safety report after Waymo co-CEO called for more data",
+        "published_at": "2025-11-14T12:57:21"
+      },
+      {
+        "item_id": 1379,
+        "group_id": 1379,
+        "title": "Oura Ring 4 Ceramic review: A colorful glow-up",
+        "published_at": "2025-11-14T11:30:58"
+      },
+      {
+        "item_id": 1380,
+        "group_id": 1380,
+        "title": "OpenAI says it’s fixed ChatGPT’s em dash problem",
+        "published_at": "2025-11-14T08:59:45"
+      },
+      {
+        "item_id": 1381,
+        "group_id": 1381,
+        "title": "Five people plead guilty to helping North Koreans infiltrate US companies as ‘remote IT workers’",
+        "published_at": "2025-11-14T08:15:09"
+      },
+      {
+        "item_id": 1382,
+        "group_id": 1382,
+        "title": "Boeing has a carbon emissions problem. Startup Charm Industrial is cleaning up.",
+        "published_at": "2025-11-14T08:04:10"
+      },
+      {
+        "item_id": 1383,
+        "group_id": 1383,
+        "title": "German court rules Google must pay €572M for violating antitrust rules in price comparison sector",
+        "published_at": "2025-11-14T06:40:13"
+      }
+    ]
+  },
+  "status": "passed"
+}

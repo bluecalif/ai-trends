@@ -1,0 +1,120 @@
+{
+  "test_name": "test_rss_collect_verify_all_sources",
+  "timestamp": "20251115_150546",
+  "summary": {
+    "sources_total": 13,
+    "collected_total": 1,
+    "errors": 4
+  },
+  "sources": [
+    {
+      "id": 243,
+      "title": "AITimes",
+      "feed_url": "https://www.aitimes.com/rss/allArticle.xml",
+      "site_url": "https://www.aitimes.com",
+      "is_active": true,
+      "collected": 0
+    },
+    {
+      "id": 244,
+      "title": "arXiv – cs.AI",
+      "feed_url": "http://export.arxiv.org/rss/cs.AI",
+      "site_url": "https://arxiv.org/list/cs.AI/recent",
+      "is_active": true,
+      "collected": 0
+    },
+    {
+      "id": 246,
+      "title": "DeepMind Blog",
+      "feed_url": "https://deepmind.google/discover/blog/feed/basic/",
+      "site_url": "https://deepmind.google/discover/blog",
+      "is_active": true,
+      "collected": 0,
+      "error": "Feed parsing error: <unknown>:34:41: not well-formed (invalid token)"
+    },
+    {
+      "id": 247,
+      "title": "IEEE Spectrum – AI",
+      "feed_url": "https://spectrum.ieee.org/rss/fulltext",
+      "site_url": "https://spectrum.ieee.org",
+      "is_active": true,
+      "collected": 0
+    },
+    {
+      "id": 242,
+      "title": "IEEE Spectrum – AI",
+      "feed_url": "https://spectrum.ieee.org/artificial-intelligence/fulltext/rss",
+      "site_url": "https://spectrum.ieee.org",
+      "is_active": true,
+      "collected": 0,
+      "error": "Feed parsing error: <unknown>:21:39: not well-formed (invalid token)"
+    },
+    {
+      "id": 239,
+      "title": "MarkTechPost",
+      "feed_url": "https://www.marktechpost.com/feed/",
+      "site_url": "https://www.marktechpost.com",
+      "is_active": true,
+      "collected": 0
+    },
+    {
+      "id": 245,
+      "title": "OpenAI News",
+      "feed_url": "https://openai.com/index.xml",
+      "site_url": "https://openai.com",
+      "is_active": true,
+      "collected": 0,
+      "error": "Feed parsing error: <unknown>:4:17: not well-formed (invalid token)"
+    },
+    {
+      "id": 248,
+      "title": "OpenAI News",
+      "feed_url": "https://openai.com/blog/rss.xml",
+      "site_url": "https://openai.com",
+      "is_active": true,
+      "collected": 0
+    },
+    {
+      "id": 237,
+      "title": "TechCrunch",
+      "feed_url": "https://techcrunch.com/feed/",
+      "site_url": "https://techcrunch.com",
+      "is_active": true,
+      "collected": 0
+    },
+    {
+      "id": 249,
+      "title": "The Keyword (Google DeepMind filtered)",
+      "feed_url": "https://blog.google/feed/",
+      "site_url": "https://blog.google/technology/google-deepmind/",
+      "is_active": true,
+      "collected": 0,
+      "error": "Feed parsing error: <unknown>:38:75: not well-formed (invalid token)"
+    },
+    {
+      "id": 241,
+      "title": "The Verge (All)",
+      "feed_url": "https://www.theverge.com/rss/index.xml",
+      "site_url": "https://www.theverge.com",
+      "is_active": true,
+      "collected": 0
+    },
+    {
+      "id": 238,
+      "title": "VentureBeat – AI",
+      "feed_url": "https://venturebeat.com/category/ai/feed/",
+      "site_url": "https://venturebeat.com",
+      "is_active": true,
+      "collected": 0
+    },
+    {
+      "id": 240,
+      "title": "WIRED (All)",
+      "feed_url": "https://www.wired.com/feed/rss",
+      "site_url": "https://www.wired.com",
+      "is_active": true,
+      "collected": 1
+    }
+  ],
+  "status": "passed"
+}

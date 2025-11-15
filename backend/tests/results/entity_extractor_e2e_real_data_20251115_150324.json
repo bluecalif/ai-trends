@@ -1,0 +1,105 @@
+{
+  "test_name": "test_entity_extractor_e2e_real_data",
+  "timestamp": "20251115_150324",
+  "source": {
+    "id": 237,
+    "title": "TechCrunch",
+    "feed_url": "https://techcrunch.com/feed/",
+    "site_url": "https://techcrunch.com"
+  },
+  "collection": {
+    "count": 0,
+    "status": "success"
+  },
+  "extraction": {
+    "total_items": 5,
+    "processed": 5,
+    "items": [
+      {
+        "item_id": 1374,
+        "title": "Leaked documents shed light into how much OpenAI pays Microsoft",
+        "link": "https://techcrunch.com/2025/11/14/leaked-documents-shed-light-into-how-much-openai-pays-microsoft/",
+        "summary_short_present": true,
+        "extracted_entities": [
+          {
+            "name": "OpenAI",
+            "type": "org"
+          },
+          {
+            "name": "Microsoft",
+            "type": "org"
+          }
+        ],
+        "relations_count": 2
+      },
+      {
+        "item_id": 1375,
+        "title": "Databricks co-founder argues US must go open source to beat China in AI",
+        "link": "https://techcrunch.com/2025/11/14/databricks-co-founder-argues-us-must-go-open-source-to-beat-china-in-ai/",
+        "summary_short_present": true,
+        "extracted_entities": [
+          {
+            "name": "Andy Konwinski",
+            "type": "person"
+          },
+          {
+            "name": "Databricks",
+            "type": "org"
+          },
+          {
+            "name": "AI",
+            "type": "tech"
+          }
+        ],
+        "relations_count": 3
+      },
+      {
+        "item_id": 1376,
+        "title": "A comprehensive list of 2025 tech layoffs",
+        "link": "https://techcrunch.com/2025/11/14/tech-layoffs-2025-list/",
+        "summary_short_present": true,
+        "extracted_entities": [],
+        "relations_count": 0
+      },
+      {
+        "item_id": 1377,
+        "title": "ChatGPT: Everything you need to know about the AI-powered chatbot",
+        "link": "https://techcrunch.com/2025/11/14/chatgpt-everything-to-know-about-the-ai-chatbot/",
+        "summary_short_present": true,
+        "extracted_entities": [
+          {
+            "name": "Yann LeCun",
+            "type": "person"
+          },
+          {
+            "name": "Meta",
+            "type": "org"
+          },
+          {
+            "name": "ChatGPT",
+            "type": "tech"
+          }
+        ],
+        "relations_count": 3
+      },
+      {
+        "item_id": 1378,
+        "title": "Tesla releases detailed safety report after Waymo co-CEO called for more data",
+        "link": "https://techcrunch.com/2025/11/14/tesla-releases-detailed-safety-report-after-waymo-co-ceo-called-for-more-data/",
+        "summary_short_present": true,
+        "extracted_entities": [
+          {
+            "name": "Tesla",
+            "type": "org"
+          },
+          {
+            "name": "Waymo",
+            "type": "org"
+          }
+        ],
+        "relations_count": 2
+      }
+    ]
+  },
+  "status": "passed"
+}

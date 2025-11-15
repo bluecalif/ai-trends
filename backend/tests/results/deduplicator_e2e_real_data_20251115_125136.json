@@ -1,0 +1,20 @@
+{
+  "test_name": "test_deduplicator_e2e_real_data",
+  "timestamp": "20251115_125136",
+  "source": {
+    "id": 222,
+    "title": "TechCrunch",
+    "feed_url": "https://techcrunch.com/feed/",
+    "site_url": "https://techcrunch.com"
+  },
+  "collection": {
+    "count": 20,
+    "status": "success"
+  },
+  "grouping": {
+    "candidates": 10,
+    "grouped": 0,
+    "groups": []
+  },
+  "status": "passed"
+}

@@ -19,5 +19,9 @@
 * **api-contract**:API-Contract의 sync는 매우 중요. 파일 복사한 후(@vibe-coding) 본 프로젝트에 맞게 각색하여 커서룰로 넣기 
 * **test세션**: backend-frontend가 별도로 구성된 경우, backend에서 E2E 테스트가 완료되어야 합니다. 이를 위해 각 단계별 sub 테스트가 정합성있게 빠짐없이 되어 있는지 TODOs.md에 반영
 * **Git**: 깃 업데이트 및 실행을 안하는 경우가 있으니, 주의할 것
+* **supabase**: connection string 확인. transaction pooler에서 ipv4 버전 string 확인
 
-## 5. 프로젝트 작업 개시
+## 5. 프로젝트 작업 개시(주의사항)
+* **실제 데이터**: 테스트시 Mock이 아닌 실제 데이터로 E2E 테스트
+* **Supabase 연동**: Phase 마다 supabase와 연동되어 처리 되도록 작성되어야 함. 테스트도 동일하게 진행
+* **데이터 Coverage 조기 확인**: 여러 Phase로 나눠진 경우, 첫 Phase에서 가능한 모든 데이터 수집경로(소소, 카테고리등)에 대해서 실행시 문제없는것 확인해야 함. 최소한 검증으로 Phase 번호만 계속 올라가는것은 의미없음. 나중에 문제가 더 커짐.

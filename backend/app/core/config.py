@@ -29,6 +29,9 @@ class Settings(BaseSettings):
     # RSS Collection
     RSS_COLLECTION_INTERVAL_MINUTES: int = 20
 
+    # Grouping reference date (UTC midnight) in YYYY-MM-DD, empty means use today's UTC date
+    REF_DATE: str = ""
+
     class Config:
         # Find .env file relative to project root
         # This file is at backend/app/core/config.py, so go up 2 levels to project root

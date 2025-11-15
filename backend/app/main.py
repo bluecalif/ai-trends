@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from backend.app.core.config import get_settings
 from backend.app.api import rss
+from backend.app.api import groups
 from backend.app.core.scheduler import start_scheduler, stop_scheduler, is_scheduler_running
 
 # Configure logging
@@ -50,6 +51,7 @@ app.add_middleware(
 
 # Register routers
 app.include_router(rss.router, prefix="/api/rss")
+app.include_router(groups.router)
 
 
 @app.get("/")

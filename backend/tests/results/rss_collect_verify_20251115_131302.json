@@ -1,0 +1,36 @@
+{
+  "test_name": "test_rss_collect_verify_all_sources",
+  "timestamp": "20251115_131302",
+  "summary": {
+    "sources_total": 3,
+    "collected_total": 0,
+    "errors": 0
+  },
+  "sources": [
+    {
+      "id": 225,
+      "title": "TechCrunch",
+      "feed_url": "https://techcrunch.com/feed/",
+      "site_url": "https://techcrunch.com",
+      "is_active": true,
+      "collected": 0
+    },
+    {
+      "id": 226,
+      "title": "The Verge",
+      "feed_url": "https://www.theverge.com/rss/index.xml",
+      "site_url": "https://www.theverge.com",
+      "is_active": true,
+      "collected": 0
+    },
+    {
+      "id": 227,
+      "title": "VentureBeat AI",
+      "feed_url": "https://venturebeat.com/category/ai/feed/",
+      "site_url": "https://venturebeat.com",
+      "is_active": true,
+      "collected": 0
+    }
+  ],
+  "status": "passed"
+}

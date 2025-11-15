@@ -1,0 +1,93 @@
+{
+  "test_name": "test_rss_collect_verify_all_sources",
+  "timestamp": "20251115_132149",
+  "summary": {
+    "sources_total": 10,
+    "collected_total": 0,
+    "errors": 0
+  },
+  "sources": [
+    {
+      "id": 231,
+      "title": "AITimes",
+      "feed_url": "https://www.aitimes.com/rss/allArticle.xml",
+      "site_url": "https://www.aitimes.com",
+      "is_active": true,
+      "collected": 0
+    },
+    {
+      "id": 232,
+      "title": "arXiv – cs.AI",
+      "feed_url": "http://export.arxiv.org/rss/cs.AI",
+      "site_url": "https://arxiv.org/list/cs.AI/recent",
+      "is_active": true,
+      "collected": 0
+    },
+    {
+      "id": 234,
+      "title": "DeepMind Blog",
+      "feed_url": "https://deepmind.google/discover/blog/feed/basic/",
+      "site_url": "https://deepmind.google/discover/blog",
+      "is_active": false,
+      "collected": 0,
+      "skipped": true
+    },
+    {
+      "id": 230,
+      "title": "IEEE Spectrum – AI",
+      "feed_url": "https://spectrum.ieee.org/rss/fulltext",
+      "site_url": "https://spectrum.ieee.org",
+      "is_active": true,
+      "collected": 0
+    },
+    {
+      "id": 228,
+      "title": "MarkTechPost",
+      "feed_url": "https://www.marktechpost.com/feed/",
+      "site_url": "https://www.marktechpost.com",
+      "is_active": true,
+      "collected": 0
+    },
+    {
+      "id": 233,
+      "title": "OpenAI News",
+      "feed_url": "https://openai.com/blog/rss.xml",
+      "site_url": "https://openai.com",
+      "is_active": true,
+      "collected": 0
+    },
+    {
+      "id": 225,
+      "title": "TechCrunch",
+      "feed_url": "https://techcrunch.com/feed/",
+      "site_url": "https://techcrunch.com",
+      "is_active": true,
+      "collected": 0
+    },
+    {
+      "id": 226,
+      "title": "The Verge",
+      "feed_url": "https://www.theverge.com/rss/index.xml",
+      "site_url": "https://www.theverge.com",
+      "is_active": true,
+      "collected": 0
+    },
+    {
+      "id": 227,
+      "title": "VentureBeat AI",
+      "feed_url": "https://venturebeat.com/category/ai/feed/",
+      "site_url": "https://venturebeat.com",
+      "is_active": true,
+      "collected": 0
+    },
+    {
+      "id": 229,
+      "title": "WIRED (All)",
+      "feed_url": "https://www.wired.com/feed/rss",
+      "site_url": "https://www.wired.com",
+      "is_active": true,
+      "collected": 0
+    }
+  ],
+  "status": "passed"
+}

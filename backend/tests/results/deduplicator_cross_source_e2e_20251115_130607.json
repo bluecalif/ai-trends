@@ -1,0 +1,66 @@
+{
+  "test_name": "test_deduplicator_cross_source_e2e",
+  "timestamp": "20251115_130607",
+  "sources": [
+    {
+      "id": 225,
+      "title": "TechCrunch",
+      "feed_url": "https://techcrunch.com/feed/"
+    },
+    {
+      "id": 226,
+      "title": "The Verge",
+      "feed_url": "https://www.theverge.com/rss/index.xml"
+    },
+    {
+      "id": 227,
+      "title": "VentureBeat AI",
+      "feed_url": "https://venturebeat.com/category/ai/feed/"
+    }
+  ],
+  "collection": {
+    "total": 30,
+    "per_source": [
+      {
+        "source_id": 225,
+        "collected": 20
+      },
+      {
+        "source_id": 226,
+        "collected": 10
+      },
+      {
+        "source_id": 227,
+        "collected": 0,
+        "error": "Feed parsing error: document declared as us-ascii, but parsed as utf-8"
+      }
+    ]
+  },
+  "window_days": 10,
+  "params": {
+    "similarity_threshold": 0.2,
+    "lookback_days": 14,
+    "max_items_per_source": 15
+  },
+  "grouping": {
+    "candidates": 30,
+    "grouped": 2,
+    "groups": [
+      {
+        "item_id": 465,
+        "group_id": 466,
+        "title": "YouTube TV, ESPN, and Disney: the latest on the blackout that’s now over",
+        "source_id": 226,
+        "published_at": "2025-11-14T16:19:23"
+      },
+      {
+        "item_id": 466,
+        "group_id": 466,
+        "title": "Disney and ESPN are back on YouTube TV",
+        "source_id": 226,
+        "published_at": "2025-11-14T16:10:19"
+      }
+    ]
+  },
+  "status": "passed"
+}

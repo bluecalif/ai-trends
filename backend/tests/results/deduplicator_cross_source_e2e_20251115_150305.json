@@ -1,0 +1,317 @@
+{
+  "test_name": "test_deduplicator_cross_source_e2e",
+  "timestamp": "20251115_150305",
+  "sources": [
+    {
+      "id": 237,
+      "title": "TechCrunch",
+      "feed_url": "https://techcrunch.com/feed/"
+    },
+    {
+      "id": 241,
+      "title": "The Verge (All)",
+      "feed_url": "https://www.theverge.com/rss/index.xml"
+    },
+    {
+      "id": 238,
+      "title": "VentureBeat – AI",
+      "feed_url": "https://venturebeat.com/category/ai/feed/"
+    }
+  ],
+  "collection": {
+    "total": 1,
+    "per_source": [
+      {
+        "source_id": 237,
+        "collected": 0
+      },
+      {
+        "source_id": 241,
+        "collected": 1
+      },
+      {
+        "source_id": 238,
+        "collected": 0
+      }
+    ]
+  },
+  "window_days": 10,
+  "params": {
+    "similarity_threshold": 0.2,
+    "lookback_days": 14,
+    "max_items_per_source": 15
+  },
+  "grouping": {
+    "candidates": 38,
+    "grouped": 38,
+    "groups": [
+      {
+        "item_id": 2284,
+        "group_id": 2284,
+        "title": "How to find music you will love without the algorithm",
+        "source_id": 241,
+        "published_at": "2025-11-15T06:00:00"
+      },
+      {
+        "item_id": 1461,
+        "group_id": 1461,
+        "title": "Framework’s franken-laptop is back with big chip upgrades and familiar frustrations",
+        "source_id": 241,
+        "published_at": "2025-11-15T05:00:00"
+      },
+      {
+        "item_id": 1462,
+        "group_id": 1462,
+        "title": "The Steam Machine feels like the TV gaming PC I’ve always wanted",
+        "source_id": 241,
+        "published_at": "2025-11-15T04:00:00"
+      },
+      {
+        "item_id": 1463,
+        "group_id": 1463,
+        "title": "Pluribus’ third episode throws a bomb into things",
+        "source_id": 241,
+        "published_at": "2025-11-15T04:00:00"
+      },
+      {
+        "item_id": 1464,
+        "group_id": 1464,
+        "title": "YouTube TV, ESPN, and Disney: the latest on the blackout that’s now over",
+        "source_id": 241,
+        "published_at": "2025-11-14T16:19:23"
+      },
+      {
+        "item_id": 1465,
+        "group_id": 1465,
+        "title": "Disney and ESPN are back on YouTube TV",
+        "source_id": 241,
+        "published_at": "2025-11-14T16:10:19"
+      },
+      {
+        "item_id": 1374,
+        "group_id": 1374,
+        "title": "Leaked documents shed light into how much OpenAI pays Microsoft",
+        "source_id": 237,
+        "published_at": "2025-11-14T15:47:41"
+      },
+      {
+        "item_id": 1394,
+        "group_id": 1394,
+        "title": "Google’s new AI training method helps small models tackle complex reasoning",
+        "source_id": 238,
+        "published_at": "2025-11-14T14:00:00"
+      },
+      {
+        "item_id": 1375,
+        "group_id": 1375,
+        "title": "Databricks co-founder argues US must go open source to beat China in AI",
+        "source_id": 237,
+        "published_at": "2025-11-14T13:52:18"
+      },
+      {
+        "item_id": 1376,
+        "group_id": 1376,
+        "title": "A comprehensive list of 2025 tech layoffs",
+        "source_id": 237,
+        "published_at": "2025-11-14T13:29:56"
+      },
+      {
+        "item_id": 1377,
+        "group_id": 1377,
+        "title": "ChatGPT: Everything you need to know about the AI-powered chatbot",
+        "source_id": 237,
+        "published_at": "2025-11-14T13:06:57"
+      },
+      {
+        "item_id": 1466,
+        "group_id": 1466,
+        "title": "The best early Black Friday deals we’ve found so far on laptops, TVs, and more",
+        "source_id": 241,
+        "published_at": "2025-11-14T13:02:20"
+      },
+      {
+        "item_id": 1378,
+        "group_id": 1378,
+        "title": "Tesla releases detailed safety report after Waymo co-CEO called for more data",
+        "source_id": 237,
+        "published_at": "2025-11-14T12:57:21"
+      },
+      {
+        "item_id": 1379,
+        "group_id": 1379,
+        "title": "Oura Ring 4 Ceramic review: A colorful glow-up",
+        "source_id": 237,
+        "published_at": "2025-11-14T11:30:58"
+      },
+      {
+        "item_id": 1467,
+        "group_id": 1467,
+        "title": "A recent Switch 2 update blocks some third-party docks, but Nintendo isn’t saying why",
+        "source_id": 241,
+        "published_at": "2025-11-14T11:00:27"
+      },
+      {
+        "item_id": 1468,
+        "group_id": 1468,
+        "title": "Paramount Skydance is working on a new Star Trek movie",
+        "source_id": 241,
+        "published_at": "2025-11-14T10:32:06"
+      },
+      {
+        "item_id": 1469,
+        "group_id": 1469,
+        "title": "Fortnite is coming to the Xbox PC store",
+        "source_id": 241,
+        "published_at": "2025-11-14T09:37:18"
+      },
+      {
+        "item_id": 1470,
+        "group_id": 1470,
+        "title": "Superman, Sinners, and other 4K Blu-rays are just $12.99 ahead of Black Friday",
+        "source_id": 241,
+        "published_at": "2025-11-14T09:00:00"
+      },
+      {
+        "item_id": 1380,
+        "group_id": 1380,
+        "title": "OpenAI says it’s fixed ChatGPT’s em dash problem",
+        "source_id": 237,
+        "published_at": "2025-11-14T08:59:45"
+      },
+      {
+        "item_id": 1381,
+        "group_id": 1381,
+        "title": "Five people plead guilty to helping North Koreans infiltrate US companies as ‘remote IT workers’",
+        "source_id": 237,
+        "published_at": "2025-11-14T08:15:09"
+      },
+      {
+        "item_id": 1382,
+        "group_id": 1382,
+        "title": "Boeing has a carbon emissions problem. Startup Charm Industrial is cleaning up.",
+        "source_id": 237,
+        "published_at": "2025-11-14T08:04:10"
+      },
+      {
+        "item_id": 1395,
+        "group_id": 1395,
+        "title": "ChatGPT Group Chats are here … but not for everyone (yet)",
+        "source_id": 238,
+        "published_at": "2025-11-14T06:54:00"
+      },
+      {
+        "item_id": 1383,
+        "group_id": 1383,
+        "title": "German court rules Google must pay €572M for violating antitrust rules in price comparison sector",
+        "source_id": 237,
+        "published_at": "2025-11-14T06:40:13"
+      },
+      {
+        "item_id": 1384,
+        "group_id": 1384,
+        "title": "WhatsApp to launch third-party chat integration in Europe soon",
+        "source_id": 237,
+        "published_at": "2025-11-14T06:32:50"
+      },
+      {
+        "item_id": 1385,
+        "group_id": 1385,
+        "title": "Pine Labs gets warm market welcome on $440M India IPO despite a valuation trim",
+        "source_id": 237,
+        "published_at": "2025-11-14T06:17:27"
+      },
+      {
+        "item_id": 1386,
+        "group_id": 1386,
+        "title": "Pixel 10 Pro Fold review: Google’s bet to make foldables sturdy",
+        "source_id": 237,
+        "published_at": "2025-11-14T06:13:22"
+      },
+      {
+        "item_id": 1387,
+        "group_id": 1387,
+        "title": "TikTok users can now share tracks and more from Amazon Music",
+        "source_id": 237,
+        "published_at": "2025-11-14T05:00:00"
+      },
+      {
+        "item_id": 1388,
+        "group_id": 1388,
+        "title": "Inside Harvey: How a first-year legal associate built one of Silicon Valley’s hottest startups",
+        "source_id": 237,
+        "published_at": "2025-11-14T02:57:24"
+      },
+      {
+        "item_id": 1389,
+        "group_id": 1389,
+        "title": "ChatGPT launches pilot group chats across Japan, New Zealand, South Korea, and Taiwan",
+        "source_id": 237,
+        "published_at": "2025-11-14T01:58:08"
+      },
+      {
+        "item_id": 1396,
+        "group_id": 1396,
+        "title": "OpenAI experiment finds that sparse models could give AI builders the tools to debug neural networks",
+        "source_id": 238,
+        "published_at": "2025-11-13T20:00:00"
+      },
+      {
+        "item_id": 1390,
+        "group_id": 1390,
+        "title": "VCs abandon old rules for a ‘funky time’ of investing in AI startups",
+        "source_id": 237,
+        "published_at": "2025-11-13T14:18:49"
+      },
+      {
+        "item_id": 1391,
+        "group_id": 1391,
+        "title": "Blue Origin sticks first New Glenn rocket landing and launches NASA spacecraft",
+        "source_id": 237,
+        "published_at": "2025-11-13T12:51:00"
+      },
+      {
+        "item_id": 1392,
+        "group_id": 1392,
+        "title": "Build Mode starts at the beginning: How Forethought AI found product-market fit",
+        "source_id": 237,
+        "published_at": "2025-11-13T12:47:30"
+      },
+      {
+        "item_id": 1393,
+        "group_id": 1393,
+        "title": "Apple’s new App Review Guidelines clamp down on apps sharing personal data with ‘third-party AI’",
+        "source_id": 237,
+        "published_at": "2025-11-13T12:14:35"
+      },
+      {
+        "item_id": 1397,
+        "group_id": 1397,
+        "title": "Baidu unveils proprietary ERNIE 5 beating GPT-5 performance on charts, document understanding and more",
+        "source_id": 238,
+        "published_at": "2025-11-13T11:23:00"
+      },
+      {
+        "item_id": 1398,
+        "group_id": 1398,
+        "title": "Upwork study shows AI agents excel with human partners but fail independently",
+        "source_id": 238,
+        "published_at": "2025-11-13T09:30:00"
+      },
+      {
+        "item_id": 1399,
+        "group_id": 1399,
+        "title": "Inside LinkedIn’s generative AI cookbook: How it scaled people search to 1.3 billion users",
+        "source_id": 238,
+        "published_at": "2025-11-13T07:00:00"
+      },
+      {
+        "item_id": 1400,
+        "group_id": 1400,
+        "title": "Alembic melted GPUs chasing causal A.I. — now it's running one of the fastest supercomputers in the world",
+        "source_id": 238,
+        "published_at": "2025-11-13T01:00:00"
+      }
+    ]
+  },
+  "status": "passed"
+}

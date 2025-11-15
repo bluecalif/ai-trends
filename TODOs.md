@@ -143,6 +143,13 @@ ai-trend/
   - [x] 중복 체크 함수 (link 해시 기반)
   - [x] 소스별 폴링 함수 (스케줄러 통합)
   - [x] APScheduler 작업 등록 (일반 소스: 20분 간격, arXiv: 하루 2회)
+- [x] PRD 소스 전량 등록(MVP 필수)
+  - [x] 초기 소스 일괄 등록 스크립트 실행(TechCrunch, VentureBeat AI, MarkTechPost, WIRED, The Verge, IEEE Spectrum – AI, AITimes, arXiv cs.AI, OpenAI News, DeepMind Blog)
+  - [x] 등록 직후 전체 수집 리포트 실행 및 결과 JSON 저장
+  - [x] 문제 소스 별도 이슈 트래킹(헤더/인코딩/리다이렉트 정책 정리)
+    - [x] IEEE Spectrum – AI: 대체 피드 적용(`https://spectrum.ieee.org/rss/fulltext`)
+    - [x] OpenAI News: 대체 피드 적용(`https://openai.com/blog/rss.xml`)
+    - [x] DeepMind: 현 단계 비활성화(피드 malformed 지속). Phase 3에서 The Keyword 전체 피드(`https://blog.google/feed/`) + 카테고리 필터(“Google DeepMind”) 방식으로 재활성화 예정
 - [x] `backend/app/core/scheduler.py` 생성 (APScheduler 스케줄러 구현)
 - [x] `backend/app/main.py` 스케줄러 통합 (lifespan 이벤트)
 - [x] `backend/app/api/rss.py` 생성 (수동 수집 트리거 엔드포인트)
@@ -151,6 +158,13 @@ ai-trend/
 - [x] **통합 테스트**: 실제 RSS 피드 수집 테스트 (DB 호환성 포함) - 3개 테스트 통과
 - [x] **E2E 테스트**: 초기 10개 RSS 소스 등록 및 수집 테스트 - 4개 테스트 통과
 - [x] Supabase 연동 확인: 수집 후 `items` 행 증가 및 고유 인덱스 충돌 처리 검증 (스케줄러 포함)
+- [x] 재검증(최근 기준 전체 소스 수집 품질 점검)
+  - [x] 대상 소스 전체 재수집 실행(최근 7~14일 범위) 및 per-source 수집 결과 집계
+  - [x] feedparser `bozo`/인코딩 오류(예: us-ascii vs utf-8) 원인 파악 및 핸들링 방안 마련
+  - [x] 오류 소스별 대응: 요청 헤더/리다이렉트/파서 옵션/인코딩 강제 등 검토
+  - [x] 재시도/백오프 로직 및 오류 로깅 강화(소스별 요약 리포트)
+  - [x] 수집 결과 JSON 저장(`backend/tests/results/rss_collect_verify_YYYYMMDD_HHMMSS.json`)
+  - [x] 문제 소스 리스트업 및 이슈 트래킹 항목 생성 — 현재 활성 소스 기준 에러 0 확인
 
 ### 1.4 요약 서비스 (MVP: RSS description만 사용)
 - [x] `backend/app/services/summarizer.py` 생성:
@@ -188,17 +202,27 @@ ai-trend/
 - [x] Supabase 연동 확인: `items.iptc_topics/iab_categories/custom_tags` 저장/조회 동작 확인 (JSONB contains/GIN은 Phase 1.9에서 최종 검증)
 
 ### 1.7 중복/사건 묶음 서비스
-- [ ] `backend/app/services/deduplicator.py` 생성:
-  - [ ] link 해시 기반 정확 중복 제거 함수
-  - [ ] 요약 n-gram 유사도 계산 함수 (TF-IDF 또는 임베딩)
-  - [ ] 근사 중복 그룹화 함수 (유사도 임계값 기반)
-  - [ ] dup_group_id 할당 함수
-- [ ] `backend/app/models/dup_group.py` 생성 (선택사항: 그룹 메타데이터)
-- [ ] **단위 테스트**: 유사도 계산 함수 테스트 (샘플 텍스트)
-- [ ] **단위 테스트**: 그룹화 로직 테스트 (임계값 기반)
-- [ ] **통합 테스트**: dup_group_id 할당 및 업데이트 테스트
-- [ ] **E2E 테스트**: 실제 아이템으로 중복 그룹화 → 타임라인 조회 확인
-- [ ] Supabase 연동 확인: `dup_group_id` 배치 업데이트 및 타임라인 조회 성능
+- [ ] `backend/app/services/deduplicator.py` 생성/확장:
+  - [x] link 정확 중복 제거
+  - [x] TF-IDF 유사도 + 보정점수(엔티티/태그/시간)
+  - [x] 근사 중복 그룹화(유사도 임계값 기반)
+  - [x] dup_group_id 할당
+  - [ ] 후보 축소(1단계) 도입: 최근 윈도우 + 제목 3-gram 교집합 ≥1 + (있을 때) 엔티티/커스텀태그 교집합 필터
+  - [ ] 초기 백필 모드(REF_DATE-21d ~ REF_DATE) + 증분 모드(REF_DATE 이후 신규) 분리
+- [ ] 그룹 메타 테이블 추가: `dup_group_meta`
+  - [ ] 스키마: `dup_group_id(PK)`, `first_seen_at`, `last_updated_at`, `member_count`
+  - [ ] 인덱스: `first_seen_at`, `last_updated_at`
+  - [ ] 동기화: 새 그룹 생성/합류 시 메타 갱신
+- [ ] 스케줄러 작업
+  - [ ] 초기 백필 작업(수동 트리거) — REF_DATE 포함 과거 21일 전수 그룹핑
+  - [ ] 증분 파이프라인(10–30분) — 수집→요약→분류→엔티티→증분 그룹핑→메타 갱신
+- [ ] API
+  - [ ] `GET /api/groups?since=YYYY-MM-DD&kind=new|incremental&page=...`
+  - [ ] `GET /api/groups/{dup_group_id}` 타임라인 상세(기존 group API 확장)
+- [ ] **단위 테스트**: 후보축소/점수 결합/메타 동기화 테스트
+- [ ] **통합 테스트**: 그룹 메타 생성/갱신/조회 테스트
+- [ ] **E2E 테스트**: 초기 백필 결과/증분 결과 JSON 저장 및 검증
+- [ ] Supabase 연동 확인: `dup_group_id` 배치 업데이트, 메타 조회 성능
 
 ### 1.8 인물 트래킹 서비스
 - [ ] `backend/app/services/person_tracker.py` 생성:
@@ -223,6 +247,9 @@ ai-trend/
   - [ ] `GET /api/items` - 아이템 목록 (필터: 분야, 태그, 날짜, 페이지네이션)
   - [ ] `GET /api/items/{id}` - 아이템 상세
   - [ ] `GET /api/items/group/{dup_group_id}` - 사건 타임라인
+- [ ] `backend/app/api/groups.py` 생성:
+  - [ ] `GET /api/groups` - `since`, `kind=new|incremental` 기반 그룹 목록(대표+updates_count_since)
+  - [ ] `GET /api/groups/{dup_group_id}` - 그룹 타임라인 상세
 - [ ] `backend/app/api/persons.py` 생성:
   - [ ] `GET /api/persons` - 인물 목록
   - [ ] `GET /api/persons/{id}` - 인물 상세 (타임라인+그래프)
@@ -363,12 +390,25 @@ ai-trend/
 - [ ] `backend/app/api/subscriptions.py` 생성
 - [ ] 프론트엔드 알림 설정 UI
 
+### 3.5 고급 중복/사건 묶음 (임베딩/LSH 기반)
+- [ ] 임베딩 기반 유사도(예: text-embedding-3-small) 도입 + 코사인 유사도
+- [ ] LSH/ANN을 활용한 후보 축소 후 정밀 판별(성능 최적화)
+- [ ] 사건 시드 모델: 초기 보도 식별 → 시간/엔티티/출처 가중으로 후속 기사 점수화
+- [ ] 문장/문단 의미 유사도(파라프레이즈) 모델 평가 및 통합
+- [ ] **E2E 테스트(실데이터)**: 임베딩/LSH 파이프라인으로 그룹 생성률/정확도 비교, 결과 JSON 저장
+
+### 3.6 소스 재활성화(DeepMind)
+- [ ] DeepMind 수집 재개(Phase 3)
+  - [ ] The Keyword 전체 피드(`https://blog.google/feed/`) 구독
+  - [ ] 카테고리 메타 기반 필터(“Google DeepMind”) + 백업 키워드(`deepmind`, `/technology/google-deepmind/`)
+  - [ ] 초기 E2E: 수집 → 요약 → 분류 → 그룹핑 → `/api/groups` 노출 검증(결과 JSON 저장)
+
 ---
 
 ## 초기 데이터 설정
 
 ### 4.1 RSS 소스 초기화
-- [ ] `backend/scripts/init_sources.py` 생성:
+- [ ] `backend/scripts/init_sources.py` 생성 (MVP 필수):
   - [ ] TechCrunch (전체)
   - [ ] VentureBeat – AI
   - [ ] MarkTechPost
@@ -379,7 +419,8 @@ ai-trend/
   - [ ] arXiv – cs.AI
   - [ ] OpenAI News
   - [ ] DeepMind Blog
-- [ ] 스크립트 실행하여 DB에 소스 등록
+- [ ] 스크립트 실행하여 DB에 소스 등록(MVP 완료 요건)
+  - [x] 실행 완료(등록/대체/비활성 반영) — DeepMind Blog 비활성화, OpenAI/IEEE 대체 피드 적용
 
 ### 4.2 워치 규칙 초기화
 - [ ] `backend/scripts/init_watch_rules.py` 생성:
@@ -415,7 +456,7 @@ ai-trend/
 - [ ] **요약 E2E**: 아이템 수집 → 요약 생성 → 저장 확인
 - [ ] **분류 E2E**: 아이템 → IPTC/IAB/커스텀 태그 분류 → 저장 확인
 - [ ] **엔티티 추출 E2E**: 아이템 → 엔티티 추출 → 관계 저장 확인
-- [ ] **중복 그룹화 E2E**: 유사 아이템 → 그룹화 → 타임라인 조회 확인
+- [ ] **중복 그룹화 E2E**: 초기 백필(21일) + 증분(REF_DATE 이후) → 그룹/타임라인/메타 조회 확인
 - [ ] **인물 트래킹 E2E**: 워치 규칙 → 매칭 → 타임라인 생성 확인
 - [ ] **API 전체 플로우 E2E**: 소스 추가 → 수집 → 처리 → API 조회 (모든 필터/정렬)
 - [ ] **폴링 작업자 E2E**: 스케줄러 실행 → 자동 수집 → 처리 파이프라인 확인
@@ -453,11 +494,47 @@ ai-trend/
 
 **마지막 업데이트**: 2025-11-15
 
-**프로젝트 진행률**: 백엔드 기반 구조 약 44% 완료 (Phase 1.1~1.4 / 1.9)
+**프로젝트 진행률**: 백엔드 기반 구조 약 55% 완료 (Phase 1.1~1.6 / 1.9)
 
 **완료된 항목**: Phase 1.1, Phase 1.2, Phase 1.3, Phase 1.4, Phase 1.5, Phase 1.6 완료
 
-**현재 단계**: Phase 1.7 (중복/사건 묶음 서비스) - 시작 전
+**현재 단계**: Phase 1.7 (중복/사건 묶음 서비스) - 진행 중
+
+**결정 사항(그룹/증분 기준)**:
+- REF_DATE: 매일 UTC 자정 고정
+- 초기 백필 윈도우: REF_DATE 포함 과거 21일
+- 신규(New): `first_seen_at >= since(REF_DATE 또는 사용자 마지막 방문)`
+- 증분(Incremental): `first_seen_at < since` AND `last_updated_at >= since`
+
+**다음 단계(즉시)**:
+1) `dup_group_meta` 스키마/인덱스 추가 및 메타 동기화 로직 구현
+2) Deduplicator 후보축소(1단계) 적용 및 초기 백필/증분 모드 분리
+3) `/api/groups` 엔드포인트 추가 및 E2E 작성(백필/증분 결과 JSON 저장)
+4) 소스 정리: 구(OpenAI `index.xml`, IEEE `.../fulltext/rss`) 중복 소스 비활성화
+5) 수집 재실행 → 백필/증분 → `/api/groups` 재검증(결과 JSON 저장 유지)
+6) 스케줄러 등록: 증분(10–30분), 일일 백필(UTC 00:00)
+
+---
+
+## 세션 요약 (2025-11-15)
+
+- 수집 소스
+  - IEEE Spectrum – AI: 대체 피드 적용(`https://spectrum.ieee.org/rss/fulltext`) 확인
+  - OpenAI News: 대체 피드 적용(`https://openai.com/blog/rss.xml`) 확인
+  - DeepMind: 현 단계 비활성화(피드 malformed 지속). Phase 3에서 The Keyword 전체 피드(`https://blog.google/feed/`) + 카테고리 필터(“Google DeepMind”) 방식 재활성화
+- 그룹핑
+  - 백필/증분 실행 결과: 최근 실행에서 백필 181, 증분 40 처리 확인
+  - `/api/groups` 신 29, 증분 2 그룹 반환(JSON 저장)
+- 테스트 결과 파일
+  - `backend/tests/results/rss_collect_verify_YYYYMMDD_HHMMSS.json`
+  - `backend/tests/results/groups_api_e2e_YYYYMMDD_HHMMSS.json`
+
+### 미해결/과제
+- [ ] 구 OpenAI/IEEE 중복 소스 비활성화(소스 테이블 정리) 및 재수집 확인
+- [ ] The Keyword(DeepMind) 피드 malformed 지속 모니터링(Phase 3에서 재활성화)
+- [ ] 스케줄러에 증분/백필 파이프라인 등록
+- [ ] `/api/groups` 고도화: `updates_count_since` 계산 및 정렬 보강
+- [ ] Supabase 체크포인트: `dup_group_meta` 읽기/쓰기 및 조회 성능 확인
 
 **완료된 작업**:
 - Phase 1.1: Poetry 프로젝트 설정, 프로젝트 문서화, 커서룰 파일 생성

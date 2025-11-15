@@ -27,14 +27,47 @@ class RSSCollector:
         Raises:
             ValueError: If feed parsing fails
         """
-        feed = feedparser.parse(feed_url)
-        
-        if feed.bozo:
+        # First attempt: direct URL with headers (helps some feeds)
+        headers = {
+            "User-Agent": "ai-trend-bot/1.0 (+https://example.com)",
+            "Accept": "application/rss+xml, application/atom+xml, application/xml;q=0.9, */*;q=0.8",
+        }
+        feed = feedparser.parse(feed_url, request_headers=headers)
+
+        # Fallback: fetch bytes manually and let feedparser parse content
+        if getattr(feed, "bozo", False):
+            try:
+                from urllib.request import Request, urlopen  # stdlib, no extra dep
+
+                req = Request(feed_url, headers=headers)
+                with urlopen(req, timeout=15) as resp:
+                    content_bytes = resp.read()
+                # Try bytes first; feedparser can sniff encoding
+                feed = feedparser.parse(content_bytes)
+                if getattr(feed, "bozo", False):
+                    # Last resort: decode as utf-8, ignore errors
+                    feed = feedparser.parse(content_bytes.decode("utf-8", errors="ignore"))
+            except Exception as e:
+                error_msg = str(getattr(feed, "bozo_exception", e)) if getattr(feed, "bozo", False) else str(e)
+                raise ValueError(f"Feed parsing error: {error_msg}")
+
+        if getattr(feed, "bozo", False):
             error_msg = str(feed.bozo_exception) if feed.bozo_exception else "Unknown error"
             raise ValueError(f"Feed parsing error: {error_msg}")
         
         items = []
         for entry in feed.entries:
+            # Categories/tags (if present)
+            categories: List[str] = []
+            try:
+                if hasattr(entry, "tags") and entry.tags:
+                    for t in entry.tags:
+                        term = t.get("term") if isinstance(t, dict) else getattr(t, "term", None)
+                        if term:
+                            categories.append(str(term))
+            except Exception:
+                # best-effort; ignore malformed tags
+                pass
             item = {
                 "title": entry.get("title", ""),
                 "link": entry.get("link", ""),
@@ -42,6 +75,7 @@ class RSSCollector:
                 "author": self._extract_author(entry),
                 "description": entry.get("description", ""),
                 "thumbnail_url": self._extract_thumbnail(entry),  # Extract from entry object
+                "categories": categories,
             }
             items.append(item)
         
@@ -100,6 +134,20 @@ class RSSCollector:
         """
         try:
             entries = self.parse_feed(source.feed_url)
+
+            # Optional source-specific filtering: The Keyword → only Google DeepMind items
+            if source.feed_url.strip().lower() == "https://blog.google/feed/":
+                filtered = []
+                for e in entries:
+                    cats = [c.lower() for c in (e.get("categories") or [])]
+                    title = (e.get("title") or "").lower()
+                    desc = (e.get("description") or "").lower()
+                    link = (e.get("link") or "").lower()
+                    in_category = any("google deepmind" in c for c in cats)
+                    backup_match = ("deepmind" in title) or ("deepmind" in desc) or ("/technology/google-deepmind/" in link)
+                    if in_category or backup_match:
+                        filtered.append(e)
+                entries = filtered
             count = 0
             
             for entry in entries:
