@@ -127,6 +127,17 @@ print("✅ Success")
 
 ---
 
+### 1.8 실행 경로 규칙 (중요)
+
+- 모든 명령은 프로젝트 루트(`C:\Projects\vibe-coding\ai-trend`) 기준으로 실행
+- 세션 중 `cd` 사용 금지 (경로 중첩 오류 방지)
+- 예시:
+  - `poetry run alembic upgrade head`
+  - `poetry run python -m pytest backend/tests/integration -v`
+  - `poetry run python -m pytest backend/tests/e2e -m e2e_real_data -v -s`
+
+---
+
 ## 2. 터미널 문제 해결
 
 ### 2.1 프로세스 강제 종료
