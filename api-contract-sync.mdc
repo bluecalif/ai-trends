@@ -1,0 +1,421 @@
+---
+alwaysApply: true
+description: Backend-Frontend API contract synchronization to prevent data mismatch issues
+---
+
+# API Contract Synchronization
+
+## Overview
+백엔드와 프론트엔드 간 데이터 불일치를 방지하기 위한 규칙. API 스키마, 상수, Enum, 노드 이름 등이 양쪽에서 동일하게 유지되어야 합니다.
+
+## Domain Knowledge
+
+### 발생했던 문제 사례
+1. **필터 값 불일치** (Phase 3.2.2)
+   - 프론트엔드: `경제경영` (슬래시 없음)
+   - 백엔드 DB: `경제/경영` (슬래시 있음)
+   - 결과: 필터링 작동 안 함
+
+2. **노드 이름 불일치** (Phase 3.2.4)
+   - 백엔드: `anchor_mapper`, `review_domain`, `integrator`
+   - 프론트엔드: `AnchorMapper`, `Reviewer_경제경영`, `Integrator`
+   - 결과: 진행바 실시간 업데이트 안 됨
+
+### 계약(Contract)이 필요한 영역
+- **API 요청/응답 스키마** (Request/Response models)
+- **Enum 값** (status, mode, format 등)
+- **상수** (domain 목록, 노드 이름, 테이블명)
+- **필터/쿼리 파라미터** (domain, topic, year_min/max)
+- **이벤트/상태 이름** (LangGraph 노드, WebSocket 이벤트)
+
+## Standards & Conventions
+
+### 1. 단일 진실 공급원 (Single Source of Truth)
+
+**원칙**: 상수와 Enum은 백엔드에서 정의하고, 프론트엔드는 API로 가져오거나 문서화된 값을 사용
+
+**나쁜 예**:
+```python
+# backend/models/schemas.py
+class RunCreate(BaseModel):
+    mode: str  # "synthesis" or "simple_merge"
+```
+
+```typescript
+// frontend/lib/api.ts (독립적으로 정의)
+type Mode = 'reduce' | 'simple_merge'  // ❌ 백엔드와 다름!
+```
+
+**좋은 예**:
+```python
+# backend/models/schemas.py
+from enum import Enum
+
+class RunMode(str, Enum):
+    SYNTHESIS = "synthesis"
+    SIMPLE_MERGE = "simple_merge"
+
+class RunCreate(BaseModel):
+    mode: RunMode
+```
+
+```typescript
+// frontend/types/api.ts (백엔드와 동일한 값 사용)
+export type RunMode = 'synthesis' | 'simple_merge'  // ✅ 백엔드와 일치
+```
+
+### 2. 상수는 설정 파일에서 관리
+
+**백엔드**:
+```python
+# backend/core/constants.py
+DOMAINS = [
+    "경제/경영",
+    "과학/기술", 
+    "역사/사회",
+    "인문/자기계발"
+]
+
+LANGGRAPH_NODES = [
+    "anchor_mapper",
+    "review_domain",
+    "integrator",
+    "producer",
+    "assemble",
+    "validator"
+]
+
+NODE_PROGRESS = {
+    "anchor_mapper": 11.1,
+    "review_domain": 33.3,
+    "integrator": 55.6,
+    "producer": 77.8,
+    "assemble": 100.0,
+    "validator": 88.9
+}
+```
+
+**프론트엔드**:
+```typescript
+// frontend/lib/constants.ts
+export const DOMAINS = [
+  '경제/경영',
+  '과학/기술',
+  '역사/사회',
+  '인문/자기계발'
+] as const
+
+export const LANGGRAPH_NODES = [
+  'anchor_mapper',
+  'review_domain',
+  'integrator',
+  'producer',
+  'assemble',
+  'validator'
+] as const
+
+export type LangGraphNode = typeof LANGGRAPH_NODES[number]
+
+export const NODE_LABELS: Record<LangGraphNode, string> = {
+  'anchor_mapper': 'AnchorMapper',
+  'review_domain': 'Reviewers (4개)',
+  'integrator': 'Integrator',
+  'producer': 'Producer',
+  'assemble': 'Assemble',
+  'validator': 'Validator',
+}
+```
+
+### 3. API 엔드포인트 추가 시 체크리스트
+
+#### Backend 작업
+```python
+# 1. Pydantic 모델 정의 (backend/models/schemas.py)
+class BookResponse(BaseModel):
+    id: str
+    title: str
+    domain: str  # ← 정확한 값 확인!
+    topic: str
+    year: int
+
+# 2. API 구현 (backend/api/routes/books.py)
+@router.get("/books", response_model=List[BookResponse])
+async def get_books(
+    domain: Optional[str] = None,  # ← 쿼리 파라미터 이름 확인!
+    topic: Optional[str] = None,
+    year_min: Optional[int] = None,
+    year_max: Optional[int] = None
+):
+    # JSONB 필터링 시 정확한 키 사용
+    if domain:
+        query = query.filter("meta_json->>domain", "eq", domain)
+    return results
+```
+
+#### Frontend 작업
+```typescript
+// 1. 타입 정의 (frontend/types/api.ts)
+export interface BookResponse {
+  id: string
+  title: string
+  domain: string  // ← 백엔드와 동일
+  topic: string
+  year: number
+}
+
+// 2. API 클라이언트 (frontend/lib/api.ts)
+export const api = {
+  getBooks: async (filters?: {
+    domain?: string      // ← 백엔드 쿼리 파라미터와 일치
+    topic?: string
+    year_min?: number    // ← 백엔드와 일치 (camelCase 아님!)
+    year_max?: number
+  }) => {
+    const { data } = await apiClient.get<BookResponse[]>('/api/books', {
+      params: filters  // 직접 전달 (JSON.stringify 안 함!)
+    })
+    return data
+  }
+}
+
+// 3. 상수 사용 (frontend/components/book-filter.tsx)
+import { DOMAINS } from '@/lib/constants'
+
+const BookFilter = () => {
+  return (
+    <Select>
+      {DOMAINS.map(domain => (
+        <SelectItem key={domain} value={domain}>
+          {domain}
+        </SelectItem>
+      ))}
+    </Select>
+  )
+}
+```
+
+### 4. 데이터베이스 값 검증
+
+**신규 CSV 업로드 전에 도메인 값 확인**:
+```python
+# backend/services/kb_parser.py
+from backend.core.constants import DOMAINS
+
+def validate_book_data(book_data: dict):
+    """CSV에서 읽은 데이터 검증"""
+    domain = book_data.get("domain", "")
+    
+    if domain not in DOMAINS:
+        raise ValueError(
+            f"Invalid domain: {domain}. "
+            f"Must be one of: {', '.join(DOMAINS)}"
+        )
+    
+    return True
+```
+
+### 5. LangGraph 노드 이름 동기화
+
+**백엔드**:
+```python
+# backend/langgraph_pipeline/graph.py
+from backend.core.constants import LANGGRAPH_NODES
+
+workflow.add_node(LANGGRAPH_NODES[0], anchor_mapper)  # "anchor_mapper"
+workflow.add_node(LANGGRAPH_NODES[1], review_domain)  # "review_domain"
+# ...
+```
+
+**프론트엔드**:
+```typescript
+// frontend/components/progress-bar.tsx
+import { LANGGRAPH_NODES, NODE_LABELS } from '@/lib/constants'
+
+export function ProgressBar({ currentNode }: Props) {
+  const getNodeStatus = (nodeName: typeof LANGGRAPH_NODES[number]) => {
+    const currentIndex = LANGGRAPH_NODES.indexOf(currentNode || '')
+    const nodeIndex = LANGGRAPH_NODES.indexOf(nodeName)
+    // ...
+  }
+
+  return (
+    <div>
+      {LANGGRAPH_NODES.map(nodeName => (
+        <div key={nodeName}>
+          {NODE_LABELS[nodeName]}  {/* 한글 라벨 표시 */}
+        </div>
+      ))}
+    </div>
+  )
+}
+```
+
+## Implementation Patterns
+
+### Pattern 1: Enum 공유 방식
+
+**OpenAPI/JSON Schema 활용**:
+```python
+# backend/main.py
+from fastapi import FastAPI
+from fastapi.openapi.utils import get_openapi
+
+app = FastAPI()
+
+# OpenAPI 스키마 엔드포인트 노출
+@app.get("/openapi.json")
+async def get_openapi_schema():
+    return get_openapi(
+        title="Ideator Books API",
+        version="0.1.0",
+        routes=app.routes,
+    )
+```
+
+```typescript
+// frontend/scripts/generate-types.ts
+// openapi-typescript를 사용하여 타입 자동 생성
+// npx openapi-typescript http://localhost:8000/openapi.json -o types/api.ts
+```
+
+### Pattern 2: Constants API 제공
+
+**백엔드에서 상수 제공**:
+```python
+# backend/api/routes/constants.py
+from backend.core.constants import DOMAINS, LANGGRAPH_NODES, NODE_PROGRESS
+
+@router.get("/constants/domains")
+async def get_domains():
+    return {"domains": DOMAINS}
+
+@router.get("/constants/langgraph-nodes")
+async def get_langgraph_nodes():
+    return {
+        "nodes": LANGGRAPH_NODES,
+        "progress": NODE_PROGRESS
+    }
+```
+
+**프론트엔드에서 가져오기** (선택적):
+```typescript
+// frontend/lib/api.ts
+export const api = {
+  getConstants: async () => {
+    const { data } = await apiClient.get('/api/constants/domains')
+    return data
+  }
+}
+```
+
+### Pattern 3: 런타임 검증
+
+**프론트엔드에서 값 검증**:
+```typescript
+// frontend/lib/validators.ts
+import { DOMAINS } from './constants'
+
+export function validateDomain(domain: string): boolean {
+  if (!DOMAINS.includes(domain as any)) {
+    console.error(`[Validation] Invalid domain: ${domain}`)
+    console.error(`[Validation] Expected one of: ${DOMAINS.join(', ')}`)
+    return false
+  }
+  return true
+}
+
+// 사용 예시
+const handleFilter = (domain: string) => {
+  if (!validateDomain(domain)) {
+    toast.error('잘못된 도메인 값입니다')
+    return
+  }
+  // ...
+}
+```
+
+## Checklist
+
+### 새 API 엔드포인트 추가 시
+- [ ] Pydantic 모델에 정확한 필드명/타입 정의
+- [ ] 프론트엔드 타입 정의가 백엔드와 일치하는지 확인
+- [ ] Query 파라미터 이름이 양쪽에서 동일한지 확인
+- [ ] Enum 값이 문자열로 정확히 일치하는지 확인
+- [ ] 테스트: 백엔드 단독 → 프론트엔드 연동 순서로 검증
+
+### Constants 추가/수정 시
+- [ ] `backend/core/constants.py`에 정의
+- [ ] `frontend/lib/constants.ts`에 동일한 값으로 정의
+- [ ] 기존 하드코딩된 값을 constants import로 교체
+- [ ] 양쪽 코드에서 constants 사용하는지 검색으로 확인
+
+### LangGraph 노드 추가/수정 시
+- [ ] `backend/core/constants.py` LANGGRAPH_NODES 업데이트
+- [ ] `backend/core/constants.py` NODE_PROGRESS 업데이트
+- [ ] `frontend/lib/constants.ts` LANGGRAPH_NODES 업데이트
+- [ ] `frontend/lib/constants.ts` NODE_LABELS 업데이트
+- [ ] 프론트엔드 ProgressBar 컴포넌트 테스트
+
+### 데이터베이스 스키마 변경 시
+- [ ] CSV 파싱 로직에서 새 필드명 사용
+- [ ] Pydantic 모델 업데이트
+- [ ] 프론트엔드 타입 업데이트
+- [ ] 필터 로직이 JSONB 쿼리에서 올바른 키 사용하는지 확인
+- [ ] 샘플 데이터로 E2E 테스트
+
+## Common Pitfalls
+
+### ❌ 피해야 할 것
+
+1. **하드코딩된 문자열**:
+```typescript
+// BAD
+if (mode === 'reduce') { ... }  // 백엔드는 'synthesis'를 사용
+```
+
+2. **독립적인 Enum 정의**:
+```python
+# backend: "synthesis"
+# frontend: "reduce"  // ❌ 다름!
+```
+
+3. **camelCase vs snake_case 혼용**:
+```typescript
+// BAD
+api.getBooks({ yearMin: 2020 })  // 백엔드는 year_min 기대
+```
+
+4. **JSONB 키 오타**:
+```python
+# BAD
+.filter("meta_json->>Domain", "eq", domain)  // "Domain"이 아니라 "domain"
+```
+
+### ✅ 권장 사항
+
+1. **Constants 파일 사용**:
+```typescript
+import { RunMode } from '@/lib/constants'
+if (mode === RunMode.SYNTHESIS) { ... }
+```
+
+2. **타입스크립트 타입 활용**:
+```typescript
+type Domain = typeof DOMAINS[number]  // 자동으로 리터럴 유니온 타입
+```
+
+3. **백엔드 응답으로 검증**:
+```typescript
+const { data: domains } = await api.getConstants()
+// 프론트 constants와 비교
+```
+
+## References
+- Backend API standards: `.cursor/rules/backend-api.mdc`
+- Database schema: `.cursor/rules/database-schema.mdc`
+- Frontend pages: `.cursor/rules/frontend-pages.mdc`
+- Constants files:
+  - `backend/core/constants.py`
+  - `frontend/lib/constants.ts`
+- Pydantic models: `backend/models/schemas.py`
+- API client: `frontend/lib/api.ts`
