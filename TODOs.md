@@ -151,17 +151,14 @@ ai-trend/
 - [x] **통합 테스트**: 실제 RSS 피드 수집 테스트 (DB 호환성 포함) - 3개 테스트 통과
 - [x] **E2E 테스트**: 초기 10개 RSS 소스 등록 및 수집 테스트 - 4개 테스트 통과
 
-### 1.4 요약 서비스
-- [ ] `backend/app/services/summarizer.py` 생성:
-  - [ ] RSS description 우선 사용 함수
-  - [ ] 원문 일시 로드 함수 (httpx)
-  - [ ] OpenAI API로 1-2문장 요약 생성 함수
-  - [ ] 본문 폐기 후 요약만 반환
-- [ ] `backend/app/core/config.py`에 OpenAI API 키 설정
-- [ ] **단위 테스트**: description 우선 사용 로직 테스트
-- [ ] **단위 테스트**: 원문 로드 함수 테스트 (mock httpx)
-- [ ] **통합 테스트**: OpenAI API 호출 테스트 (실제 API 또는 mock)
-- [ ] **E2E 테스트**: 다양한 RSS 항목으로 요약 생성 → DB 저장 확인
+### 1.4 요약 서비스 (MVP: RSS description만 사용)
+- [x] `backend/app/services/summarizer.py` 생성:
+  - [x] RSS description 사용 함수 (MVP: description 그대로 사용)
+  - [x] **참고**: 원문 로드 및 AI 요약 기능은 Phase 3 고급 기능으로 이동
+- [x] `backend/app/core/config.py`에 OpenAI API 키 설정 (이미 존재, Phase 3에서 사용)
+- [x] **단위 테스트**: description 사용 로직 테스트 (`test_summarizer.py`)
+- [x] **E2E 테스트**: 다양한 RSS 항목으로 요약 생성 → DB 저장 확인
+- [x] **결정 사항**: MVP에서는 RSS description만 사용, 원문 기반 AI 요약은 Phase 3로 이동
 
 ### 1.5 엔티티 추출 서비스
 - [ ] `backend/app/services/entity_extractor.py` 생성:
@@ -319,7 +316,17 @@ ai-trend/
 
 ## Phase 3: 고급 기능
 
-### 3.1 OPML Import/Export
+### 3.1 고급 요약 서비스 (원문 기반 AI 요약)
+- [ ] `backend/app/services/summarizer.py` 확장:
+  - [ ] 원문 일시 로드 함수 (httpx) - Phase 3에서 추가
+  - [ ] OpenAI API로 1-2문장 요약 생성 함수 - Phase 3에서 추가
+  - [ ] 본문 폐기 후 요약만 반환
+  - [ ] RSS description 부족 시 원문 로드 → AI 요약 자동 수행
+- [ ] **단위 테스트**: 원문 로드 함수 테스트 (mock httpx)
+- [ ] **통합 테스트**: OpenAI API 호출 테스트 (실제 API 또는 mock)
+- [ ] **E2E 테스트**: 원문 기반 요약 생성 → DB 저장 확인
+
+### 3.2 OPML Import/Export
 - [ ] `backend/app/services/opml_handler.py` 생성:
   - [ ] OPML 파싱 함수 (feedparser 또는 opml 라이브러리)
   - [ ] 소스 일괄 추가 함수
@@ -329,7 +336,7 @@ ai-trend/
   - [ ] `GET /api/opml/export` - 현재 소스 목록을 OPML로 내보내기
 - [ ] 프론트엔드 OPML Import/Export UI 연동
 
-### 3.2 주간 인사이트
+### 3.3 주간 인사이트
 - [ ] `backend/app/services/insights.py` 생성:
   - [ ] 분야별 키워드 증감 분석 함수
   - [ ] 인물별 핵심 이슈 요약 함수
@@ -340,7 +347,7 @@ ai-trend/
   - [ ] `GET /api/insights/persons` - 인물별 요약
 - [ ] `frontend/app/insights/page.tsx` 생성 (인사이트 시각화)
 
-### 3.3 알림 (선택사항)
+### 3.4 알림 (선택사항)
 - [ ] `backend/app/services/notifier.py` 생성:
   - [ ] 이메일 알림 함수 (SMTP)
   - [ ] 웹푸시 알림 함수
@@ -396,6 +403,7 @@ ai-trend/
 - [ ] 서비스 간 연동 테스트
 
 ### 5.3 백엔드 E2E 테스트 (프론트엔드 개발 전 필수)
+- [ ] 모든 E2E 테스트 결과는 `backend/tests/results/`에 JSON 파일로 저장 (필수)
 - [ ] **RSS 수집 E2E**: 소스 등록 → 수집 → DB 저장 확인
 - [ ] **요약 E2E**: 아이템 수집 → 요약 생성 → 저장 확인
 - [ ] **분류 E2E**: 아이템 → IPTC/IAB/커스텀 태그 분류 → 저장 확인
@@ -436,11 +444,13 @@ ai-trend/
 
 ## 진행 상황 추적
 
-**마지막 업데이트**: 2025-01-XX
+**마지막 업데이트**: 2025-11-15
 
-**완료된 항목**: Phase 1.1, Phase 1.2, Phase 1.3 완료
+**프로젝트 진행률**: 백엔드 기반 구조 약 44% 완료 (Phase 1.1~1.4 / 1.9)
 
-**현재 단계**: Phase 1.4 (요약 서비스)
+**완료된 항목**: Phase 1.1, Phase 1.2, Phase 1.3, Phase 1.4 완료
+
+**현재 단계**: Phase 1.5 (엔티티 추출 서비스) - 시작 전
 
 **완료된 작업**:
 - Phase 1.1: Poetry 프로젝트 설정, 프로젝트 문서화, 커서룰 파일 생성
@@ -450,6 +460,44 @@ ai-trend/
   - 중복 체크 로직
   - APScheduler 기반 자동 수집 스케줄러 (일반 소스: 20분 간격, arXiv: 하루 2회)
   - 테스트 완료: 단위 11개, 통합 3개, E2E 4개 (총 18개 테스트 통과)
+- Phase 1.4: 요약 서비스 구현 완료 (MVP: RSS description만 사용)
+  - RSS description 사용 로직 (MVP에서는 description 그대로 사용)
+  - **참고**: 원문 로드 및 AI 요약 기능은 Phase 3 고급 기능으로 이동 결정
+  - 테스트 완료: 단위 테스트, E2E 테스트 작성 완료 (실제 RSS 데이터 사용, 결과 JSON 파일 저장)
+
+**현재 프로젝트 구조 상태**:
+```
+backend/app/
+├── api/
+│   ├── rss.py          ✅ (RSS 수집 API만 구현)
+│   └── [5개 API 미구현: sources, items, persons, bookmarks, watch_rules, insights]
+├── services/
+│   ├── rss_collector.py  ✅
+│   ├── summarizer.py     ✅
+│   └── [4개 서비스 미구현: entity_extractor, classifier, deduplicator, person_tracker]
+├── models/            ✅ (8개 모델 모두 완료)
+├── schemas/           
+│   ├── rss.py         ✅
+│   └── [다른 엔티티 스키마 미구현]
+└── core/              ✅ (config, database, scheduler)
+```
+
+**테스트 현황**:
+- ✅ 완료: 모델 테스트 27개, RSS 수집 테스트 18개, 요약 서비스 테스트 완료 (단위/통합/E2E)
+- ❌ 미완료: 엔티티 추출, 분류, 중복 그룹화, 인물 트래킹, API 엔드포인트 테스트
+
+**핵심 마일스톤**:
+- ✅ 완료: 백엔드 기반 구조의 약 44% 완료 (Phase 1.1~1.4)
+- ⏳ 현재: Phase 1.5 (엔티티 추출 서비스) 시작 전
+- 📋 다음 우선순위: 엔티티 추출 → 분류 → 중복 그룹화 → 인물 트래킹 → API 엔드포인트
+- 🚫 프론트엔드: Phase 1의 모든 E2E 테스트 통과 후 시작
+
+**미구현 주요 기능**:
+- Phase 1.5: 엔티티 추출 서비스 (entity_extractor.py)
+- Phase 1.6: 분류 서비스 (classifier.py + 매핑 데이터 파일)
+- Phase 1.7: 중복/사건 묶음 서비스 (deduplicator.py)
+- Phase 1.8: 인물 트래킹 서비스 (person_tracker.py)
+- Phase 1.9: API 엔드포인트 (5개 추가 API 라우터)
 
 ---
 
