@@ -546,7 +546,7 @@
 - [ ] **통합 테스트**: OpenAI API 호출 테스트 (실제 API 또는 mock)
 - [ ] **E2E 테스트**: 원문 기반 요약 생성 → DB 저장 확인
 
-### 3.2 OPML Import/Export
+### 6.2 OPML Import/Export
 - [ ] `backend/app/services/opml_handler.py` 생성:
   - [ ] OPML 파싱 함수 (feedparser 또는 opml 라이브러리)
   - [ ] 소스 일괄 추가 함수
@@ -556,7 +556,7 @@
   - [ ] `GET /api/opml/export` - 현재 소스 목록을 OPML로 내보내기
 - [ ] 프론트엔드 OPML Import/Export UI 연동
 
-### 3.3 주간 인사이트
+### 6.3 주간 인사이트
 - [ ] `backend/app/services/insights.py` 생성:
   - [ ] 분야별 키워드 증감 분석 함수
   - [ ] 인물별 핵심 이슈 요약 함수
@@ -567,7 +567,7 @@
   - [ ] `GET /api/insights/persons` - 인물별 요약
 - [ ] `frontend/app/insights/page.tsx` 생성 (인사이트 시각화)
 
-### 3.4 알림 (선택사항)
+### 6.4 알림 (선택사항)
 - [ ] `backend/app/services/notifier.py` 생성:
   - [ ] 이메일 알림 함수 (SMTP)
   - [ ] 웹푸시 알림 함수
@@ -576,7 +576,7 @@
 - [ ] `backend/app/api/subscriptions.py` 생성
 - [ ] 프론트엔드 알림 설정 UI
 
-### 3.5 고급 중복/사건 묶음 (임베딩/LSH 기반)
+### 6.5 고급 중복/사건 묶음 (임베딩/LSH 기반)
 - [ ] **중복 그룹화 실행 및 백필** (Phase 1.7 기본 그룹화 완료, 실행 필요):
   - [ ] 백필 스크립트 실행 (`backend/scripts/run_backfill.py`)
   - [ ] 기존 아이템에 `dup_group_id` 할당
@@ -589,8 +589,8 @@
   - [ ] 문장/문단 의미 유사도(파라프레이즈) 모델 평가 및 통합
 - [ ] **E2E 테스트(실데이터)**: 임베딩/LSH 파이프라인으로 그룹 생성률/정확도 비교, 결과 JSON 저장
 
-### 3.6 소스 재활성화(DeepMind)
-- [ ] DeepMind 수집 재개(Phase 3)
+### 6.6 소스 재활성화(DeepMind)
+- [ ] DeepMind 수집 재개(Phase 6)
   - [ ] The Keyword 전체 피드(`https://blog.google/feed/`) 구독
   - [ ] 카테고리 메타 기반 필터("Google DeepMind") + 백업 키워드(`deepmind`, `/technology/google-deepmind/`)
   - [ ] 초기 E2E: 수집 → 요약 → 분류 → 그룹핑 → `/api/groups` 노출 검증(결과 JSON 저장)
