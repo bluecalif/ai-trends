@@ -1,16 +1,21 @@
 'use client'
 
-import { Suspense } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { use, useEffect, Suspense } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
 import { api } from '@/lib/api'
+import { validateField, getFieldFromPath } from '@/lib/validators'
 import { FieldTabs } from '@/components/FieldTabs'
 import { ItemCard } from '@/components/ItemCard'
 import { TagFilter } from '@/components/TagFilter'
 import { Pagination } from '@/components/Pagination'
-import type { CustomTag } from '@/lib/constants'
+import type { Field, CustomTag } from '@/lib/constants'
 
-function HomePageContent() {
+interface FieldPageProps {
+  params: Promise<{ field: string }>
+}
+
+function FieldPageContent({ field }: { field: Field }) {
   const searchParams = useSearchParams()
 
   // Get query parameters
@@ -20,11 +25,12 @@ function HomePageContent() {
   const dateFrom = searchParams.get('date_from') || undefined
   const dateTo = searchParams.get('date_to') || undefined
 
-  // Fetch items (no field filter for "All")
+  // Fetch items
   const { data, isLoading, error } = useQuery({
-    queryKey: ['items', 'all', page, pageSize, customTag, dateFrom, dateTo],
+    queryKey: ['items', field, page, pageSize, customTag, dateFrom, dateTo],
     queryFn: () =>
       api.getItems({
+        field,
         custom_tag: customTag || undefined,
         date_from: dateFrom,
         date_to: dateTo,
@@ -98,7 +104,29 @@ function HomePageContent() {
   )
 }
 
-export default function HomePage() {
+export default function FieldPage({ params }: FieldPageProps) {
+  const resolvedParams = use(params)
+  const router = useRouter()
+  
+  // Validate field parameter
+  const field = getFieldFromPath(`/${resolvedParams.field}`)
+  
+  useEffect(() => {
+    if (!field) {
+      // Invalid field, redirect to research
+      router.replace('/research')
+    }
+  }, [field, router])
+
+  if (!field) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        <span className="ml-3 text-gray-600">Redirecting...</span>
+      </div>
+    )
+  }
+
   return (
     <Suspense
       fallback={
@@ -111,7 +139,7 @@ export default function HomePage() {
         </div>
       }
     >
-      <HomePageContent />
+      <FieldPageContent field={field} />
     </Suspense>
   )
 }

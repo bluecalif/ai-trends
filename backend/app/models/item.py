@@ -18,6 +18,9 @@ class Item(BaseModel):
     author = Column(Text, nullable=True)
     thumbnail_url = Column(String(1024), nullable=True)
 
+    # Field category (분야)
+    field = Column(String(50), nullable=True, index=True)
+
     # Classification tags (JSON arrays)
     iptc_topics = Column(JSON, default=list, nullable=False)
     iab_categories = Column(JSON, default=list, nullable=False)

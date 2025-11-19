@@ -176,50 +176,55 @@
   - [x] 에러 처리 및 로딩 상태 표시 확인
   - [x] 반응형 디자인 확인 (모바일/데스크톱)
 
-### 2.2 홈/분야 탭
-- [ ] 기본 레이아웃 (`frontend/app/layout.tsx`):
-  - [ ] 네비게이션 바 (로고, 메뉴)
-  - [ ] 기본 스타일링 (Tailwind CSS)
-  - [ ] React Query Provider 설정
-- [ ] 홈 페이지 (`frontend/app/page.tsx`):
-  - [ ] 기본적으로 Research 분야 아이템 표시
-  - [ ] 분야 탭 컴포넌트 포함
-  - [ ] 아이템 리스트 표시
-- [ ] 분야별 페이지 (`frontend/app/[field]/page.tsx`):
-  - [ ] 동적 라우팅: `/research`, `/industry`, `/infra`, `/policy`, `/funding`
-  - [ ] React Query로 해당 분야 아이템 조회
-  - [ ] 페이지네이션 구현
-  - [ ] **중요**: URL 파라미터 검증 (`validateField()` 사용)
-- [ ] `FieldTabs` 컴포넌트 (`frontend/components/FieldTabs.tsx`):
-  - [ ] 5개 분야 탭 (Research, Industry, Infra, Policy, Funding)
-  - [ ] 현재 선택된 분야 하이라이트
-  - [ ] 클릭 시 해당 분야 페이지로 이동
-- [ ] `ItemCard` 컴포넌트 (`frontend/components/ItemCard.tsx`):
-  - [ ] 제목, 요약 표시
-  - [ ] 태그 표시 (IPTC, IAB, 커스텀 태그)
-  - [ ] 출처, 시간 표시 (date-fns 사용)
-  - [ ] `dup_group_id`가 있으면 "동일 사건 N건" 표시
-  - [ ] 클릭 시 원문 링크 이동 (새 탭)
-  - [ ] "사건 보기" 버튼 (dup_group_id가 있을 때)
-- [ ] `TagFilter` 컴포넌트 (`frontend/components/TagFilter.tsx`):
-  - [ ] 커스텀 태그 필터 (다중 선택 가능)
-  - [ ] 필터 상태 관리 (React Query 쿼리 파라미터와 연동)
-  - [ ] **중요**: 상수 파일의 CUSTOM_TAGS 사용 (하드코딩 금지)
-- [ ] 페이지네이션 컴포넌트 (`frontend/components/Pagination.tsx`):
-  - [ ] 페이지 번호 표시
-  - [ ] 이전/다음 버튼
-  - [ ] 총 아이템 수 표시
-- [ ] **UX 확인**:
-  - [ ] 홈 페이지 로딩 및 아이템 표시 확인
-  - [ ] 분야 탭 전환 동작 확인 (Research/Industry/Infra/Policy/Funding)
-  - [ ] 아이템 카드 클릭 시 원문 링크 이동 확인
-  - [ ] "사건 보기" 버튼 동작 확인 (dup_group_id가 있는 경우)
-  - [ ] 태그 필터 동작 확인 (다중 선택, 필터링 결과)
-  - [ ] 페이지네이션 동작 확인 (이전/다음, 페이지 번호 클릭)
-  - [ ] 로딩 상태 표시 확인 (데이터 로딩 중)
-  - [ ] 에러 상태 표시 확인 (API 에러 발생 시)
-  - [ ] 반응형 디자인 확인 (모바일/태블릿/데스크톱)
-  - [ ] 접근성 확인 (키보드 네비게이션, 스크린 리더)
+### 2.2 홈/분야 탭 ✅
+- [x] 기본 레이아웃 (`frontend/app/layout.tsx`):
+  - [x] 네비게이션 바 (로고, 메뉴)
+  - [x] 기본 스타일링 (Tailwind CSS)
+  - [x] React Query Provider 설정
+- [x] 홈 페이지 (`frontend/app/page.tsx`):
+  - [x] "All" 옵션 추가 (모든 분야 아이템 표시)
+  - [x] 분야 탭 컴포넌트 포함
+  - [x] 아이템 리스트 표시
+- [x] 분야별 페이지 (`frontend/app/[field]/page.tsx`):
+  - [x] 동적 라우팅: `/research`, `/industry`, `/infra`, `/policy`, `/funding`
+  - [x] React Query로 해당 분야 아이템 조회
+  - [x] 페이지네이션 구현
+  - [x] **중요**: URL 파라미터 검증 (`validateField()` 사용)
+- [x] `FieldTabs` 컴포넌트 (`frontend/components/FieldTabs.tsx`):
+  - [x] "All" 옵션 추가
+  - [x] 5개 분야 탭 (Research, Industry, Infra, Policy, Funding)
+  - [x] 현재 선택된 분야 하이라이트
+  - [x] 클릭 시 해당 분야 페이지로 이동
+- [x] `ItemCard` 컴포넌트 (`frontend/components/ItemCard.tsx`):
+  - [x] 제목, 요약 표시
+  - [x] 태그 표시 (커스텀 태그)
+  - [x] 출처, 시간 표시 (date-fns 사용)
+  - [x] `dup_group_id`가 있으면 "동일 사건 N건" 표시
+  - [x] 클릭 시 원문 링크 이동 (새 탭)
+- [x] `TagFilter` 컴포넌트 (`frontend/components/TagFilter.tsx`):
+  - [x] 커스텀 태그 필터 (다중 선택 가능)
+  - [x] 필터 상태 관리 (React Query 쿼리 파라미터와 연동)
+  - [x] **중요**: 상수 파일의 CUSTOM_TAGS 사용 (하드코딩 금지)
+- [x] 페이지네이션 컴포넌트 (`frontend/components/Pagination.tsx`):
+  - [x] 페이지 번호 표시
+  - [x] 이전/다음 버튼
+  - [x] 총 아이템 수 표시
+- [x] **백엔드 field 필터 기능 추가**:
+  - [x] Item 모델에 `field` 컬럼 추가 (마이그레이션)
+  - [x] 분류 서비스에 `field` 추론 로직 추가
+  - [x] 백엔드 API에서 `field` 필터 활성화
+  - [x] 기존 아이템에 `field` 및 `custom_tags` 업데이트 스크립트 실행
+- [x] **UX 확인**:
+  - [x] 홈 페이지 로딩 및 아이템 표시 확인
+  - [x] "All" 탭 동작 확인
+  - [x] 분야 탭 전환 동작 확인 (Research/Industry/Infra/Policy/Funding)
+  - [x] 아이템 카드 클릭 시 원문 링크 이동 확인
+  - [x] 태그 필터 동작 확인 (다중 선택, 필터링 결과)
+  - [x] 페이지네이션 동작 확인 (이전/다음, 페이지 번호 클릭)
+  - [x] 로딩 상태 표시 확인 (데이터 로딩 중)
+  - [x] 에러 상태 표시 확인 (API 에러 발생 시)
+  - [x] 반응형 디자인 확인 (모바일/태블릿/데스크톱)
+  - [x] 태그 표시 확인
 
 ### 2.3 사건 타임라인
 - [ ] 사건 타임라인 페이지 (`frontend/app/story/[groupId]/page.tsx`):

@@ -14,6 +14,7 @@ class ItemResponse(BaseModel):
     published_at: datetime
     author: Optional[str] = None
     thumbnail_url: Optional[str] = None
+    field: Optional[str] = None
     iptc_topics: List[str] = []
     iab_categories: List[str] = []
     custom_tags: List[str] = []

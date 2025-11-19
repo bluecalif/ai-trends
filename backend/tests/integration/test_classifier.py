@@ -26,6 +26,7 @@ def test_classifier_saves_to_item_json_fields(test_db: Session):
     svc = ClassifierService()
     result = svc.classify(item.title, item.summary_short or "")
 
+    item.field = result.get("field")
     item.iptc_topics = result["iptc_topics"]
     item.iab_categories = result["iab_categories"]
     item.custom_tags = result["custom_tags"]

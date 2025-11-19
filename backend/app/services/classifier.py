@@ -8,6 +8,7 @@ Updated: LLM-first strategy with heuristic fallback.
 from typing import List, Dict, Optional
 
 from backend.app.core.config import get_settings
+from backend.app.core.constants import FIELDS
 
 
 CUSTOM_KEYWORDS = {
@@ -17,6 +18,30 @@ CUSTOM_KEYWORDS = {
     "neuro_symbolic": ["neuro-symbolic", "apollo", "symbolic reasoning"],
     "foundational_models": ["llm", "multimodal", "foundation model"],
     "inference_infra": ["gpu", "asic", "inference", "accelerator"],
+}
+
+# Field inference keywords
+FIELD_KEYWORDS = {
+    "research": [
+        "research", "paper", "arxiv", "study", "academic", "university", "lab", "scientist",
+        "published", "journal", "conference", "neural", "model", "algorithm", "methodology"
+    ],
+    "industry": [
+        "company", "startup", "product", "launch", "release", "announce", "enterprise",
+        "business", "commercial", "market", "revenue", "funding", "investment", "acquisition"
+    ],
+    "infra": [
+        "infrastructure", "gpu", "asic", "hardware", "chip", "accelerator", "compute",
+        "cloud", "server", "datacenter", "deployment", "scaling", "performance", "optimization"
+    ],
+    "policy": [
+        "policy", "regulation", "law", "government", "regulatory", "compliance", "ethics",
+        "safety", "governance", "legislation", "congress", "senate", "eu", "regulation"
+    ],
+    "funding": [
+        "funding", "investment", "raise", "series", "seed", "venture", "capital", "ipo",
+        "valuation", "million", "billion", "investor", "backer", "round"
+    ],
 }
 
 
@@ -35,12 +60,16 @@ class ClassifierService:
             self._client = None
 
     def classify(self, title: str, summary: str) -> Dict:
-        """Return dict with iptc_topics, iab_categories, custom_tags."""
+        """Return dict with field, iptc_topics, iab_categories, custom_tags."""
         text = f"{title} {summary}".strip()
         try:
             print(f"[Classifier] title_len={len(title)}, summary_len={len(summary)}")
         except Exception:
             pass
+
+        # Infer field first (keyword-based)
+        lower_text = text.lower()
+        field = self._infer_field(lower_text)
 
         # Try LLM first when client is available
         if self._client and text:
@@ -48,14 +77,19 @@ class ClassifierService:
             if llm and (
                 llm.get("custom_tags") or llm.get("iptc_topics") or llm.get("iab_categories")
             ):
-                return llm
+                return {
+                    "field": field,
+                    "iptc_topics": llm.get("iptc_topics", []),
+                    "iab_categories": llm.get("iab_categories", []),
+                    "custom_tags": llm.get("custom_tags", []),
+                }
 
         # Fallback to heuristics
-        lower_text = text.lower()
         custom_tags = self._infer_custom_tags(lower_text)
         iptc_topics = self._map_iptc_from_custom(custom_tags)
         iab_categories = self._map_iab_from_custom(custom_tags)
         return {
+            "field": field,
             "iptc_topics": iptc_topics,
             "iab_categories": iab_categories,
             "custom_tags": custom_tags,
@@ -112,6 +146,22 @@ class ClassifierService:
                 last_error = e
                 continue
         return None
+
+    def _infer_field(self, text: str) -> Optional[str]:
+        """Infer field category from text using keyword matching."""
+        # Count matches for each field
+        field_scores = {}
+        for field, keywords in FIELD_KEYWORDS.items():
+            score = sum(1 for kw in keywords if kw in text)
+            if score > 0:
+                field_scores[field] = score
+        
+        if not field_scores:
+            # Default to research if no matches
+            return "research"
+        
+        # Return field with highest score
+        return max(field_scores.items(), key=lambda x: x[1])[0]
 
     def _infer_custom_tags(self, text: str) -> List[str]:
         tags: List[str] = []

@@ -92,6 +92,7 @@ def test_classifier_e2e_real_data():
         processed = 0
         for it in items:
             result = svc.classify(it.title, it.summary_short or "")
+            it.field = result.get("field")
             it.iptc_topics = result["iptc_topics"]
             it.iab_categories = result["iab_categories"]
             it.custom_tags = result["custom_tags"]

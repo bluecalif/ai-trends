@@ -55,9 +55,7 @@ async def get_items(
     
     # 필터 적용
     if field:
-        # field는 현재 Item 모델에 없지만, 향후 추가될 수 있으므로 주석 처리
-        # query = query.filter(Item.field == field)
-        pass
+        query = query.filter(Item.field == field)
     
     if custom_tag:
         # JSON 배열에 특정 태그 포함 여부 (PostgreSQL JSONB @> 연산자 사용)
