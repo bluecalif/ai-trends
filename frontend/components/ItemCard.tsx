@@ -50,12 +50,12 @@ export function ItemCard({ item, eventCount }: ItemCardProps) {
 
       <div className="flex items-center justify-between text-sm text-gray-500">
         <span>{timeAgo}</span>
-        {eventCount && eventCount > 1 && (
+        {item.dup_group_id && (
           <Link
             href={`/story/${item.dup_group_id}`}
             className="text-blue-600 hover:underline font-medium"
           >
-            View story ({eventCount} events)
+            View story →
           </Link>
         )}
       </div>
