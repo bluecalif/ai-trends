@@ -97,6 +97,82 @@ class TestPersonTrackerMatching:
         
         # Test: should not match (excluded)
         assert tracker._matches_rule("this is spam", rule) is False
+    
+    def test_matches_rule_required_and_optional_keywords(self, test_db):
+        """Test matching with required_keywords (AND) and optional_keywords (OR)."""
+        unique_id = get_unique_string()
+        
+        person = Person(name=f"Test Person {unique_id}")
+        test_db.add(person)
+        test_db.flush()
+        
+        # Test 1: required_keywords만 있는 경우 (모두 포함되어야 함)
+        rule1 = WatchRule(
+            label=f"Test Rule 1 {unique_id}",
+            required_keywords=["Sakana", "paper"],  # 모두 필수
+            optional_keywords=[],
+            exclude_rules=[],
+            person_id=person.id
+        )
+        test_db.add(rule1)
+        test_db.commit()
+        
+        tracker = PersonTracker(test_db)
+        
+        # Test: should match (both required keywords present)
+        result = tracker._match_rule_with_keywords("sakana ai paper published", rule1)
+        assert result["matched"] is True
+        assert "Sakana" in result["matched_keywords"]
+        assert "paper" in result["matched_keywords"]
+        
+        # Test: should not match (missing one required keyword)
+        result = tracker._match_rule_with_keywords("sakana ai research", rule1)
+        assert result["matched"] is False
+        
+        # Test 2: optional_keywords만 있는 경우 (하나라도 포함되면 OK)
+        rule2 = WatchRule(
+            label=f"Test Rule 2 {unique_id}",
+            required_keywords=[],
+            optional_keywords=["JEPA", "I-JEPA", "V-JEPA"],  # 하나라도 있으면 OK
+            exclude_rules=[],
+            person_id=person.id
+        )
+        test_db.add(rule2)
+        test_db.commit()
+        
+        # Test: should match (one optional keyword present)
+        result = tracker._match_rule_with_keywords("jepa model research", rule2)
+        assert result["matched"] is True
+        assert "JEPA" in result["matched_keywords"]
+        
+        # Test: should not match (no optional keywords)
+        result = tracker._match_rule_with_keywords("general ai research", rule2)
+        assert result["matched"] is False
+        
+        # Test 3: required_keywords + optional_keywords 조합
+        rule3 = WatchRule(
+            label=f"Test Rule 3 {unique_id}",
+            required_keywords=["Sakana"],  # 필수
+            optional_keywords=["paper", "benchmark"],  # 하나라도 있으면 OK
+            exclude_rules=["arxiv"],
+            person_id=person.id
+        )
+        test_db.add(rule3)
+        test_db.commit()
+        
+        # Test: should match (required + one optional)
+        result = tracker._match_rule_with_keywords("sakana ai paper published", rule3)
+        assert result["matched"] is True
+        assert "Sakana" in result["matched_keywords"]
+        assert "paper" in result["matched_keywords"]
+        
+        # Test: should not match (missing required keyword)
+        result = tracker._match_rule_with_keywords("ai paper published", rule3)
+        assert result["matched"] is False
+        
+        # Test: should not match (excluded keyword)
+        result = tracker._match_rule_with_keywords("sakana ai arxiv paper", rule3)
+        assert result["matched"] is False
 
 
 class TestPersonTrackerEventType:
@@ -213,10 +289,11 @@ class TestPersonTrackerMatchItem:
         test_db.commit()
         
         tracker = PersonTracker(test_db)
-        matched = tracker.match_item(item)
+        matched_results = tracker.match_item(item)
         
-        assert len(matched) == 1
-        assert matched[0].id == person.id
+        assert len(matched_results) == 1
+        assert matched_results[0]["person"].id == person.id
+        assert len(matched_results[0]["matched_keywords"]) > 0
         
         # Check timeline event was created
         events = test_db.query(PersonTimeline).filter(
@@ -262,9 +339,9 @@ class TestPersonTrackerMatchItem:
         test_db.commit()
         
         tracker = PersonTracker(test_db)
-        matched = tracker.match_item(item)
+        matched_results = tracker.match_item(item)
         
-        assert len(matched) == 0
+        assert len(matched_results) == 0
         
         # Check no timeline event was created
         events = test_db.query(PersonTimeline).filter(

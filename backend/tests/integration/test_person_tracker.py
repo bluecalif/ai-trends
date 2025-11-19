@@ -60,10 +60,11 @@ class TestPersonTrackerIntegration:
         
         # Match item
         tracker = PersonTracker(test_db)
-        matched = tracker.match_item(item)
+        matched_results = tracker.match_item(item)
         
-        assert len(matched) == 1
-        assert matched[0].id == person.id
+        assert len(matched_results) == 1
+        assert matched_results[0]["person"].id == person.id
+        assert "JEPA" in matched_results[0]["matched_keywords"] or "Meta" in matched_results[0]["matched_keywords"]
         
         # Verify timeline event
         events = test_db.query(PersonTimeline).filter(
@@ -123,11 +124,11 @@ class TestPersonTrackerIntegration:
         test_db.commit()
         
         tracker = PersonTracker(test_db)
-        matched = tracker.match_item(item)
+        matched_results = tracker.match_item(item)
         
         # Should match once (same person)
-        assert len(matched) == 1
-        assert matched[0].id == person.id
+        assert len(matched_results) == 1
+        assert matched_results[0]["person"].id == person.id
         
         # Should create only one timeline event (duplicate prevention)
         events = test_db.query(PersonTimeline).filter(
@@ -171,10 +172,10 @@ class TestPersonTrackerIntegration:
         test_db.commit()
         
         tracker = PersonTracker(test_db)
-        matched = tracker.match_item(item)
+        matched_results = tracker.match_item(item)
         
         # Should not match due to exclude rule
-        assert len(matched) == 0
+        assert len(matched_results) == 0
         
         # Should not create timeline event
         events = test_db.query(PersonTimeline).filter(
@@ -230,11 +231,11 @@ class TestPersonTrackerIntegration:
         test_db.commit()
         
         tracker = PersonTracker(test_db)
-        matched = tracker.match_item(item)
+        matched_results = tracker.match_item(item)
         
         # Both should match
-        assert len(matched) == 2
-        matched_ids = {p.id for p in matched}
+        assert len(matched_results) == 2
+        matched_ids = {r["person"].id for r in matched_results}
         assert person1.id in matched_ids
         assert person2.id in matched_ids
 

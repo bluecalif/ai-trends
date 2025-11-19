@@ -22,16 +22,17 @@ class PersonTracker:
         """
         self.db = db
     
-    def match_item(self, item: Item) -> List[Person]:
+    def match_item(self, item: Item) -> List[Dict]:
         """Match an item to persons based on watch rules.
         
         Args:
             item: Item to match against watch rules
             
         Returns:
-            List of matched Person objects (no duplicates)
+            List of dictionaries with person and matched keywords:
+            [{"person": Person, "matched_keywords": List[str], "rule_label": str, "rule_id": int}, ...]
         """
-        matched_persons = []
+        matched_results = []
         matched_person_ids = set()  # Track matched person IDs to avoid duplicates
         
         # Get all watch rules with person_id
@@ -43,19 +44,82 @@ class PersonTracker:
         text = f"{item.title or ''} {item.summary_short or ''}".lower()
         
         for rule in rules:
-            if self._matches_rule(text, rule):
+            match_result = self._match_rule_with_keywords(text, rule)
+            if match_result["matched"]:
                 person = self.db.query(Person).filter(
                     Person.id == rule.person_id
                 ).first()
                 if person and person.id not in matched_person_ids:
-                    matched_persons.append(person)
+                    matched_results.append({
+                        "person": person,
+                        "matched_keywords": match_result["matched_keywords"],
+                        "rule_label": rule.label,
+                        "rule_id": rule.id
+                    })
                     matched_person_ids.add(person.id)
                     self._add_timeline_event(item, person, rule)
         
-        return matched_persons
+        return matched_results
+    
+    def _match_rule_with_keywords(self, text: str, rule: WatchRule) -> Dict:
+        """Match rule and return matched keywords.
+        
+        Args:
+            text: Text to match (lowercase)
+            rule: WatchRule to match against
+            
+        Returns:
+            Dictionary with:
+            - matched: bool
+            - matched_keywords: List[str] (matched keywords)
+        """
+        matched_keywords = []
+        
+        # Exclude rules: if any keyword matches, exclude
+        if rule.exclude_rules:
+            if any(keyword.lower() in text for keyword in rule.exclude_rules):
+                return {"matched": False, "matched_keywords": []}
+        
+        # 옵션 A: required_keywords와 optional_keywords 사용 (우선)
+        if rule.required_keywords or rule.optional_keywords:
+            # 필수 키워드: 모두 포함되어야 함 (AND)
+            if rule.required_keywords:
+                required_matched = []
+                for keyword in rule.required_keywords:
+                    if keyword.lower() in text:
+                        required_matched.append(keyword)
+                    else:
+                        # 필수 키워드가 하나라도 없으면 매칭 실패
+                        return {"matched": False, "matched_keywords": []}
+                matched_keywords.extend(required_matched)
+            
+            # 선택 키워드: 하나라도 포함되면 OK (OR)
+            if rule.optional_keywords:
+                optional_matched = []
+                for keyword in rule.optional_keywords:
+                    if keyword.lower() in text:
+                        optional_matched.append(keyword)
+                if optional_matched:
+                    matched_keywords.extend(optional_matched)
+                else:
+                    # 선택 키워드가 없으면 매칭 실패 (필수 키워드만으로는 부족)
+                    if not rule.required_keywords:
+                        return {"matched": False, "matched_keywords": []}
+            
+            return {"matched": True, "matched_keywords": matched_keywords}
+        
+        # 하위 호환: 기존 include_rules 사용 (required_keywords/optional_keywords가 없을 때)
+        if rule.include_rules:
+            for keyword in rule.include_rules:
+                if keyword.lower() in text:
+                    matched_keywords.append(keyword)
+            if matched_keywords:
+                return {"matched": True, "matched_keywords": matched_keywords}
+        
+        return {"matched": False, "matched_keywords": []}
     
     def _matches_rule(self, text: str, rule: WatchRule) -> bool:
-        """Check if text matches watch rule.
+        """Check if text matches watch rule (backward compatibility).
         
         Args:
             text: Text to match (lowercase)
@@ -64,26 +128,8 @@ class PersonTracker:
         Returns:
             True if text matches rule, False otherwise
         """
-        # Include rules: at least one keyword must match (OR condition)
-        include_match = False
-        if rule.include_rules:
-            include_match = any(
-                keyword.lower() in text
-                for keyword in rule.include_rules
-            )
-        else:
-            # If no include_rules, always match (unless excluded)
-            include_match = True
-        
-        # Exclude rules: if any keyword matches, exclude
-        exclude_match = False
-        if rule.exclude_rules:
-            exclude_match = any(
-                keyword.lower() in text
-                for keyword in rule.exclude_rules
-            )
-        
-        return include_match and not exclude_match
+        result = self._match_rule_with_keywords(text, rule)
+        return result["matched"]
     
     def _add_timeline_event(
         self,
@@ -259,10 +305,10 @@ class PersonTracker:
         total_matches = 0
         
         for item in items:
-            matched = self.match_item(item)
-            if matched:
+            matched_results = self.match_item(item)
+            if matched_results:
                 matched_items += 1
-                total_matches += len(matched)
+                total_matches += len(matched_results)
         
         return {
             "total_items": total_items,
