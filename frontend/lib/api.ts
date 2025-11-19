@@ -138,7 +138,7 @@ export const api = {
     bookmarkId: number,
     bookmarkData: BookmarkUpdate
   ): Promise<BookmarkResponse> => {
-    const { data } = await apiClient.patch<BookmarkResponse>(
+    const { data } = await apiClient.put<BookmarkResponse>(
       `/api/bookmarks/${bookmarkId}`,
       bookmarkData
     )
