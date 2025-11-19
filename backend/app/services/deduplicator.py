@@ -28,10 +28,11 @@ except Exception:  # pragma: no cover - only used when sklearn missing
 class Deduplicator:
     """Provides duplicate detection and grouping for Items."""
 
-    def __init__(self, db: Session, similarity_threshold: float = 0.7, lookback_days: int = 7):
+    def __init__(self, db: Session, similarity_threshold: float = 0.7, lookback_days: int = 7, verbose: bool = False):
         self.db = db
         self.similarity_threshold = similarity_threshold
         self.lookback_days = lookback_days
+        self.verbose = verbose
 
     # -------- Core API --------
     def check_exact_duplicate(self, link: str, exclude_id: Optional[int] = None) -> bool:
@@ -40,10 +41,11 @@ class Deduplicator:
         if exclude_id is not None:
             q = q.filter(Item.id != exclude_id)
         exists = self.db.query(q.exists()).scalar()
-        try:
-            print(f"[Dedup] exact_check link={link!r} exclude_id={exclude_id} -> {bool(exists)}")
-        except Exception:
-            pass
+        if self.verbose:
+            try:
+                print(f"[Dedup] exact_check link={link!r} exclude_id={exclude_id} -> {bool(exists)}")
+            except Exception:
+                pass
         return bool(exists)
 
     def process_new_item(self, item: Item) -> Optional[int]:
@@ -57,10 +59,11 @@ class Deduplicator:
 
         # Exact duplicate by link (exclude self if already flushed and has id)
         if self.check_exact_duplicate(item.link, exclude_id=item.id):
-            try:
-                print(f"[Dedup] Early exit: exact dup for link={item.link!r}")
-            except Exception:
-                pass
+            if self.verbose:
+                try:
+                    print(f"[Dedup] Early exit: exact dup for link={item.link!r}")
+                except Exception:
+                    pass
             return None
 
         cutoff = (item.published_at or datetime.utcnow()) - timedelta(days=self.lookback_days)
@@ -71,10 +74,11 @@ class Deduplicator:
             .order_by(Item.published_at.desc())
             .all()
         )
-        try:
-            print(f"[Dedup] Recent candidates: {len(recent_items)} (cutoff>={cutoff.isoformat()})")
-        except Exception:
-            pass
+        if self.verbose:
+            try:
+                print(f"[Dedup] Recent candidates: {len(recent_items)} (cutoff>={cutoff.isoformat()})")
+            except Exception:
+                pass
 
         # Build candidate text corpus
         target_text = self._compose_text(item)
@@ -103,10 +107,11 @@ class Deduplicator:
                 # if both sides have signals, require at least one overlap
                 continue
             sim = self._augmented_similarity(item, cand, target_text, self._compose_text(cand))
-            try:
-                print(f"[Dedup] sim to cand#{cand.id} ~ {sim:.4f}")
-            except Exception:
-                pass
+            if self.verbose:
+                try:
+                    print(f"[Dedup] sim to cand#{cand.id} ~ {sim:.4f}")
+                except Exception:
+                    pass
             if sim > best_sim:
                 best_sim = sim
                 best_item = cand
@@ -136,10 +141,11 @@ class Deduplicator:
                     print(f"[Dedup] Meta sync error for group {group_id}: {e}")
                 except Exception:
                     pass
-            try:
-                print(f"[Dedup] GROUPED item#{item.id} -> group_id={group_id} (best_sim={best_sim:.4f})")
-            except Exception:
-                pass
+            if self.verbose:
+                try:
+                    print(f"[Dedup] GROUPED item#{item.id} -> group_id={group_id} (best_sim={best_sim:.4f})")
+                except Exception:
+                    pass
             return group_id
 
         # No near-duplicate found; do not assign group id here (could become a seed later)
@@ -154,7 +160,11 @@ class Deduplicator:
             if not meta:
                 self.db.add(DupGroupMeta(dup_group_id=item.id, first_seen_at=first_seen, last_updated_at=first_seen, member_count=1))
                 self.db.commit()
-            print(f"[Dedup] Seeded item#{item.id} as new group (best_sim={best_sim:.4f})")
+            if self.verbose:
+                try:
+                    print(f"[Dedup] Seeded item#{item.id} as new group (best_sim={best_sim:.4f})")
+                except Exception:
+                    pass
         except Exception as e:
             try:
                 print(f"[Dedup] Seed/meta error for item {item.id}: {e}")
@@ -183,16 +193,18 @@ class Deduplicator:
                 vec = TfidfVectorizer(max_features=1000, ngram_range=(1, 2), stop_words="english")
                 X = vec.fit_transform([a, b])
                 sim = float(cosine_similarity(X[0:1], X[1:2])[0][0])
-                try:
-                    print(f"[Dedup] TFIDF sim={sim:.4f}")
-                except Exception:
-                    pass
+                if self.verbose:
+                    try:
+                        print(f"[Dedup] TFIDF sim={sim:.4f}")
+                    except Exception:
+                        pass
                 return max(0.0, min(1.0, sim))
             except Exception as e:
-                try:
-                    print(f"[Dedup] TFIDF error: {e} -> fallback Jaccard")
-                except Exception:
-                    pass
+                if self.verbose:
+                    try:
+                        print(f"[Dedup] TFIDF error: {e} -> fallback Jaccard")
+                    except Exception:
+                        pass
         # Fallback: Jaccard on tokens
         ta = set(_simple_tokens(a))
         tb = set(_simple_tokens(b))
@@ -201,10 +213,11 @@ class Deduplicator:
         inter = len(ta & tb)
         union = len(ta | tb)
         sim = (inter / union) if union else 0.0
-        try:
-            print(f"[Dedup] Jaccard sim={sim:.4f} | |A|={len(ta)} |B|={len(tb)} inter={inter} union={union}")
-        except Exception:
-            pass
+        if self.verbose:
+            try:
+                print(f"[Dedup] Jaccard sim={sim:.4f} | |A|={len(ta)} |B|={len(tb)} inter={inter} union={union}")
+            except Exception:
+                pass
         return sim
 
     # -------- Augmented similarity (entities/tags/time) --------
@@ -257,10 +270,11 @@ class Deduplicator:
             pass
 
         total = max(0.0, min(1.0, base + bonus))
-        try:
-            print(f"[Dedup] base={base:.4f} bonus={bonus:.4f} ent_overlap={ent_overlap} tag_overlap={tag_overlap}")
-        except Exception:
-            pass
+        if self.verbose:
+            try:
+                print(f"[Dedup] base={base:.4f} bonus={bonus:.4f} ent_overlap={ent_overlap} tag_overlap={tag_overlap}")
+            except Exception:
+                pass
         return total
 
 

@@ -1,0 +1,182 @@
+{
+  "phase": "1.3",
+  "phase_name": "RSS Collection",
+  "test_name": "test_phase1_3_collection_all_sources_21days",
+  "timestamp": "20251118_140723",
+  "window": {
+    "start": "2025-10-28T00:00:00+00:00",
+    "end": "2025-11-18T00:00:00+00:00",
+    "days": 21
+  },
+  "sources": [
+    {
+      "source_id": 291,
+      "title": "TechCrunch",
+      "feed_url": "https://techcrunch.com/feed/",
+      "collected_count": 0,
+      "status": "success",
+      "error": null
+    },
+    {
+      "source_id": 292,
+      "title": "VentureBeat – AI",
+      "feed_url": "https://venturebeat.com/category/ai/feed/",
+      "collected_count": 0,
+      "status": "success",
+      "error": null
+    },
+    {
+      "source_id": 293,
+      "title": "MarkTechPost",
+      "feed_url": "https://www.marktechpost.com/feed/",
+      "collected_count": 0,
+      "status": "error",
+      "error": "Feed parsing error: <unknown>:26:113: not well-formed (invalid token)"
+    },
+    {
+      "source_id": 294,
+      "title": "WIRED (All)",
+      "feed_url": "https://www.wired.com/feed/rss",
+      "collected_count": 0,
+      "status": "success",
+      "error": null
+    },
+    {
+      "source_id": 295,
+      "title": "The Verge (All)",
+      "feed_url": "https://www.theverge.com/rss/index.xml",
+      "collected_count": 0,
+      "status": "success",
+      "error": null
+    },
+    {
+      "source_id": 296,
+      "title": "IEEE Spectrum – AI",
+      "feed_url": "https://spectrum.ieee.org/rss/fulltext",
+      "collected_count": 0,
+      "status": "success",
+      "error": null
+    },
+    {
+      "source_id": 297,
+      "title": "AITimes",
+      "feed_url": "https://www.aitimes.com/rss/allArticle.xml",
+      "collected_count": 0,
+      "status": "success",
+      "error": null
+    },
+    {
+      "source_id": 298,
+      "title": "arXiv – cs.AI",
+      "feed_url": "http://export.arxiv.org/rss/cs.AI",
+      "collected_count": 0,
+      "status": "success",
+      "error": null
+    },
+    {
+      "source_id": 299,
+      "title": "OpenAI News",
+      "feed_url": "https://openai.com/blog/rss.xml",
+      "collected_count": 0,
+      "status": "success",
+      "error": null
+    },
+    {
+      "source_id": 300,
+      "title": "The Keyword (Google DeepMind filtered)",
+      "feed_url": "https://blog.google/feed/",
+      "collected_count": 0,
+      "status": "error",
+      "error": "Feed parsing error: <unknown>:38:75: not well-formed (invalid token)"
+    }
+  ],
+  "summary": {
+    "total_sources": 10,
+    "active_sources": 10,
+    "collected_items": 0,
+    "items_in_window": 373,
+    "errors": [
+      {
+        "source": "MarkTechPost",
+        "error": "Feed parsing error: <unknown>:26:113: not well-formed (invalid token)"
+      },
+      {
+        "source": "The Keyword (Google DeepMind filtered)",
+        "error": "Feed parsing error: <unknown>:38:75: not well-formed (invalid token)"
+      }
+    ]
+  },
+  "status": "passed",
+  "item_statistics": {
+    "total_items": 373,
+    "items_with_summary": 373,
+    "items_with_entities": 0,
+    "items_with_classification": 0,
+    "items_with_group": 0,
+    "items_by_source": {
+      "TechCrunch": 10,
+      "AITimes": 28,
+      "WIRED (All)": 18,
+      "arXiv – cs.AI": 254,
+      "OpenAI News": 30,
+      "The Verge (All)": 1,
+      "IEEE Spectrum – AI": 26,
+      "VentureBeat – AI": 6
+    },
+    "items_by_source_and_date": {
+      "TechCrunch": {
+        "2025-11-17": 10
+      },
+      "AITimes": {
+        "2025-11-17": 25,
+        "2025-11-16": 3
+      },
+      "WIRED (All)": {
+        "2025-11-17": 10,
+        "2025-11-16": 3,
+        "2025-11-15": 5
+      },
+      "arXiv – cs.AI": {
+        "2025-11-17": 254
+      },
+      "OpenAI News": {
+        "2025-11-17": 2,
+        "2025-11-13": 2,
+        "2025-11-12": 4,
+        "2025-11-11": 3,
+        "2025-11-09": 1,
+        "2025-11-07": 2,
+        "2025-11-06": 1,
+        "2025-11-05": 4,
+        "2025-11-04": 2,
+        "2025-11-03": 1,
+        "2025-11-02": 1,
+        "2025-10-30": 2,
+        "2025-10-29": 1,
+        "2025-10-28": 4
+      },
+      "The Verge (All)": {
+        "2025-11-17": 1
+      },
+      "IEEE Spectrum – AI": {
+        "2025-11-17": 3,
+        "2025-11-15": 1,
+        "2025-11-14": 4,
+        "2025-11-13": 3,
+        "2025-11-12": 2,
+        "2025-11-11": 1,
+        "2025-11-10": 1,
+        "2025-11-09": 1,
+        "2025-11-07": 2,
+        "2025-11-06": 3,
+        "2025-11-05": 2,
+        "2025-11-04": 3
+      },
+      "VentureBeat – AI": {
+        "2025-11-16": 3,
+        "2025-11-15": 1,
+        "2025-11-14": 2
+      }
+    }
+  }
+}

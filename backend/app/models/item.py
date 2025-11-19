@@ -15,7 +15,7 @@ class Item(BaseModel):
     summary_short = Column(Text, nullable=True)
     link = Column(String(1024), unique=True, nullable=False, index=True)
     published_at = Column(DateTime, nullable=False, index=True)
-    author = Column(String(255), nullable=True)
+    author = Column(Text, nullable=True)
     thumbnail_url = Column(String(1024), nullable=True)
 
     # Classification tags (JSON arrays)

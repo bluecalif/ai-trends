@@ -1,0 +1,123 @@
+{
+  "test_name": "test_person_tracker_e2e_real_data",
+  "timestamp": "20251118_125124",
+  "persons_created": [
+    {
+      "id": 85,
+      "name": "Yann LeCun",
+      "bio": "Chief AI Scientist at Meta",
+      "rules": [
+        {
+          "id": 40,
+          "label": "JEPA variants",
+          "include_rules": [
+            "JEPA",
+            "I-JEPA",
+            "V-JEPA",
+            "Meta",
+            "LeCun"
+          ],
+          "exclude_rules": [],
+          "priority": 10
+        }
+      ]
+    },
+    {
+      "id": 86,
+      "name": "Andrej Karpathy",
+      "bio": "Former Director of AI at Tesla, Founder of Eureka Labs",
+      "rules": [
+        {
+          "id": 41,
+          "label": "NanoChat and Eureka Labs",
+          "include_rules": [
+            "NanoChat",
+            "Eureka Labs",
+            "LLM101n",
+            "Karpathy"
+          ],
+          "exclude_rules": [],
+          "priority": 10
+        }
+      ]
+    },
+    {
+      "id": 87,
+      "name": "David Luan",
+      "bio": "Co-founder of Adept AI, Former VP of Engineering at OpenAI",
+      "rules": [
+        {
+          "id": 42,
+          "label": "Agentic and Amazon Nova",
+          "include_rules": [
+            "agentic",
+            "Amazon Nova",
+            "AGI SF Lab",
+            "David Luan"
+          ],
+          "exclude_rules": [],
+          "priority": 10
+        }
+      ]
+    },
+    {
+      "id": 88,
+      "name": "Llion Jones",
+      "bio": "Co-founder of Sakana AI, Former Research Scientist at Google",
+      "rules": [
+        {
+          "id": 43,
+          "label": "Sakana AI models",
+          "include_rules": [
+            "Sakana AI",
+            "Sakana"
+          ],
+          "exclude_rules": [],
+          "priority": 10
+        },
+        {
+          "id": 44,
+          "label": "Sakana AI papers/benchmarks",
+          "include_rules": [
+            "Sakana",
+            "model",
+            "paper",
+            "benchmark"
+          ],
+          "exclude_rules": [],
+          "priority": 5
+        }
+      ]
+    },
+    {
+      "id": 89,
+      "name": "AUI/Apollo-1",
+      "bio": "Neuro-symbolic AI system",
+      "rules": [
+        {
+          "id": 45,
+          "label": "Apollo-1 and neuro-symbolic",
+          "include_rules": [
+            "Apollo-1",
+            "neuro-symbolic",
+            "stateful reasoning"
+          ],
+          "exclude_rules": [],
+          "priority": 10
+        }
+      ]
+    }
+  ],
+  "collection": {
+    "sources": [],
+    "total_items": 0
+  },
+  "matching": {
+    "total_items": 0,
+    "matched_items": 0,
+    "total_matches": 0,
+    "matches_by_person": {}
+  },
+  "timeline_events": [],
+  "status": "success"
+}

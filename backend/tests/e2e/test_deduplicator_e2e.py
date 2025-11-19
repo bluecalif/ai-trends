@@ -55,16 +55,25 @@ def test_deduplicator_e2e_real_data():
             "site_url": src.site_url,
         }
 
-        coll = RSSCollector(db)
-        try:
-            c = coll.collect_source(src)
-        except Exception as e:
-            c = 0
-            result["collection"]["error"] = str(e)
-        result["collection"]["count"] = c
-        result["collection"]["status"] = "success" if c >= 0 else "failed"
+        # Get existing items from Supabase actual DB (skip collection, use existing data)
+        existing_item_count = db.query(Item).filter(Item.source_id == src.id).count()
+        result["collection"]["count"] = existing_item_count
+        result["collection"]["status"] = "using_existing_data"
+        
+        if existing_item_count == 0:
+            # If no existing data, try to collect
+            print("[Deduplicator E2E] No existing items, attempting collection...")
+            coll = RSSCollector(db)
+            try:
+                c = coll.collect_source(src)
+                result["collection"]["count"] = c
+                result["collection"]["status"] = "collected_new"
+            except Exception as e:
+                c = 0
+                result["collection"]["error"] = str(e)
+                result["collection"]["status"] = "collection_failed"
 
-        # Pull last N items and attempt grouping against previous N (lookback 7 days)
+        # Pull last N items from actual DB and attempt grouping (lookback 7 days)
         items = (
             db.query(Item)
             .filter(Item.source_id == src.id)

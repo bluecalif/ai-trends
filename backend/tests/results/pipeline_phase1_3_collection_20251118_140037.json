@@ -1,0 +1,21 @@
+{
+  "phase": "1.3",
+  "phase_name": "RSS Collection",
+  "test_name": "test_phase1_3_collection_all_sources_21days",
+  "timestamp": "20251118_140037",
+  "window": {
+    "start": "2025-10-28T00:00:00+00:00",
+    "end": "2025-11-18T00:00:00+00:00",
+    "days": 21
+  },
+  "sources": [],
+  "summary": {
+    "total_sources": 0,
+    "active_sources": 0,
+    "collected_items": 0,
+    "items_in_window": 0,
+    "errors": []
+  },
+  "status": "skipped_no_sources",
+  "error": "No active sources found (excluding DeepMind)"
+}

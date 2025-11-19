@@ -23,15 +23,18 @@ class TestSummarizerE2E:
 
     @pytest.mark.slow
     @pytest.mark.e2e_real_data
-    def test_summarize_real_rss_items_e2e_use_description(self, test_db):
-        """E2E: Use existing RSS description (no NULL init) and persist summaries."""
-        results_dir = Path(__file__).parent.parent.parent / "tests" / "results"
+    def test_summarize_real_rss_items_e2e_use_description(self):
+        """E2E: Use existing RSS description from Supabase actual DB (no NULL init) and persist summaries."""
+        from backend.app.core.database import SessionLocal
+        
+        db = SessionLocal()
+        results_dir = Path(__file__).parent.parent / "results"
         results_dir.mkdir(exist_ok=True)
         timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
         result_file = results_dir / f"summarizer_e2e_real_data_use_desc_{timestamp}.json"
 
         test_feed_url = "https://techcrunch.com/feed/"
-        source = test_db.query(Source).filter(Source.feed_url == test_feed_url).first()
+        source = db.query(Source).filter(Source.feed_url == test_feed_url).first()
         if not source:
             source = Source(
                 title="TechCrunch",
@@ -39,8 +42,9 @@ class TestSummarizerE2E:
                 site_url="https://techcrunch.com",
                 is_active=True,
             )
-            test_db.add(source)
-            test_db.flush()
+            db.add(source)
+            db.flush()
+            db.commit()
 
         test_results = {
             "test_name": "test_summarize_real_rss_items_e2e_use_description",
@@ -51,19 +55,30 @@ class TestSummarizerE2E:
                 "feed_url": source.feed_url,
                 "site_url": source.site_url,
             },
-            "collection": {"count": 0, "status": "pending"},
+            "collection": {"count": 0, "status": "using_existing_data"},
             "summarization": {"total_items": 0, "summarized_count": 0, "items": []},
             "status": "running",
         }
 
-        collector = RSSCollector(test_db)
         try:
-            count = collector.collect_source(source)
-            test_results["collection"]["count"] = count
-            test_results["collection"]["status"] = "success"
+            # Get existing items from Supabase actual DB (skip collection, use existing data)
+            existing_item_count = db.query(Item).filter(Item.source_id == source.id).count()
+            test_results["collection"]["count"] = existing_item_count
+            
+            if existing_item_count == 0:
+                # If no existing data, try to collect
+                print("[Summarizer E2E] No existing items, attempting collection...")
+                collector = RSSCollector(db)
+                try:
+                    count = collector.collect_source(source)
+                    test_results["collection"]["count"] = count
+                    test_results["collection"]["status"] = "collected_new"
+                except Exception as e:
+                    test_results["collection"]["error"] = str(e)
+                    test_results["collection"]["status"] = "collection_failed"
 
             items = (
-                test_db.query(Item)
+                db.query(Item)
                 .filter(Item.source_id == source.id)
                 .order_by(Item.published_at.desc())
                 .limit(3)
@@ -91,7 +106,7 @@ class TestSummarizerE2E:
                             "final_summary_len": len(summary) if summary else 0,
                         }
                     )
-                test_db.commit()
+                db.commit()
             test_results["summarization"]["summarized_count"] = summarized_count
             test_results["status"] = "passed"
         except Exception as e:
@@ -104,6 +119,7 @@ class TestSummarizerE2E:
             print(f"[TEST RESULTS] Status: {test_results['status']}")
             print(f"[TEST RESULTS] Collected: {test_results['collection']['count']} items")
             print(f"[TEST RESULTS] Summarized: {test_results['summarization']['summarized_count']} items")
+            db.close()
     
     def test_summarize_with_sufficient_description_e2e(self, test_db):
         """E2E test: Summarize with sufficient RSS description, save to DB."""
@@ -476,10 +492,13 @@ class TestSummarizerE2E:
     
     @pytest.mark.slow
     @pytest.mark.e2e_real_data
-    def test_summarize_real_rss_items_e2e(self, test_db):
-        """E2E test with real RSS data: summarize Null→text by temporary init & restore."""
+    def test_summarize_real_rss_items_e2e(self):
+        """E2E test with real RSS data from Supabase actual DB: summarize Null→text by temporary init & restore."""
+        from backend.app.core.database import SessionLocal
+        
+        db = SessionLocal()
         # Create results directory
-        results_dir = Path(__file__).parent.parent.parent / "tests" / "results"
+        results_dir = Path(__file__).parent.parent / "results"
         results_dir.mkdir(exist_ok=True)
         
         # Generate result filename with timestamp
@@ -489,7 +508,7 @@ class TestSummarizerE2E:
         # 1. Use real RSS source (TechCrunch or The Verge)
         test_feed_url = "https://techcrunch.com/feed/"
         
-        source = test_db.query(Source).filter(Source.feed_url == test_feed_url).first()
+        source = db.query(Source).filter(Source.feed_url == test_feed_url).first()
         if not source:
             source = Source(
                 title="TechCrunch",
@@ -497,8 +516,9 @@ class TestSummarizerE2E:
                 site_url="https://techcrunch.com",
                 is_active=True
             )
-            test_db.add(source)
-            test_db.flush()
+            db.add(source)
+            db.flush()
+            db.commit()
         
         test_results = {
             "test_name": "test_summarize_real_rss_items_e2e",
@@ -511,7 +531,7 @@ class TestSummarizerE2E:
             },
             "collection": {
                 "count": 0,
-                "status": "pending"
+                "status": "using_existing_data"
             },
             "summarization": {
                 "total_items": 0,
@@ -521,15 +541,29 @@ class TestSummarizerE2E:
             "status": "running"
         }
         
-        # 2. Collect real RSS items
-        collector = RSSCollector(test_db)
-        try:
-            count = collector.collect_source(source)
-            test_results["collection"]["count"] = count
-            test_results["collection"]["status"] = "success"
+        # 2. Get existing items from Supabase actual DB (skip collection, use existing data)
+        existing_item_count = db.query(Item).filter(Item.source_id == source.id).count()
+        test_results["collection"]["count"] = existing_item_count
+        
+        if existing_item_count == 0:
+            # If no existing data, try to collect
+            print("[Summarizer E2E] No existing items, attempting collection...")
+            collector = RSSCollector(db)
+            try:
+                count = collector.collect_source(source)
+                test_results["collection"]["count"] = count
+                test_results["collection"]["status"] = "collected_new"
+            except Exception as e:
+                test_results["collection"]["error"] = str(e)
+                test_results["collection"]["status"] = "collection_failed"
             
             # 3. Pick recent items (limit 3) and temporarily NULL their summary_short
-            items = test_db.query(Item).filter(
+            items = db.query(Item).filter(
+                Item.source_id == source.id
+            ).order_by(Item.published_at.desc()).limit(3).all()
+        else:
+            # 3. Pick recent items from existing data (limit 3) and temporarily NULL their summary_short
+            items = db.query(Item).filter(
                 Item.source_id == source.id
             ).order_by(Item.published_at.desc()).limit(3).all()
             
@@ -542,7 +576,7 @@ class TestSummarizerE2E:
             for it in items:
                 backups.append({"id": it.id, "summary_short": it.summary_short})
                 it.summary_short = None
-            test_db.commit()
+            db.commit()
 
             # 4. Summarize real items (MVP: use description if present)
             with patch('backend.app.services.summarizer.get_settings') as mock_settings:
@@ -581,13 +615,13 @@ class TestSummarizerE2E:
                     }
                     test_results["summarization"]["items"].append(item_data)
                 
-                test_db.commit()
+                db.commit()
                 
                 test_results["summarization"]["summarized_count"] = summarized_count
                 
                 # For MVP with empty description, summarized_count may be 0; still verify write path works:
                 for item in items:
-                    test_db.refresh(item)
+                    db.refresh(item)
                     assert item.summary_short in (None, "")  # MVP does not fetch content
                 
                 test_results["status"] = "passed"
@@ -606,10 +640,10 @@ class TestSummarizerE2E:
             # Restore original summaries
             if 'backups' in locals():
                 for b in backups:
-                    rec = test_db.query(Item).filter(Item.id == b["id"]).first()
+                    rec = db.query(Item).filter(Item.id == b["id"]).first()
                     if rec:
                         rec.summary_short = b["summary_short"]
-                test_db.commit()
+                db.commit()
             with open(result_file, "w", encoding="utf-8") as f:
                 json.dump(test_results, f, indent=2, ensure_ascii=False, default=str)
             
@@ -617,4 +651,5 @@ class TestSummarizerE2E:
             print(f"[TEST RESULTS] Status: {test_results['status']}")
             print(f"[TEST RESULTS] Collected: {test_results['collection']['count']} items")
             print(f"[TEST RESULTS] Summarized: {test_results['summarization']['summarized_count']} items")
+            db.close()
 

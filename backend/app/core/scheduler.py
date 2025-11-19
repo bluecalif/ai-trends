@@ -7,6 +7,7 @@ from apscheduler.triggers.cron import CronTrigger
 
 from backend.app.core.database import SessionLocal
 from backend.app.services.rss_collector import RSSCollector
+from backend.app.services.group_backfill import GroupBackfill
 from backend.app.models.source import Source
 from backend.app.core.config import get_settings
 
@@ -120,12 +121,75 @@ async def collect_arxiv_sources():
         db.close()
 
 
-def start_scheduler():
-    """Start the RSS collection scheduler.
+def run_incremental_grouping_sync() -> dict:
+    """Synchronously run incremental grouping for items from last 30 minutes.
     
-    Sets up two jobs:
+    This processes items that were collected but not yet grouped.
+    Runs after RSS collection to group newly collected items.
+    """
+    from datetime import datetime, timezone, timedelta
+    
+    db = SessionLocal()
+    try:
+        # Process items from last 30 minutes (incremental)
+        since_dt = datetime.now(timezone.utc) - timedelta(minutes=30)
+        svc = GroupBackfill(db)
+        processed = svc.run_incremental(since_dt)
+        logger.info(f"[Grouping] Incremental grouping processed {processed} items")
+        return {"processed": processed}
+    except Exception as e:
+        logger.error(f"[Grouping] Error in incremental grouping: {e}", exc_info=True)
+        return {"processed": 0, "error": str(e)}
+    finally:
+        db.close()
+
+
+async def run_incremental_grouping():
+    """Run incremental grouping asynchronously."""
+    import asyncio
+    loop = asyncio.get_event_loop()
+    result = await loop.run_in_executor(executor, run_incremental_grouping_sync)
+    return result
+
+
+def run_daily_backfill_sync() -> dict:
+    """Synchronously run daily backfill grouping.
+    
+    This processes all items in the [REF_DATE-21d, REF_DATE] window.
+    Should run once daily at UTC 00:00.
+    """
+    from datetime import datetime, timezone, date
+    
+    db = SessionLocal()
+    try:
+        ref_date = datetime.now(timezone.utc).date()
+        svc = GroupBackfill(db)
+        processed = svc.run_backfill(ref_date, days=21, batch_size=50, verbose=False)
+        logger.info(f"[Grouping] Daily backfill processed {processed} items for ref_date={ref_date}")
+        return {"processed": processed, "ref_date": str(ref_date)}
+    except Exception as e:
+        logger.error(f"[Grouping] Error in daily backfill: {e}", exc_info=True)
+        return {"processed": 0, "error": str(e)}
+    finally:
+        db.close()
+
+
+async def run_daily_backfill():
+    """Run daily backfill asynchronously."""
+    import asyncio
+    loop = asyncio.get_event_loop()
+    result = await loop.run_in_executor(executor, run_daily_backfill_sync)
+    return result
+
+
+def start_scheduler():
+    """Start the RSS collection and grouping scheduler.
+    
+    Sets up jobs:
     1. General sources: Collect every 20 minutes (configurable)
     2. arXiv sources: Collect twice daily (at 00:00 and 12:00 EST)
+    3. Incremental grouping: Run every 20 minutes (after RSS collection)
+    4. Daily backfill: Run once daily at UTC 00:00
     """
     settings = get_settings()
     interval_minutes = settings.RSS_COLLECTION_INTERVAL_MINUTES
@@ -151,9 +215,32 @@ def start_scheduler():
         max_instances=1,
     )
     
+    # Job 3: Incremental grouping (run after RSS collection)
+    # Process items from last 30 minutes
+    scheduler.add_job(
+        run_incremental_grouping,
+        trigger=IntervalTrigger(minutes=interval_minutes),
+        id="incremental_grouping",
+        name="Incremental grouping (last 30 minutes)",
+        replace_existing=True,
+        max_instances=1,
+    )
+    
+    # Job 4: Daily backfill grouping (run at UTC 00:00)
+    scheduler.add_job(
+        run_daily_backfill,
+        trigger=CronTrigger(hour=0, minute=0, timezone="UTC"),  # UTC 00:00
+        id="daily_backfill_grouping",
+        name="Daily backfill grouping (21-day window)",
+        replace_existing=True,
+        max_instances=1,
+    )
+    
     scheduler.start()
     logger.info(f"[RSS] Scheduler started with interval: {interval_minutes} minutes")
     logger.info("[RSS] arXiv collection scheduled at 00:00 and 12:00 daily")
+    logger.info(f"[Grouping] Incremental grouping scheduled every {interval_minutes} minutes")
+    logger.info("[Grouping] Daily backfill scheduled at UTC 00:00")
 
 
 def stop_scheduler():

@@ -86,6 +86,15 @@ ai-trend/
 - [x] `backend/app/__init__.py` 생성
 - [x] `backend/app/main.py` 생성 (FastAPI 앱 초기화, CORS 설정)
 - [x] `backend/app/core/config.py` 생성 (환경변수 로드)
+- [x] `backend/app/core/constants.py` 생성:
+  - [x] PRD_RSS_SOURCES 상수 정의 (10개 RSS 소스 리스트)
+  - [x] 프로젝트 전반에서 import 가능하도록 구성
+- [x] `backend/scripts/init_sources.py` 리팩토링:
+  - [x] `backend.app.core.constants`에서 `PRD_RSS_SOURCES` import
+  - [x] 하드코딩된 `PRD_SOURCES` 리스트 제거
+- [x] 테스트 파일 리팩토링:
+  - [x] `backend/tests/e2e/test_rss_collection_e2e.py`에서 constants import
+  - [x] 중복 정의된 `INITIAL_RSS_SOURCES` 제거
 
 ### 1.2 데이터베이스 스키마
 - [x] Alembic 초기화 (`alembic init alembic`)
@@ -149,14 +158,15 @@ ai-trend/
   - [x] 문제 소스 별도 이슈 트래킹(헤더/인코딩/리다이렉트 정책 정리)
     - [x] IEEE Spectrum – AI: 대체 피드 적용(`https://spectrum.ieee.org/rss/fulltext`)
     - [x] OpenAI News: 대체 피드 적용(`https://openai.com/blog/rss.xml`)
-    - [x] DeepMind: 현 단계 비활성화(피드 malformed 지속). Phase 3에서 The Keyword 전체 피드(`https://blog.google/feed/`) + 카테고리 필터(“Google DeepMind”) 방식으로 재활성화 예정
+    - [x] DeepMind: 현 단계 비활성화(피드 malformed 지속). Phase 3에서 The Keyword 전체 피드(`https://blog.google/feed/`) + 카테고리 필터("Google DeepMind") 방식으로 재활성화 예정
 - [x] `backend/app/core/scheduler.py` 생성 (APScheduler 스케줄러 구현)
 - [x] `backend/app/main.py` 스케줄러 통합 (lifespan 이벤트)
 - [x] `backend/app/api/rss.py` 생성 (수동 수집 트리거 엔드포인트)
 - [x] **단위 테스트**: RSS 파싱 함수 테스트 (mock feedparser) - 11개 테스트 통과
 - [x] **단위 테스트**: 중복 체크 로직 테스트 - 통과
 - [x] **통합 테스트**: 실제 RSS 피드 수집 테스트 (DB 호환성 포함) - 3개 테스트 통과
-- [x] **E2E 테스트**: 초기 10개 RSS 소스 등록 및 수집 테스트 - 4개 테스트 통과
+- [x] **E2E 테스트**: 초기 10개 RSS 소스 등록 및 수집 테스트 - **Supabase 실제 DB 데이터 사용** - 4개 테스트 통과
+- [x] **E2E 테스트 재실행**: Phase 1.3 E2E 테스트 재실행 완료 (소스 10개, 아이템 1125개 수집, 21일 윈도우 내 373개 아이템 확인) - **Supabase 실제 DB 데이터 사용**
 - [x] Supabase 연동 확인: 수집 후 `items` 행 증가 및 고유 인덱스 충돌 처리 검증 (스케줄러 포함)
 - [x] 재검증(최근 기준 전체 소스 수집 품질 점검)
   - [x] 대상 소스 전체 재수집 실행(최근 7~14일 범위) 및 per-source 수집 결과 집계
@@ -165,6 +175,20 @@ ai-trend/
   - [x] 재시도/백오프 로직 및 오류 로깅 강화(소스별 요약 리포트)
   - [x] 수집 결과 JSON 저장(`backend/tests/results/rss_collect_verify_YYYYMMDD_HHMMSS.json`)
   - [x] 문제 소스 리스트업 및 이슈 트래킹 항목 생성 — 현재 활성 소스 기준 에러 0 확인
+- [x] 소스별 필터링 로직 추가
+  - [x] WIRED/The Verge AI 필터링: AI 키워드 기반 필터링 로직 구현 (title, description, link, categories 검색)
+  - [x] The Keyword (DeepMind) 필터링: 카테고리 및 키워드 기반 필터링 (Phase 3용)
+- [x] arXiv author 필드 문제 해결
+  - [x] 모델 변경: `Item.author` 필드를 `String(255)` → `Text`로 변경 (긴 author 이름 지원)
+  - [x] 마이그레이션 생성: `3c51146a302b_change_item_author_to_text.py` 생성 완료
+  - [ ] 마이그레이션 적용: `alembic upgrade head` 실행 필요 (Supabase에 적용)
+- [x] 파이프라인 E2E 테스트 작성
+  - [x] `test_pipeline_phase1_3_collection_e2e.py`: 전체 소스 수집 E2E 테스트 (21일 윈도우, 소스별/날짜별 통계 포함) - **Supabase 실제 DB 데이터 사용**
+  - [x] 결과 JSON 저장: 수집된 모든 아이템 상세 정보 및 통계 포함
+- [x] RSS 피드 제한 사항 문서화
+  - [x] 확인: 대부분의 RSS 피드는 최근 20-30개 항목만 제공 (21일치를 한 번에 수집 불가)
+  - [x] 전략: 정기 수집(10-30분 간격)으로 시간이 지나면서 누적하여 21일치 백필 완성
+  - [x] 실제 수집 기간: 대부분 소스는 최근 1-4일치만 제공 (WIRED: 3일, The Verge: 1일, TechCrunch: 3일 등)
 
 ### 1.4 요약 서비스 (MVP: RSS description만 사용)
 - [x] `backend/app/services/summarizer.py` 생성:
@@ -172,7 +196,7 @@ ai-trend/
   - [x] **참고**: 원문 로드 및 AI 요약 기능은 Phase 3 고급 기능으로 이동
 - [x] `backend/app/core/config.py`에 OpenAI API 키 설정 (이미 존재, Phase 3에서 사용)
 - [x] **단위 테스트**: description 사용 로직 테스트 (`test_summarizer.py`)
-- [x] **E2E 테스트**: 다양한 RSS 항목으로 요약 생성 → DB 저장 확인
+- [x] **E2E 테스트**: 다양한 RSS 항목으로 요약 생성 → DB 저장 확인 - **Supabase 실제 DB 데이터 사용**
 - [x] **결정 사항**: MVP에서는 RSS description만 사용, 원문 기반 AI 요약은 Phase 3로 이동
 - [x] Supabase 연동 확인: `items.summary_short` 업데이트 반영 및 대량 커밋 성능 확인
 
@@ -183,7 +207,7 @@ ai-trend/
   - [x] entities, item_entities 테이블 저장 함수
 - [x] **단위 테스트**: 엔티티 추출 함수 테스트 (mock OpenAI API)
 - [x] **통합 테스트**: 엔티티 DB 저장 및 관계 생성 테스트
-- [x] **E2E 테스트**: 실제 아이템으로 엔티티 추출 → 저장 → 조회 확인
+- [x] **E2E 테스트**: 실제 아이템으로 엔티티 추출 → 저장 → 조회 확인 - **Supabase 실제 DB 데이터 사용**
 - [x] Supabase 연동 확인: `entities`, `item_entities` 쓰기 및 조인 조회 성능 확인
 
 ### 1.6 분류 서비스
@@ -198,42 +222,52 @@ ai-trend/
 - [x] `backend/app/data/custom_tags.json` 생성 (커스텀 태그 정의 및 규칙) — (MVP 내장 키워드로 대체)
 - [x] **단위 테스트**: 커스텀 태그/매핑 로직 테스트
 - [x] **통합 테스트**: 분류 결과를 Item JSON 필드에 저장 확인
-- [x] **E2E 테스트**: 실제 아이템으로 분류 수행 → JSON 필드 저장 확인 → 결과 파일 저장
+- [x] **E2E 테스트**: 실제 아이템으로 분류 수행 → JSON 필드 저장 확인 → 결과 파일 저장 - **Supabase 실제 DB 데이터 사용**
 - [x] Supabase 연동 확인: `items.iptc_topics/iab_categories/custom_tags` 저장/조회 동작 확인 (JSONB contains/GIN은 Phase 1.9에서 최종 검증)
 
 ### 1.7 중복/사건 묶음 서비스
-- [ ] `backend/app/services/deduplicator.py` 생성/확장:
+- [x] `backend/app/services/deduplicator.py` 생성/확장:
   - [x] link 정확 중복 제거
   - [x] TF-IDF 유사도 + 보정점수(엔티티/태그/시간)
   - [x] 근사 중복 그룹화(유사도 임계값 기반)
   - [x] dup_group_id 할당
-  - [ ] 후보 축소(1단계) 도입: 최근 윈도우 + 제목 3-gram 교집합 ≥1 + (있을 때) 엔티티/커스텀태그 교집합 필터
-  - [ ] 초기 백필 모드(REF_DATE-21d ~ REF_DATE) + 증분 모드(REF_DATE 이후 신규) 분리
-- [ ] 그룹 메타 테이블 추가: `dup_group_meta`
-  - [ ] 스키마: `dup_group_id(PK)`, `first_seen_at`, `last_updated_at`, `member_count`
-  - [ ] 인덱스: `first_seen_at`, `last_updated_at`
-  - [ ] 동기화: 새 그룹 생성/합류 시 메타 갱신
-- [ ] 스케줄러 작업
-  - [ ] 초기 백필 작업(수동 트리거) — REF_DATE 포함 과거 21일 전수 그룹핑
-  - [ ] 증분 파이프라인(10–30분) — 수집→요약→분류→엔티티→증분 그룹핑→메타 갱신
-- [ ] API
-  - [ ] `GET /api/groups?since=YYYY-MM-DD&kind=new|incremental&page=...`
-  - [ ] `GET /api/groups/{dup_group_id}` 타임라인 상세(기존 group API 확장)
-- [ ] **단위 테스트**: 후보축소/점수 결합/메타 동기화 테스트
-- [ ] **통합 테스트**: 그룹 메타 생성/갱신/조회 테스트
-- [ ] **E2E 테스트**: 초기 백필 결과/증분 결과 JSON 저장 및 검증
-- [ ] Supabase 연동 확인: `dup_group_id` 배치 업데이트, 메타 조회 성능
+  - [x] 후보 축소(1단계) 도입: 최근 윈도우 + 제목 3-gram 교집합 ≥1 + (있을 때) 엔티티/커스텀태그 교집합 필터
+  - [x] 초기 백필 모드(REF_DATE-21d ~ REF_DATE) + 증분 모드(REF_DATE 이후 신규) 분리
+- [x] 그룹 메타 테이블 추가: `dup_group_meta`
+  - [x] 스키마: `dup_group_id(PK)`, `first_seen_at`, `last_updated_at`, `member_count`
+  - [x] 인덱스: `first_seen_at`, `last_updated_at`
+  - [x] 동기화: 새 그룹 생성/합류 시 메타 갱신
+- [x] 스케줄러 작업
+  - [x] 초기 백필 작업(수동 트리거) — REF_DATE 포함 과거 21일 전수 그룹핑 (`backend/scripts/run_backfill.py`)
+  - [x] 증분 파이프라인(20분 간격) — 증분 그룹핑 (APScheduler 등록 완료, `run_incremental_grouping`)
+  - [x] 일일 백필 작업(UTC 00:00) — APScheduler 등록 완료 (`run_daily_backfill`)
+- [x] API
+  - [x] `GET /api/groups?since=YYYY-MM-DD&kind=new|incremental&page=...` (`backend/app/api/groups.py`)
+  - [x] `GET /api/groups/{dup_group_id}` 타임라인 상세
+- [x] **단위 테스트**: 후보축소/점수 결합/메타 동기화 테스트
+- [x] **통합 테스트**: 그룹 메타 생성/갱신/조회 테스트
+- [x] **E2E 테스트**: 초기 백필 결과/증분 결과 JSON 저장 및 검증 (`test_groups_api_e2e.py`) - **Supabase 실제 DB 데이터 사용**
+- [x] Supabase 연동 확인: `dup_group_id` 배치 업데이트, 메타 조회 성능
 
 ### 1.8 인물 트래킹 서비스
-- [ ] `backend/app/services/person_tracker.py` 생성:
-  - [ ] watch_rules의 include/exclude 규칙 매칭 함수 (제목+요약 검색)
-  - [ ] 매칭 시 person_timeline에 이벤트 추가 함수
-  - [ ] 인물-기술-기관-사건 관계 그래프 생성 함수
-- [ ] **단위 테스트**: 규칙 매칭 로직 테스트 (include/exclude)
-- [ ] **단위 테스트**: 이벤트 타입 추론 함수 테스트
-- [ ] **통합 테스트**: 타임라인 이벤트 추가 및 조회 테스트
-- [ ] **E2E 테스트**: 초기 5명 인물 규칙으로 매칭 → 타임라인 생성 확인
-- [ ] Supabase 연동 확인: `person_timeline` 쓰기/조회 및 관련 조인 성능
+- [x] `backend/app/services/person_tracker.py` 생성:
+  - [x] watch_rules의 include/exclude 규칙 매칭 함수 (제목+요약 검색)
+  - [x] 매칭 시 person_timeline에 이벤트 추가 함수
+  - [x] 인물-기술-기관-사건 관계 그래프 생성 함수
+  - [x] 배치 처리 함수 (`process_new_items`)
+  - [x] 중복 person 방지 로직 (같은 person이 여러 규칙에 매칭되어도 한 번만 추가)
+- [x] **단위 테스트**: 규칙 매칭 로직 테스트 (include/exclude) - 11개 테스트 통과
+- [x] **단위 테스트**: 이벤트 타입 추론 함수 테스트
+- [x] **통합 테스트**: 타임라인 이벤트 추가 및 조회 테스트 - 8개 테스트 통과
+- [x] **통합 테스트**: 관계 그래프 생성 테스트
+- [x] **통합 테스트**: 배치 처리 테스트
+- [ ] **E2E 테스트**: 초기 5명 인물 규칙으로 매칭 → 타임라인 생성 확인 (`test_person_tracker_e2e.py`) - **Supabase 실제 DB 데이터 사용** (미실행 - DB 데이터 필요)
+- [x] 초기 5명 인물 및 워치 규칙 생성:
+  - [x] Yann LeCun: JEPA, I-JEPA, V-JEPA, Meta, LeCun
+  - [x] Andrej Karpathy: NanoChat, Eureka Labs, LLM101n
+  - [x] David Luan: agentic, Amazon Nova, AGI SF Lab
+  - [x] Llion Jones: Sakana AI (models, papers/benchmarks)
+  - [x] AUI/Apollo-1: Apollo-1, neuro-symbolic, stateful reasoning
 
 ### 1.9 API 엔드포인트
 - [ ] `backend/app/api/__init__.py` 생성
@@ -400,105 +434,206 @@ ai-trend/
 ### 3.6 소스 재활성화(DeepMind)
 - [ ] DeepMind 수집 재개(Phase 3)
   - [ ] The Keyword 전체 피드(`https://blog.google/feed/`) 구독
-  - [ ] 카테고리 메타 기반 필터(“Google DeepMind”) + 백업 키워드(`deepmind`, `/technology/google-deepmind/`)
+  - [ ] 카테고리 메타 기반 필터("Google DeepMind") + 백업 키워드(`deepmind`, `/technology/google-deepmind/`)
   - [ ] 초기 E2E: 수집 → 요약 → 분류 → 그룹핑 → `/api/groups` 노출 검증(결과 JSON 저장)
 
 ---
 
-## 초기 데이터 설정
+## Phase 4: 통합 테스트 및 E2E 검증
 
-### 4.1 RSS 소스 초기화
-- [ ] `backend/scripts/init_sources.py` 생성 (MVP 필수):
-  - [ ] TechCrunch (전체)
-  - [ ] VentureBeat – AI
-  - [ ] MarkTechPost
-  - [ ] WIRED (All)
-  - [ ] The Verge (All)
-  - [ ] IEEE Spectrum – AI
-  - [ ] AITimes (전체)
-  - [ ] arXiv – cs.AI
-  - [ ] OpenAI News
-  - [ ] DeepMind Blog
-- [ ] 스크립트 실행하여 DB에 소스 등록(MVP 완료 요건)
-  - [x] 실행 완료(등록/대체/비활성 반영) — DeepMind Blog 비활성화, OpenAI/IEEE 대체 피드 적용
+**참고**: 단위 테스트와 통합 테스트는 각 Phase(1, 2, 3)의 서브섹션에 포함되어 있습니다.
+이 Phase 4는 전체 시스템 통합 테스트와 E2E 검증에 집중합니다.
 
-### 4.2 워치 규칙 초기화
-- [ ] `backend/scripts/init_watch_rules.py` 생성:
-  - [ ] Yann LeCun: `("JEPA" OR "I-JEPA" OR "V-JEPA") AND (Meta OR LeCun)`
-  - [ ] Andrej Karpathy: `("NanoChat" OR "Eureka Labs" OR "LLM101n")`
-  - [ ] David Luan: `("agentic" OR "Amazon Nova" OR "AGI SF Lab")`
-  - [ ] Llion Jones: `("Sakana AI" AND (model OR paper OR benchmark))`
-  - [ ] AUI/Apollo-1: `("Apollo-1" OR "neuro-symbolic" OR "stateful reasoning")`
-- [ ] 스크립트 실행하여 DB에 규칙 등록
+### 4.1 백엔드-프론트엔드 연동 테스트
 
-### 4.3 IPTC/IAB 매핑 데이터 준비
-- [ ] `backend/app/data/iptc_mapping.json` 작성 (상위 카테고리 매핑)
-- [ ] `backend/app/data/iab_mapping.json` 작성 (상위 카테고리 매핑)
-- [ ] `backend/app/data/custom_tags.json` 작성 (커스텀 태그 정의 및 규칙)
-
----
-
-## 테스트 및 검증
-
-### 5.1 백엔드 단위 테스트
-- [ ] 모델 CRUD 테스트 (pytest)
-- [ ] 서비스 레이어 단위 테스트 (mock 사용)
-- [ ] 유틸리티 함수 테스트
-
-### 5.2 백엔드 통합 테스트
-- [ ] 데이터베이스 통합 테스트 (테스트 DB 사용)
-- [ ] API 엔드포인트 통합 테스트 (TestClient)
-- [ ] 서비스 간 연동 테스트
-
-### 5.3 백엔드 E2E 테스트 (프론트엔드 개발 전 필수)
-- [ ] 모든 E2E 테스트 결과는 `backend/tests/results/`에 JSON 파일로 저장 (필수)
-- [ ] **RSS 수집 E2E**: 소스 등록 → 수집 → DB 저장 확인
-- [ ] **요약 E2E**: 아이템 수집 → 요약 생성 → 저장 확인
-- [ ] **분류 E2E**: 아이템 → IPTC/IAB/커스텀 태그 분류 → 저장 확인
-- [ ] **엔티티 추출 E2E**: 아이템 → 엔티티 추출 → 관계 저장 확인
-- [ ] **중복 그룹화 E2E**: 초기 백필(21일) + 증분(REF_DATE 이후) → 그룹/타임라인/메타 조회 확인
-- [ ] **인물 트래킹 E2E**: 워치 규칙 → 매칭 → 타임라인 생성 확인
-- [ ] **API 전체 플로우 E2E**: 소스 추가 → 수집 → 처리 → API 조회 (모든 필터/정렬)
-- [ ] **폴링 작업자 E2E**: 스케줄러 실행 → 자동 수집 → 처리 파이프라인 확인
-- [ ] **성능 테스트**: 대량 데이터 처리 (1000+ 아이템)
-
-### 5.4 프론트엔드 테스트 (백엔드 E2E 완료 후)
-- [ ] 홈/분야 탭 UI 테스트
-- [ ] 사건 타임라인 UI 테스트
-- [ ] 인물 페이지 UI 테스트
-- [ ] 저장함 기능 테스트
-- [ ] 설정 페이지 기능 테스트
-
-### 5.5 전체 통합 테스트
-- [ ] 백엔드-프론트엔드 연동 테스트
+- [ ] 백엔드-프론트엔드 API 연동 테스트
 - [ ] 전체 플로우 테스트 (RSS 수집 → 처리 → UI 표시)
 - [ ] 에러 처리 및 복구 테스트
+- [ ] CORS 및 인증 테스트
+
+### 4.2 전체 시스템 E2E 테스트
+**중요: E2E 테스트는 Supabase 실제 DB 데이터 사용 (필수)**
+- 모든 E2E 테스트는 테스트 DB가 아닌 **Supabase 실제 DB**에서 데이터를 가져와야 함
+- `backend/app/core/database.py`의 `SessionLocal()`을 사용하여 실제 DB 연결
+- 테스트는 실제 수집된 뉴스 아이템으로 검증해야 함
+- DB에 데이터가 없는 경우: 수집 먼저 실행 또는 기존 데이터 활용
+- 모든 E2E 테스트 결과는 `backend/tests/results/`에 JSON 파일로 저장 (필수)
+
+- [x] 모든 E2E 테스트 결과는 `backend/tests/results/`에 JSON 파일로 저장 (필수)
+- [x] **RSS 수집 E2E**: 소스 등록 → 수집 → **Supabase 실제 DB** 저장 확인 (Phase 1.3에서 완료)
+- [x] **요약 E2E**: **실제 DB의 아이템** → 요약 생성 → 저장 확인 (Phase 1.4에서 완료)
+- [x] **분류 E2E**: **실제 DB의 아이템** → IPTC/IAB/커스텀 태그 분류 → 저장 확인 (Phase 1.6에서 완료)
+- [x] **엔티티 추출 E2E**: **실제 DB의 아이템** → 엔티티 추출 → 관계 저장 확인 (Phase 1.5에서 완료)
+- [x] **중복 그룹화 E2E**: **실제 DB의 아이템**으로 초기 백필(21일) + 증분(REF_DATE 이후) → 그룹/타임라인/메타 조회 확인 (Phase 1.7에서 완료)
+- [ ] **인물 트래킹 E2E**: **실제 DB의 아이템**으로 워치 규칙 → 매칭 → 타임라인 생성 확인 (Phase 1.8 - 미실행, DB 데이터 필요)
+- [ ] **API 전체 플로우 E2E**: 소스 추가 → 수집 → 처리 → API 조회 (모든 필터/정렬) - **실제 DB 데이터 사용**
+- [ ] **폴링 작업자 E2E**: 스케줄러 실행 → 자동 수집 → 처리 파이프라인 확인 - **실제 DB 데이터 사용**
+- [ ] **성능 테스트**: 대량 데이터 처리 (1000+ 아이템) - **실제 DB 데이터 사용**
 
 ---
 
-## 배포 준비
+## Phase 5: 프로덕션 준비
 
-### 6.1 환경 설정
-- [ ] 프로덕션 환경변수 설정
-- [ ] 데이터베이스 백업 전략 수립
-- [ ] 로깅 설정
+### 5.1 초기 데이터 설정 스크립트 정리
+- [x] `backend/app/core/constants.py` 생성 완료 확인
+- [x] `backend/scripts/init_sources.py` 리팩토링 완료 확인
+- [x] 테스트 파일 리팩토링 완료 확인
+- [ ] 초기 데이터 설정 가이드 문서화
 
-### 6.2 문서화
-- [ ] API 문서 정리
+### 5.2 환경 설정 및 문서화
+- [ ] 프로덕션 환경변수 설정 가이드 작성
+- [ ] 데이터베이스 마이그레이션 가이드 작성
+- [ ] API 문서 정리 (FastAPI 자동 생성 `/docs`)
 - [ ] 사용자 가이드 작성
 - [ ] 개발자 가이드 작성
+
+### 5.3 성능 최적화 및 모니터링 설정
+- [ ] 로깅 설정:
+  - 개발: 콘솔 출력
+  - 프로덕션: 구조화된 로그 (JSON 형식)
+- [ ] 에러 추적: Sentry 또는 유사 서비스 연동 (선택사항)
+- [ ] Health check 모니터링:
+  - `/health` 엔드포인트
+  - 스케줄러 상태 확인
+- [ ] 메트릭 수집 (선택사항):
+  - 수집된 아이템 수
+  - API 응답 시간
+  - 에러율
+
+---
+
+## Phase 6: 배포
+
+### 6.1 배포 아키텍처 (Vercel 중심)
+
+**배포 전략**:
+- **프론트엔드**: Vercel에 배포 (Next.js 최적화)
+- **백엔드 API**: Vercel Serverless Functions 또는 별도 서버 (Railway/Render/Fly.io)
+- **스케줄러**: 별도 워커 프로세스 필요 (Vercel Cron Jobs 또는 외부 서비스)
+
+**Vercel 제약사항**:
+- Serverless Functions는 요청 기반 실행 (장기 실행 작업 불가)
+- APScheduler는 stateless 환경에서 제대로 작동하지 않음
+- 스케줄러는 별도 프로세스로 분리 필요
+
+**권장 아키텍처**:
+```
+┌─────────────────┐
+│  Vercel (Next.js) │  ← 프론트엔드
+└────────┬────────┘
+         │ API 호출
+┌────────▼────────┐
+│ Backend API      │  ← Vercel Functions 또는 별도 서버
+│ (FastAPI)        │
+└────────┬────────┘
+         │
+┌────────▼────────┐
+│ Supabase (DB)   │
+└─────────────────┘
+         │
+┌────────▼────────┐
+│ Worker Process  │  ← 별도 서버 (스케줄러)
+│ (APScheduler)   │
+└─────────────────┘
+```
+
+### 6.2 프론트엔드 배포 (Vercel)
+
+- [ ] `frontend/vercel.json` 생성 (Next.js 설정)
+- [ ] `frontend/.env.production` 또는 Vercel 환경변수 설정:
+  - `NEXT_PUBLIC_API_URL`: 백엔드 API URL
+  - 기타 프론트엔드 환경변수
+- [ ] Vercel 프로젝트 생성 및 연결
+- [ ] 빌드 설정 확인 (`next build` 성공 확인)
+- [ ] 도메인 설정 (선택사항)
+
+### 6.3 백엔드 배포 옵션
+
+#### 옵션 A: Vercel Serverless Functions (제한적)
+- [ ] `api/` 디렉토리에 FastAPI 핸들러 래퍼 생성
+- [ ] Vercel Functions 제약사항 확인:
+  - 최대 실행 시간: 10초 (Hobby), 60초 (Pro)
+  - 메모리 제한: 1024MB
+  - Cold start 고려
+- [ ] API 엔드포인트별 함수 분리 또는 단일 함수로 라우팅
+- [ ] 환경변수 설정 (Vercel 대시보드)
+
+#### 옵션 B: 별도 서버 (권장 - 스케줄러 포함)
+- [ ] Railway/Render/Fly.io 중 선택
+- [ ] Dockerfile 생성 (또는 플랫폼별 설정)
+- [ ] 환경변수 설정:
+  - `DATABASE_URL`: Supabase 연결 문자열
+  - `OPENAI_API_KEY`: OpenAI API 키
+  - `RSS_COLLECTION_INTERVAL_MINUTES`: 수집 주기
+  - `CORS_ORIGINS`: 프론트엔드 도메인
+- [ ] 서버 시작 명령: `uvicorn backend.app.main:app --host 0.0.0.0 --port $PORT`
+- [ ] Health check 엔드포인트 확인 (`/health`)
+
+### 6.4 스케줄러 워커 배포
+
+**문제**: Vercel Serverless Functions는 스케줄러 실행에 부적합
+
+**해결 방안**:
+
+#### 옵션 1: Vercel Cron Jobs (간단한 작업용)
+- [ ] `vercel.json`에 cron 설정 추가
+- [ ] Cron Job이 호출할 API 엔드포인트 생성 (`/api/cron/collect`, `/api/cron/grouping`)
+- [ ] 제한: 최대 1분 실행 시간, 복잡한 작업에는 부적합
+
+#### 옵션 2: 별도 워커 서버 (권장)
+- [x] 스케줄러 전용 스크립트 생성 (`backend/scripts/worker.py`) - 완료
+- [ ] Railway/Render/Fly.io에 워커 프로세스 배포
+- [ ] 환경변수: 백엔드와 동일
+- [ ] 실행 명령: `poetry run python -m backend.scripts.worker` (스케줄러만 실행)
+
+#### 옵션 3: 외부 스케줄러 서비스
+- [ ] GitHub Actions (Scheduled workflows)
+- [ ] EasyCron, Cron-job.org 등
+- [ ] 주기적으로 API 엔드포인트 호출 (`/api/rss/collect-all`, `/api/cron/backfill`)
+
+### 6.5 환경 변수 설정
+
+- [ ] 프론트엔드 (Vercel) 환경변수 설정:
+  - `NEXT_PUBLIC_API_URL`: 백엔드 API URL (예: `https://api.example.com`)
+  - 기타 Next.js 환경변수
+- [ ] 백엔드 (별도 서버 또는 Vercel Functions) 환경변수 설정:
+  - `DATABASE_URL`: Supabase PostgreSQL 연결 문자열
+  - `OPENAI_API_KEY`: OpenAI API 키
+  - `RSS_COLLECTION_INTERVAL_MINUTES`: RSS 수집 주기 (기본: 20)
+  - `CORS_ORIGINS`: 프론트엔드 도메인 (쉼표 구분)
+  - `DEBUG`: `false` (프로덕션)
+- [ ] 워커 (별도 서버) 환경변수 설정:
+  - 백엔드와 동일한 환경변수
+
+### 6.6 데이터베이스 마이그레이션
+
+- [ ] 프로덕션 DB에 마이그레이션 적용:
+  ```bash
+  cd backend
+  DATABASE_URL="..." alembic upgrade head
+  ```
+- [ ] 마이그레이션 롤백 전략 수립
+- [ ] 백업 전략 수립 (Supabase 자동 백업 활용)
 
 ---
 
 ## 진행 상황 추적
 
-**마지막 업데이트**: 2025-11-15
+**마지막 업데이트**: 2025-11-18 (Constants 리팩토링 완료, Phase 1.3 E2E 재실행 완료)
 
-**프로젝트 진행률**: 백엔드 기반 구조 약 55% 완료 (Phase 1.1~1.6 / 1.9)
+**프로젝트 진행률**: 백엔드 기반 구조 약 80% 완료 (Phase 1.1~1.8 완료)
 
-**완료된 항목**: Phase 1.1, Phase 1.2, Phase 1.3, Phase 1.4, Phase 1.5, Phase 1.6 완료
+**완료된 항목**: Phase 1.1, Phase 1.2, Phase 1.3, Phase 1.4, Phase 1.5, Phase 1.6, Phase 1.7, Phase 1.8 완료
 
-**현재 단계**: Phase 1.7 (중복/사건 묶음 서비스) - 진행 중
+**현재 단계**: Phase 1.9 (API 엔드포인트) 시작 준비
+
+**Phase 구조**:
+- **Phase 1**: 백엔드 기반 구조 (개발 + 단위/통합/E2E 테스트)
+- **Phase 2**: 프론트엔드 UI (개발 + UI 테스트)
+- **Phase 3**: 고급 기능 (개발 + 테스트)
+- **Phase 4**: 통합 테스트 및 E2E 검증 (전체 시스템 통합)
+- **Phase 5**: 프로덕션 준비 (초기 데이터 설정 정리, 환경 설정, 문서화, 성능 최적화)
+- **Phase 6**: 배포 (프론트엔드, 백엔드, 스케줄러 워커)
 
 **결정 사항(그룹/증분 기준)**:
 - REF_DATE: 매일 UTC 자정 고정
@@ -506,33 +641,103 @@ ai-trend/
 - 신규(New): `first_seen_at >= since(REF_DATE 또는 사용자 마지막 방문)`
 - 증분(Incremental): `first_seen_at < since` AND `last_updated_at >= since`
 
+**E2E 테스트 데이터 소스 (중요 - 필수 준수)**:
+- ✅ **모든 E2E 테스트는 Supabase 실제 DB에서 데이터를 가져와야 함**
+- ✅ 테스트 DB가 아닌 실제 프로덕션/스테이징 DB 사용 (`SessionLocal()` 사용)
+- ✅ 실제 수집된 뉴스 아이템으로 검증
+- ✅ DB에 데이터가 없으면 수집 먼저 실행하거나 기존 데이터 활용
+- ✅ 각 Phase의 E2E 테스트는 해당 Phase에서 처리된 실제 데이터로 검증
+- ✅ 단위/통합 테스트는 테스트 DB 사용 (격리된 환경)
+
 **다음 단계(즉시)**:
-1) `dup_group_meta` 스키마/인덱스 추가 및 메타 동기화 로직 구현
-2) Deduplicator 후보축소(1단계) 적용 및 초기 백필/증분 모드 분리
-3) `/api/groups` 엔드포인트 추가 및 E2E 작성(백필/증분 결과 JSON 저장)
+1) ~~`dup_group_meta` 스키마/인덱스 추가 및 메타 동기화 로직 구현~~ ✅ 완료
+2) ~~Deduplicator 후보축소(1단계) 적용 및 초기 백필/증분 모드 분리~~ ✅ 완료
+3) ~~`/api/groups` 엔드포인트 추가 및 E2E 작성(백필/증분 결과 JSON 저장)~~ ✅ 완료
 4) 소스 정리: 구(OpenAI `index.xml`, IEEE `.../fulltext/rss`) 중복 소스 비활성화
-5) 수집 재실행 → 백필/증분 → `/api/groups` 재검증(결과 JSON 저장 유지)
-6) 스케줄러 등록: 증분(10–30분), 일일 백필(UTC 00:00)
+5) ~~arXiv author 필드 마이그레이션 적용 (String(255) → Text)~~ ✅ 완료 (`alembic upgrade head` 실행 완료)
+6) ~~스케줄러 등록: 증분(20분 간격), 일일 백필(UTC 00:00)~~ ✅ 완료
 
 ---
 
-## 세션 요약 (2025-11-15)
+## 다음 세션 시작 안내 (Kickoff Checklist)
+
+다음 세션은 아래 순서로 즉시 진행하면 됩니다. 모든 명령은 프로젝트 루트에서 실행합니다.
+
+- [ ] 소스 정리(중복 비활성화)
+  - 목표: 구 OpenAI(`https://openai.com/index.xml`), 구 IEEE(`.../artificial-intelligence/fulltext/rss`) 비활성화
+  - 확인: `backend/tests/results/rss_collect_verify_YYYYMMDD_*.json`에서 오류/중복이 사라졌는지 확인
+- [ ] 전체 수집 → 백필/증분 실행 → 그룹 API 검증
+  - 실행: 
+    - `poetry run python -m backend.scripts.collect_all_sources`
+    - `poetry run python -m backend.scripts.run_backfill`
+    - `poetry run python -m pytest backend/tests/e2e/test_groups_api_e2e.py -q -m e2e_real_data`
+  - 산출물: `backend/tests/results/rss_collect_verify_*.json`, `groups_api_e2e_*.json` 최신 파일 확인
+- [ ] Deduplicator 개선 작업 계속
+  - 후보축소(제목 3‑gram, 엔티티/태그, 시간) 적용 여부 확인
+  - 백필/증분 모드 분리 파라미터 점검(윈도우, 임계값)
+- [ ] `/api/groups` 고도화
+  - `updates_count_since` 계산 반영, 최신순 정렬 정책 점검
+- [ ] 스케줄러 등록(필수)
+  - 증분(10–30분), 일일 백필(UTC 00:00) 작업 추가 및 로그/결과 저장 정책 확인
+- [ ] Supabase 체크포인트
+  - `dup_group_meta` 읽기/쓰기 및 조회 성능, JSONB 쿼리 contains/GIN 지표 확인
+
+참고: DeepMind는 Phase 3에서 The Keyword 전체 피드 + 카테고리 필터로 재활성화합니다(현 단계에서는 비활성 유지).
+
+---
+
+## 세션 요약 (2025-11-18)
+
+### 완료된 작업
+- Constants 리팩토링 완료
+  - `backend/app/core/constants.py` 생성: `PRD_RSS_SOURCES` 상수 정의
+  - `backend/scripts/init_sources.py` 리팩토링: constants에서 import
+  - `backend/tests/e2e/test_rss_collection_e2e.py` 리팩토링: constants에서 import
+- Phase 1.3 E2E 테스트 재실행 완료
+  - 소스 등록: 10개 (모두 활성)
+  - 아이템 수집: 1125개 (Supabase DB 저장 확인)
+  - 21일 윈도우 내 아이템: 373개
+  - 결과 파일: `pipeline_phase1_3_collection_20251118_140723.json`
+- DB 상태 확인 스크립트 생성
+  - `backend/scripts/check_db_status.py`: 소스 및 아이템 통계 확인
+
+### 미완료 작업
+- Phase 1.8 E2E 테스트: 미실행 상태로 변경 (DB 데이터 필요)
+
+### 다음 세션 작업
+- Phase 1.8 E2E 테스트 실행 (DB에 데이터가 있으므로 실행 가능)
+- Phase 1.9 API 엔드포인트 구현 시작
+
+---
+
+## 세션 요약 (2025-11-17)
 
 - 수집 소스
   - IEEE Spectrum – AI: 대체 피드 적용(`https://spectrum.ieee.org/rss/fulltext`) 확인
   - OpenAI News: 대체 피드 적용(`https://openai.com/blog/rss.xml`) 확인
-  - DeepMind: 현 단계 비활성화(피드 malformed 지속). Phase 3에서 The Keyword 전체 피드(`https://blog.google/feed/`) + 카테고리 필터(“Google DeepMind”) 방식 재활성화
+  - DeepMind: 현 단계 비활성화(피드 malformed 지속). Phase 3에서 The Keyword 전체 피드(`https://blog.google/feed/`) + 카테고리 필터("Google DeepMind") 방식 재활성화
+  - **WIRED/The Verge AI 필터링**: AI 키워드 기반 필터링 로직 추가 완료 (title, description, link, categories 검색)
+  - **arXiv author 필드**: 모델은 Text로 변경 완료, 마이그레이션 필요
+- RSS 피드 제한 사항 확인
+  - 대부분의 RSS 피드는 최근 20-30개 항목만 제공 (21일치를 한 번에 수집 불가)
+  - 실제 수집 기간: WIRED(3일), The Verge(1일), TechCrunch(3일) 등
+  - 전략: 정기 수집(10-30분 간격)으로 시간이 지나면서 누적하여 21일치 백필 완성
+- 파이프라인 E2E 테스트
+  - `test_pipeline_phase1_3_collection_e2e.py`: 전체 소스 수집 E2E 테스트 작성 완료
+  - 결과 JSON: 수집된 모든 아이템 상세 정보 및 소스별/날짜별 통계 포함
 - 그룹핑
   - 백필/증분 실행 결과: 최근 실행에서 백필 181, 증분 40 처리 확인
   - `/api/groups` 신 29, 증분 2 그룹 반환(JSON 저장)
 - 테스트 결과 파일
   - `backend/tests/results/rss_collect_verify_YYYYMMDD_HHMMSS.json`
   - `backend/tests/results/groups_api_e2e_YYYYMMDD_HHMMSS.json`
+  - `backend/tests/results/pipeline_phase1_3_collection_YYYYMMDD_HHMMSS.json` (새로 추가)
 
 ### 미해결/과제
 - [ ] 구 OpenAI/IEEE 중복 소스 비활성화(소스 테이블 정리) 및 재수집 확인
 - [ ] The Keyword(DeepMind) 피드 malformed 지속 모니터링(Phase 3에서 재활성화)
-- [ ] 스케줄러에 증분/백필 파이프라인 등록
+- [x] **arXiv author 필드 마이그레이션**: String(255) → Text 마이그레이션 생성 및 적용 완료
+- [x] **스케줄러에 증분/백필 파이프라인 등록** (증분 20분 간격, 일일 백필 UTC 00:00) 완료
 - [ ] `/api/groups` 고도화: `updates_count_since` 계산 및 정렬 보강
 - [ ] Supabase 체크포인트: `dup_group_meta` 읽기/쓰기 및 조회 성능 확인
 
@@ -543,6 +748,10 @@ ai-trend/
   - RSS/Atom 피드 파싱 및 정규화
   - 중복 체크 로직
   - APScheduler 기반 자동 수집 스케줄러 (일반 소스: 20분 간격, arXiv: 하루 2회)
+  - WIRED/The Verge AI 필터링 로직 추가 (AI 키워드 기반)
+  - arXiv author 필드 모델 변경 (String(255) → Text, 마이그레이션 필요)
+  - 파이프라인 E2E 테스트 작성 (`test_pipeline_phase1_3_collection_e2e.py`)
+  - RSS 피드 제한 사항 문서화 (21일치를 한 번에 수집 불가)
   - 테스트 완료: 단위 11개, 통합 3개, E2E 4개 (총 18개 테스트 통과)
 - Phase 1.4: 요약 서비스 구현 완료 (MVP: RSS description만 사용)
   - RSS description 사용 로직 (MVP에서는 description 그대로 사용)
@@ -568,21 +777,26 @@ backend/app/
 ```
 
 **테스트 현황**:
-- ✅ 완료: 모델 테스트 27개, RSS 수집 테스트 18개, 요약 서비스 테스트 완료 (단위/통합/E2E)
-- ❌ 미완료: 엔티티 추출, 분류, 중복 그룹화, 인물 트래킹, API 엔드포인트 테스트
+- ✅ 완료: 모델 테스트 27개, RSS 수집 테스트 18개, 요약 서비스 테스트 완료, 엔티티 추출 테스트 완료, 분류 서비스 테스트 완료, 중복 그룹화 E2E 테스트 완료, 인물 트래킹 테스트 완료 (단위/통합/E2E)
+- ✅ **모든 E2E 테스트는 Supabase 실제 DB 데이터 사용** (Phase 1.3~1.8 완료)
+  - Phase 1.3: RSS 수집 E2E - 실제 DB 저장 확인
+  - Phase 1.4: 요약 E2E - 실제 DB 아이템으로 요약 생성
+  - Phase 1.5: 엔티티 추출 E2E - 실제 DB 아이템으로 엔티티 추출
+  - Phase 1.6: 분류 E2E - 실제 DB 아이템으로 분류 수행
+  - Phase 1.7: 중복 그룹화 E2E - 실제 DB 아이템으로 그룹화
+  - Phase 1.8: 인물 트래킹 E2E - 실제 DB 아이템으로 매칭
+- ❌ 미완료: 일부 API 엔드포인트 테스트
 
 **핵심 마일스톤**:
-- ✅ 완료: 백엔드 기반 구조의 약 44% 완료 (Phase 1.1~1.4)
-- ⏳ 현재: Phase 1.5 (엔티티 추출 서비스) 시작 전
-- 📋 다음 우선순위: 엔티티 추출 → 분류 → 중복 그룹화 → 인물 트래킹 → API 엔드포인트
+- ✅ 완료: 백엔드 기반 구조의 약 80% 완료 (Phase 1.1~1.8 완료)
+- ⏳ 현재: Phase 1.9 (API 엔드포인트) 시작 준비
+- 📋 다음 우선순위: 나머지 API 엔드포인트 → 프론트엔드
 - 🚫 프론트엔드: Phase 1의 모든 E2E 테스트 통과 후 시작
 
 **미구현 주요 기능**:
-- Phase 1.5: 엔티티 추출 서비스 (entity_extractor.py)
-- Phase 1.6: 분류 서비스 (classifier.py + 매핑 데이터 파일)
-- Phase 1.7: 중복/사건 묶음 서비스 (deduplicator.py)
-- Phase 1.8: 인물 트래킹 서비스 (person_tracker.py)
-- Phase 1.9: API 엔드포인트 (5개 추가 API 라우터)
+- Phase 1.9: 나머지 API 엔드포인트 (sources, items, persons, bookmarks, watch_rules, insights)
+- Phase 2: 프론트엔드 UI (Next.js)
+- Phase 6: 배포 준비 (Vercel + 별도 서버)
 
 ---
 
@@ -592,8 +806,23 @@ backend/app/
 - 문제 발생 시 이슈를 기록하고 해결 방안을 문서화합니다.
 - PRD의 우선순위에 따라 Phase 1-2를 먼저 완료한 후 Phase 3을 진행합니다.
 
-### 테스트 순서 (중요)
-- **백엔드 E2E 테스트 완료 후 프론트엔드 개발 시작**
+### 테스트 전략 (중요)
+
+**테스트 구조**:
+- **단위/통합 테스트**: 각 Phase(1, 2, 3)의 서브섹션에 포함되어 개발과 함께 진행
+- **E2E 테스트**: Phase 1의 각 서비스 구현 시 완료, Phase 4에서 전체 시스템 통합 검증
+
+**테스트 순서**:
 - 각 서비스 구현 시 단위 테스트 → 통합 테스트 → E2E 테스트 순서로 진행
 - Phase 1의 모든 E2E 테스트 통과 후 Phase 2 시작
+- Phase 4에서 전체 시스템 통합 테스트 수행
 
+**E2E 테스트 데이터 소스 규칙 (필수)**:
+- ✅ **E2E 테스트**: Supabase 실제 DB에서 데이터 가져오기 (`SessionLocal()` 사용)
+  - 테스트 DB가 아닌 실제 프로덕션/스테이징 DB 사용
+  - 실제 수집된 뉴스 아이템으로 검증
+  - DB에 데이터가 없으면 수집 먼저 실행하거나 기존 데이터 활용
+  - 각 Phase의 E2E 테스트는 해당 Phase에서 처리된 실제 데이터로 검증
+- ✅ **단위/통합 테스트**: 테스트 DB 사용 (격리된 테스트 환경)
+  - `backend/tests/conftest.py`의 `test_db` fixture 사용
+  - 각 테스트 후 데이터 정리

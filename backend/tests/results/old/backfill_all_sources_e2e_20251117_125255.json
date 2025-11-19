@@ -1,0 +1,17 @@
+{
+  "test_name": "test_backfill_all_sources_e2e",
+  "timestamp": "20251117_125255",
+  "window_days": 21,
+  "collection": {
+    "total_items": 909,
+    "items_in_window": 173
+  },
+  "backfill": {
+    "processed": 173,
+    "duration_seconds": 94.09,
+    "items_per_second": 1.84,
+    "groups_created": 410,
+    "groups_with_multiple_members": 8
+  },
+  "status": "passed"
+}

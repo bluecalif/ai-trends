@@ -148,6 +148,29 @@ class RSSCollector:
                     if in_category or backup_match:
                         filtered.append(e)
                 entries = filtered
+            
+            # AI-related filtering for WIRED and The Verge
+            elif "wired.com" in source.feed_url.lower() or "theverge.com" in source.feed_url.lower():
+                ai_keywords = [
+                    "ai", "artificial intelligence", "machine learning", "ml", "deep learning",
+                    "neural network", "llm", "gpt", "chatgpt", "openai", "anthropic", "claude",
+                    "gemini", "transformer", "language model", "computer vision", "nlp",
+                    "robotics", "autonomous", "algorithm", "data science", "big data",
+                    "neural", "automation", "intelligent", "smart", "cognitive"
+                ]
+                filtered = []
+                for e in entries:
+                    title = (e.get("title") or "").lower()
+                    desc = (e.get("description") or "").lower()
+                    link = (e.get("link") or "").lower()
+                    cats = [c.lower() for c in (e.get("categories") or [])]
+                    
+                    # Check if any AI keyword appears in title, description, link, or categories
+                    text_to_check = f"{title} {desc} {link} {' '.join(cats)}"
+                    if any(keyword in text_to_check for keyword in ai_keywords):
+                        filtered.append(e)
+                entries = filtered
+            
             count = 0
             
             for entry in entries:

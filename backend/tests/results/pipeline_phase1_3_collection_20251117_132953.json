@@ -1,0 +1,98 @@
+{
+  "phase": "1.3",
+  "phase_name": "RSS Collection",
+  "test_name": "test_phase1_3_collection_all_sources_21days",
+  "timestamp": "20251117_132953",
+  "window": {
+    "start": "2025-10-27T00:00:00+00:00",
+    "end": "2025-11-17T00:00:00+00:00",
+    "days": 21
+  },
+  "sources": [
+    {
+      "source_id": 251,
+      "title": "TechCrunch",
+      "feed_url": "https://techcrunch.com/feed/",
+      "collected_count": 2,
+      "status": "success",
+      "error": null
+    },
+    {
+      "source_id": 252,
+      "title": "VentureBeat – AI",
+      "feed_url": "https://venturebeat.com/category/ai/feed/",
+      "collected_count": 0,
+      "status": "success",
+      "error": null
+    },
+    {
+      "source_id": 253,
+      "title": "MarkTechPost",
+      "feed_url": "https://www.marktechpost.com/feed/",
+      "collected_count": 0,
+      "status": "success",
+      "error": null
+    },
+    {
+      "source_id": 254,
+      "title": "WIRED (All)",
+      "feed_url": "https://www.wired.com/feed/rss",
+      "collected_count": 1,
+      "status": "success",
+      "error": null
+    },
+    {
+      "source_id": 255,
+      "title": "The Verge (All)",
+      "feed_url": "https://www.theverge.com/rss/index.xml",
+      "collected_count": 1,
+      "status": "success",
+      "error": null
+    },
+    {
+      "source_id": 256,
+      "title": "IEEE Spectrum – AI",
+      "feed_url": "https://spectrum.ieee.org/rss/fulltext",
+      "collected_count": 1,
+      "status": "success",
+      "error": null
+    },
+    {
+      "source_id": 257,
+      "title": "AITimes",
+      "feed_url": "https://www.aitimes.com/rss/allArticle.xml",
+      "collected_count": 0,
+      "status": "success",
+      "error": null
+    },
+    {
+      "source_id": 258,
+      "title": "arXiv – cs.AI",
+      "feed_url": "http://export.arxiv.org/rss/cs.AI",
+      "collected_count": 0,
+      "status": "error",
+      "error": "(psycopg2.errors.StringDataRightTruncation) value too long for type character varying(255)\n\n[SQL: INSERT INTO items (source_id, title, summary_short, link, published_at, author, thumbnail_url, iptc_topics, iab_categories, custom_tags, dup_group_id, created_at, updated_at) SELECT p0::INTEGER, p1::VARCHAR, p2::TEXT, p3::VARCHAR, p4::TIMESTAMP WITHO ... 74353 characters truncated ... , p7, p8, p9, p10, p11, p12, sen_counter) ORDER BY sen_counter RETURNING items.id, items.id AS id__1]\n[parameters: {'created_at__0': datetime.datetime(2025, 11, 17, 13, 30, 3, 903941), 'link__0': 'https://arxiv.org/abs/2511.10704', 'updated_at__0': datetime.datetime(2025, 11, 17, 13, 30, 3, 903941), 'dup_group_id__0': None, 'summary_short__0': 'arXiv:2511.10704v1 Announce Type: new \\nAbstract: We propose that unconstrained artificial intelligence obeys a Second Law analogous to thermodynamic ... (204 characters truncated) ... nite set of goals {g_i} as S = -{\\\\Sigma} p(g_i; theta) ln p(g_i; theta), and we prove that its time derivative dS/dt >= 0, driven by exploration noi', 'title__0': 'The Second Law of Intelligence: Controlling Ethical Entropy in Autonomous Systems', 'author__0': 'Samih Fadli', 'iab_categories__0': '[]', 'source_id__0': 258, 'published_at__0': datetime.datetime(2025, 11, 16, 20, 0, tzinfo=datetime.timezone.utc), 'iptc_topics__0': '[]', 'thumbnail_url__0': None, 'custom_tags__0': '[]', 'created_at__1': datetime.datetime(2025, 11, 17, 13, 30, 3, 903941), 'link__1': 'https://arxiv.org/abs/2511.10705', 'updated_at__1': datetime.datetime(2025, 11, 17, 13, 30, 3, 903941), 'dup_group_id__1': None, 'summary_short__1': 'arXiv:2511.10705v1 Announce Type: new \\nAbstract: Graphical User Interface (GUI) task automation constitutes a critical frontier in artificial intell ... (203 characters truncated) ... s-model synergies, and (2) over-reliance on synthetic data generation without sufficient utilization. To address these challenges, we propose Co-EPG,', 'title__1': 'Co-EPG: A Framework for Co-Evolution of Planning and Grounding in Autonomous GUI Agents', 'author__1': 'Yuan Zhao, Hualei Zhu, Tingyu Jiang, Shen Li, Xiaohang Xu, Hao Henry Wang', 'iab_categories__1': '[]', 'source_id__1': 258, 'published_at__1': datetime.datetime(2025, 11, 16, 20, 0, tzinfo=datetime.timezone.utc), 'iptc_topics__1': '[]', 'thumbnail_url__1': None, 'custom_tags__1': '[]', 'created_at__2': datetime.datetime(2025, 11, 17, 13, 30, 3, 903941), 'link__2': 'https://arxiv.org/abs/2511.10716', 'updated_at__2': datetime.datetime(2025, 11, 17, 13, 30, 3, 903941), 'dup_group_id__2': None, 'summary_short__2': 'arXiv:2511.10716v1 Announce Type: new \\nAbstract: Many real-world decision-making problems involve optimizing multiple objectives simultaneously, ren ... (203 characters truncated) ... based on their subjective preferences. To reduce the cognitive load on the decision maker, previous work has introduced the Pareto pruning problem, w', 'title__2': 'Picking a Representative Set of Solutions in Multiobjective Optimization: Axioms, Algorithms, and Experiments', 'author__2': 'Niclas Boehmer, Maximilian T. Wittmann', 'iab_categories__2': '[]', 'source_id__2': 258, 'published_at__2': datetime.datetime(2025, 11, 16, 20, 0, tzinfo=datetime.timezone.utc), 'iptc_topics__2': '[]', 'thumbnail_url__2': None, 'custom_tags__2': '[]', 'created_at__3': datetime.datetime(2025, 11, 17, 13, 30, 3, 903941), 'link__3': 'https://arxiv.org/abs/2511.10767', 'updated_at__3': datetime.datetime(2025, 11, 17, 13, 30, 3, 903941), 'dup_group_id__3': None, 'summary_short__3': 'arXiv:2511.10767v1 Announce Type: new \\nAbstract: Structural measures of graphs, such as treewidth, are central tools in computational complexity res ... (203 characters truncated) ... nterests in compact encodings into (Q)SAT for solving and to understand encoding limitations. Even more general is the graph parameter clique-width, ', 'title__3': 'Structure-Aware Encodings of Argumentation Properties for Clique-width', 'author__3': 'Yasir Mahmood, Markus Hecher, Johanna Groven, Johannes K. Fichte', 'iab_categories__3': '[]', 'source_id__3': 258, 'published_at__3': datetime.datetime(2025, 11, 16, 20, 0, tzinfo=datetime.timezone.utc), 'iptc_topics__3': '[]' ... 3202 parameters truncated ... 'updated_at__250': datetime.datetime(2025, 11, 17, 13, 30, 3, 905943), 'dup_group_id__250': None, 'summary_short__250': 'arXiv:2511.10002v2 Announce Type: replace-cross \\nAbstract: Large Language Models (LLMs) have demonstrated remarkable capabilities in understanding a ... (203 characters truncated) ... ning experiences, especially in regions with limited teaching resources. However, adapting these models effectively to curriculum-specific content, s', 'title__250': 'PustakAI: Curriculum-Aligned and Interactive Textbooks Using Large Language Models', 'author__250': 'Shivam Sharma (CSIS Department, BITS Pilani K K Birla Goa Campus, India), Riya Naik (CSIS Department, BITS Pilani K K Birla Goa Campus, India), Tejas ... (66 characters truncated) ...  Heramb Patil (CSIS Department, BITS Pilani K K Birla Goa Campus, India), Kunal Korgaonkar (CSIS Department, BITS Pilani K K Birla Goa Campus, India)', 'iab_categories__250': '[]', 'source_id__250': 258, 'published_at__250': datetime.datetime(2025, 11, 16, 20, 0, tzinfo=datetime.timezone.utc), 'iptc_topics__250': '[]', 'thumbnail_url__250': None, 'custom_tags__250': '[]', 'created_at__251': datetime.datetime(2025, 11, 17, 13, 30, 3, 905943), 'link__251': 'https://arxiv.org/abs/2511.10222', 'updated_at__251': datetime.datetime(2025, 11, 17, 13, 30, 3, 905943), 'dup_group_id__251': None, 'summary_short__251': 'arXiv:2511.10222v2 Announce Type: replace-cross \\nAbstract: Recent progress in large language models (LLMs) has enabled understanding of both speech  ... (203 characters truncated) ... ming) to evaluate the robustness of LLMs under complex audio-based attacks. Unlike existing perturbation-based methods that rely on noise optimizatio', 'title__251': 'Speech-Audio Compositional Attacks on Multimodal LLMs and Their Mitigation with SALMONN-Guard', 'author__251': 'Yudong Yang, Xuezhen Zhang, Zhifeng Han, Siyin Wang, Jimin Zhuang, Zengrui Jin, Jing Shao, Guangzhi Sun, Chao Zhang', 'iab_categories__251': '[]', 'source_id__251': 258, 'published_at__251': datetime.datetime(2025, 11, 16, 20, 0, tzinfo=datetime.timezone.utc), 'iptc_topics__251': '[]', 'thumbnail_url__251': None, 'custom_tags__251': '[]', 'created_at__252': datetime.datetime(2025, 11, 17, 13, 30, 3, 905943), 'link__252': 'https://arxiv.org/abs/2511.10480', 'updated_at__252': datetime.datetime(2025, 11, 17, 13, 30, 3, 905943), 'dup_group_id__252': None, 'summary_short__252': 'arXiv:2511.10480v2 Announce Type: replace-cross \\nAbstract: Optimizing the performance of large language models (LLMs) on large-scale AI training and ... (203 characters truncated) ... rategies) and design-space explorations. While recent efforts have proposed collecting execution traces from real systems, access to large-scale infr', 'title__252': 'STAGE: A Symbolic Tensor grAph GEnerator for distributed AI system co-design', 'author__252': 'Changhai Man, Joongun Park, Hanjiang Wu, Huan Xu, Srinivas Sridharan, Tushar Krishna', 'iab_categories__252': '[]', 'source_id__252': 258, 'published_at__252': datetime.datetime(2025, 11, 16, 20, 0, tzinfo=datetime.timezone.utc), 'iptc_topics__252': '[]', 'thumbnail_url__252': None, 'custom_tags__252': '[]', 'created_at__253': datetime.datetime(2025, 11, 17, 13, 30, 3, 905943), 'link__253': 'https://arxiv.org/abs/2511.10628', 'updated_at__253': datetime.datetime(2025, 11, 17, 13, 30, 3, 905943), 'dup_group_id__253': None, 'summary_short__253': 'arXiv:2511.10628v2 Announce Type: replace-cross \\nAbstract: Large language models (LLMs) have demonstrated remarkable performance across a wide range ... (203 characters truncated) ... billion parameter language models trained entirely on openly available data and codebase. Powered by AMD Instinct MI300X GPUs, Instella is developed ', 'title__253': 'Instella: Fully Open Language Models with Stellar Performance', 'author__253': 'Jiang Liu, Jialian Wu, Xiaodong Yu, Yusheng Su, Prakamya Mishra, Gowtham Ramesh, Sudhanshu Ranjan, Chaitanya Manem, Ximeng Sun, Ze Wang, Pratik Prabhanjan Brahma, Zicheng Liu, Emad Barsoum', 'iab_categories__253': '[]', 'source_id__253': 258, 'published_at__253': datetime.datetime(2025, 11, 16, 20, 0, tzinfo=datetime.timezone.utc), 'iptc_topics__253': '[]', 'thumbnail_url__253': None, 'custom_tags__253': '[]'}]\n(Background on this error at: https://sqlalche.me/e/20/9h9h)"
+    },
+    {
+      "source_id": 259,
+      "title": "OpenAI News",
+      "feed_url": "https://openai.com/blog/rss.xml",
+      "collected_count": 0,
+      "status": "success",
+      "error": null
+    }
+  ],
+  "summary": {
+    "total_sources": 10,
+    "active_sources": 9,
+    "collected_items": 5,
+    "items_in_window": 174,
+    "errors": [
+      {
+        "source": "arXiv – cs.AI",
+        "error": "(psycopg2.errors.StringDataRightTruncation) value too long for type character varying(255)\n\n[SQL: INSERT INTO items (source_id, title, summary_short, link, published_at, author, thumbnail_url, iptc_topics, iab_categories, custom_tags, dup_group_id, created_at, updated_at) SELECT p0::INTEGER, p1::VARCHAR, p2::TEXT, p3::VARCHAR, p4::TIMESTAMP WITHO ... 74353 characters truncated ... , p7, p8, p9, p10, p11, p12, sen_counter) ORDER BY sen_counter RETURNING items.id, items.id AS id__1]\n[parameters: {'created_at__0': datetime.datetime(2025, 11, 17, 13, 30, 3, 903941), 'link__0': 'https://arxiv.org/abs/2511.10704', 'updated_at__0': datetime.datetime(2025, 11, 17, 13, 30, 3, 903941), 'dup_group_id__0': None, 'summary_short__0': 'arXiv:2511.10704v1 Announce Type: new \\nAbstract: We propose that unconstrained artificial intelligence obeys a Second Law analogous to thermodynamic ... (204 characters truncated) ... nite set of goals {g_i} as S = -{\\\\Sigma} p(g_i; theta) ln p(g_i; theta), and we prove that its time derivative dS/dt >= 0, driven by exploration noi', 'title__0': 'The Second Law of Intelligence: Controlling Ethical Entropy in Autonomous Systems', 'author__0': 'Samih Fadli', 'iab_categories__0': '[]', 'source_id__0': 258, 'published_at__0': datetime.datetime(2025, 11, 16, 20, 0, tzinfo=datetime.timezone.utc), 'iptc_topics__0': '[]', 'thumbnail_url__0': None, 'custom_tags__0': '[]', 'created_at__1': datetime.datetime(2025, 11, 17, 13, 30, 3, 903941), 'link__1': 'https://arxiv.org/abs/2511.10705', 'updated_at__1': datetime.datetime(2025, 11, 17, 13, 30, 3, 903941), 'dup_group_id__1': None, 'summary_short__1': 'arXiv:2511.10705v1 Announce Type: new \\nAbstract: Graphical User Interface (GUI) task automation constitutes a critical frontier in artificial intell ... (203 characters truncated) ... s-model synergies, and (2) over-reliance on synthetic data generation without sufficient utilization. To address these challenges, we propose Co-EPG,', 'title__1': 'Co-EPG: A Framework for Co-Evolution of Planning and Grounding in Autonomous GUI Agents', 'author__1': 'Yuan Zhao, Hualei Zhu, Tingyu Jiang, Shen Li, Xiaohang Xu, Hao Henry Wang', 'iab_categories__1': '[]', 'source_id__1': 258, 'published_at__1': datetime.datetime(2025, 11, 16, 20, 0, tzinfo=datetime.timezone.utc), 'iptc_topics__1': '[]', 'thumbnail_url__1': None, 'custom_tags__1': '[]', 'created_at__2': datetime.datetime(2025, 11, 17, 13, 30, 3, 903941), 'link__2': 'https://arxiv.org/abs/2511.10716', 'updated_at__2': datetime.datetime(2025, 11, 17, 13, 30, 3, 903941), 'dup_group_id__2': None, 'summary_short__2': 'arXiv:2511.10716v1 Announce Type: new \\nAbstract: Many real-world decision-making problems involve optimizing multiple objectives simultaneously, ren ... (203 characters truncated) ... based on their subjective preferences. To reduce the cognitive load on the decision maker, previous work has introduced the Pareto pruning problem, w', 'title__2': 'Picking a Representative Set of Solutions in Multiobjective Optimization: Axioms, Algorithms, and Experiments', 'author__2': 'Niclas Boehmer, Maximilian T. Wittmann', 'iab_categories__2': '[]', 'source_id__2': 258, 'published_at__2': datetime.datetime(2025, 11, 16, 20, 0, tzinfo=datetime.timezone.utc), 'iptc_topics__2': '[]', 'thumbnail_url__2': None, 'custom_tags__2': '[]', 'created_at__3': datetime.datetime(2025, 11, 17, 13, 30, 3, 903941), 'link__3': 'https://arxiv.org/abs/2511.10767', 'updated_at__3': datetime.datetime(2025, 11, 17, 13, 30, 3, 903941), 'dup_group_id__3': None, 'summary_short__3': 'arXiv:2511.10767v1 Announce Type: new \\nAbstract: Structural measures of graphs, such as treewidth, are central tools in computational complexity res ... (203 characters truncated) ... nterests in compact encodings into (Q)SAT for solving and to understand encoding limitations. Even more general is the graph parameter clique-width, ', 'title__3': 'Structure-Aware Encodings of Argumentation Properties for Clique-width', 'author__3': 'Yasir Mahmood, Markus Hecher, Johanna Groven, Johannes K. Fichte', 'iab_categories__3': '[]', 'source_id__3': 258, 'published_at__3': datetime.datetime(2025, 11, 16, 20, 0, tzinfo=datetime.timezone.utc), 'iptc_topics__3': '[]' ... 3202 parameters truncated ... 'updated_at__250': datetime.datetime(2025, 11, 17, 13, 30, 3, 905943), 'dup_group_id__250': None, 'summary_short__250': 'arXiv:2511.10002v2 Announce Type: replace-cross \\nAbstract: Large Language Models (LLMs) have demonstrated remarkable capabilities in understanding a ... (203 characters truncated) ... ning experiences, especially in regions with limited teaching resources. However, adapting these models effectively to curriculum-specific content, s', 'title__250': 'PustakAI: Curriculum-Aligned and Interactive Textbooks Using Large Language Models', 'author__250': 'Shivam Sharma (CSIS Department, BITS Pilani K K Birla Goa Campus, India), Riya Naik (CSIS Department, BITS Pilani K K Birla Goa Campus, India), Tejas ... (66 characters truncated) ...  Heramb Patil (CSIS Department, BITS Pilani K K Birla Goa Campus, India), Kunal Korgaonkar (CSIS Department, BITS Pilani K K Birla Goa Campus, India)', 'iab_categories__250': '[]', 'source_id__250': 258, 'published_at__250': datetime.datetime(2025, 11, 16, 20, 0, tzinfo=datetime.timezone.utc), 'iptc_topics__250': '[]', 'thumbnail_url__250': None, 'custom_tags__250': '[]', 'created_at__251': datetime.datetime(2025, 11, 17, 13, 30, 3, 905943), 'link__251': 'https://arxiv.org/abs/2511.10222', 'updated_at__251': datetime.datetime(2025, 11, 17, 13, 30, 3, 905943), 'dup_group_id__251': None, 'summary_short__251': 'arXiv:2511.10222v2 Announce Type: replace-cross \\nAbstract: Recent progress in large language models (LLMs) has enabled understanding of both speech  ... (203 characters truncated) ... ming) to evaluate the robustness of LLMs under complex audio-based attacks. Unlike existing perturbation-based methods that rely on noise optimizatio', 'title__251': 'Speech-Audio Compositional Attacks on Multimodal LLMs and Their Mitigation with SALMONN-Guard', 'author__251': 'Yudong Yang, Xuezhen Zhang, Zhifeng Han, Siyin Wang, Jimin Zhuang, Zengrui Jin, Jing Shao, Guangzhi Sun, Chao Zhang', 'iab_categories__251': '[]', 'source_id__251': 258, 'published_at__251': datetime.datetime(2025, 11, 16, 20, 0, tzinfo=datetime.timezone.utc), 'iptc_topics__251': '[]', 'thumbnail_url__251': None, 'custom_tags__251': '[]', 'created_at__252': datetime.datetime(2025, 11, 17, 13, 30, 3, 905943), 'link__252': 'https://arxiv.org/abs/2511.10480', 'updated_at__252': datetime.datetime(2025, 11, 17, 13, 30, 3, 905943), 'dup_group_id__252': None, 'summary_short__252': 'arXiv:2511.10480v2 Announce Type: replace-cross \\nAbstract: Optimizing the performance of large language models (LLMs) on large-scale AI training and ... (203 characters truncated) ... rategies) and design-space explorations. While recent efforts have proposed collecting execution traces from real systems, access to large-scale infr', 'title__252': 'STAGE: A Symbolic Tensor grAph GEnerator for distributed AI system co-design', 'author__252': 'Changhai Man, Joongun Park, Hanjiang Wu, Huan Xu, Srinivas Sridharan, Tushar Krishna', 'iab_categories__252': '[]', 'source_id__252': 258, 'published_at__252': datetime.datetime(2025, 11, 16, 20, 0, tzinfo=datetime.timezone.utc), 'iptc_topics__252': '[]', 'thumbnail_url__252': None, 'custom_tags__252': '[]', 'created_at__253': datetime.datetime(2025, 11, 17, 13, 30, 3, 905943), 'link__253': 'https://arxiv.org/abs/2511.10628', 'updated_at__253': datetime.datetime(2025, 11, 17, 13, 30, 3, 905943), 'dup_group_id__253': None, 'summary_short__253': 'arXiv:2511.10628v2 Announce Type: replace-cross \\nAbstract: Large language models (LLMs) have demonstrated remarkable performance across a wide range ... (203 characters truncated) ... billion parameter language models trained entirely on openly available data and codebase. Powered by AMD Instinct MI300X GPUs, Instella is developed ', 'title__253': 'Instella: Fully Open Language Models with Stellar Performance', 'author__253': 'Jiang Liu, Jialian Wu, Xiaodong Yu, Yusheng Su, Prakamya Mishra, Gowtham Ramesh, Sudhanshu Ranjan, Chaitanya Manem, Ximeng Sun, Ze Wang, Pratik Prabhanjan Brahma, Zicheng Liu, Emad Barsoum', 'iab_categories__253': '[]', 'source_id__253': 258, 'published_at__253': datetime.datetime(2025, 11, 16, 20, 0, tzinfo=datetime.timezone.utc), 'iptc_topics__253': '[]', 'thumbnail_url__253': None, 'custom_tags__253': '[]'}]\n(Background on this error at: https://sqlalche.me/e/20/9h9h)"
+      }
+    ]
+  },
+  "status": "passed"
+}

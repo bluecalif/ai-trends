@@ -3,6 +3,7 @@ import pytest
 from datetime import datetime, timezone
 import uuid
 
+from backend.app.core.constants import PRD_RSS_SOURCES
 from backend.app.services.rss_collector import RSSCollector
 from backend.app.models.source import Source
 from backend.app.models.item import Item
@@ -13,81 +14,6 @@ def get_unique_string(prefix: str = "") -> str:
     return f"{prefix}_{uuid.uuid4().hex[:8]}"
 
 
-# Initial 10 RSS sources (from rules)
-INITIAL_RSS_SOURCES = [
-    {
-        "title": "TechCrunch",
-        "feed_url": "https://techcrunch.com/feed/",
-        "site_url": "https://techcrunch.com",
-        "category": "Tech News",
-        "lang": "en",
-    },
-    {
-        "title": "VentureBeat",
-        "feed_url": "https://venturebeat.com/feed/",
-        "site_url": "https://venturebeat.com",
-        "category": "Tech News",
-        "lang": "en",
-    },
-    {
-        "title": "MarkTechPost",
-        "feed_url": "https://www.marktechpost.com/feed/",
-        "site_url": "https://www.marktechpost.com",
-        "category": "AI News",
-        "lang": "en",
-    },
-    {
-        "title": "WIRED",
-        "feed_url": "https://www.wired.com/feed/rss",
-        "site_url": "https://www.wired.com",
-        "category": "Tech News",
-        "lang": "en",
-    },
-    {
-        "title": "The Verge",
-        "feed_url": "https://www.theverge.com/rss/index.xml",
-        "site_url": "https://www.theverge.com",
-        "category": "Tech News",
-        "lang": "en",
-    },
-    {
-        "title": "IEEE Spectrum",
-        "feed_url": "https://spectrum.ieee.org/rss",
-        "site_url": "https://spectrum.ieee.org",
-        "category": "Research",
-        "lang": "en",
-    },
-    {
-        "title": "AITimes",
-        "feed_url": "https://aitimes.com/feed/",
-        "site_url": "https://aitimes.com",
-        "category": "AI News",
-        "lang": "en",
-    },
-    {
-        "title": "arXiv cs.AI",
-        "feed_url": "http://arxiv.org/rss/cs.AI",
-        "site_url": "https://arxiv.org/list/cs.AI/recent",
-        "category": "Research",
-        "lang": "en",
-    },
-    {
-        "title": "OpenAI News",
-        "feed_url": "https://openai.com/blog/rss.xml",
-        "site_url": "https://openai.com/blog",
-        "category": "AI News",
-        "lang": "en",
-    },
-    {
-        "title": "DeepMind Blog",
-        "feed_url": "https://deepmind.google/discover/blog/rss.xml",
-        "site_url": "https://deepmind.google/discover/blog",
-        "category": "AI News",
-        "lang": "en",
-    },
-]
-
-
 class TestRSSCollectionE2E:
     """E2E tests for RSS collection with real RSS sources."""
     
@@ -95,7 +21,7 @@ class TestRSSCollectionE2E:
         """Test registering 10 initial RSS sources."""
         sources = []
         
-        for source_data in INITIAL_RSS_SOURCES:
+        for source_data in PRD_RSS_SOURCES:
             # Check if source already exists
             existing = test_db.query(Source).filter(
                 Source.feed_url == source_data["feed_url"]
@@ -122,7 +48,7 @@ class TestRSSCollectionE2E:
         
         # Verify feed URLs are correct
         feed_urls = {s.feed_url for s in db_sources}
-        expected_urls = {s["feed_url"] for s in INITIAL_RSS_SOURCES}
+        expected_urls = {s["feed_url"] for s in PRD_RSS_SOURCES}
         assert expected_urls.issubset(feed_urls), "Not all expected feed URLs found"
     
     @pytest.mark.slow

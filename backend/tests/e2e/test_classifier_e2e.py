@@ -57,17 +57,25 @@ def test_classifier_e2e_real_data():
             "site_url": source.site_url,
         }
 
-        # Collect items
-        collector = RSSCollector(db)
-        try:
-            count = collector.collect_source(source)
-        except Exception as e:
-            count = 0
-            test_results["collection"]["error"] = str(e)
-        test_results["collection"]["count"] = count
-        test_results["collection"]["status"] = "success" if count >= 0 else "failed"
+        # Get existing items from Supabase actual DB (skip collection, use existing data)
+        existing_item_count = db.query(Item).filter(Item.source_id == source.id).count()
+        test_results["collection"]["count"] = existing_item_count
+        test_results["collection"]["status"] = "using_existing_data"
+        
+        if existing_item_count == 0:
+            # If no existing data, try to collect
+            print("[Classifier E2E] No existing items, attempting collection...")
+            collector = RSSCollector(db)
+            try:
+                count = collector.collect_source(source)
+                test_results["collection"]["count"] = count
+                test_results["collection"]["status"] = "collected_new"
+            except Exception as e:
+                count = 0
+                test_results["collection"]["error"] = str(e)
+                test_results["collection"]["status"] = "collection_failed"
 
-        # Pick recent items (limit 5)
+        # Pick recent items from actual DB (limit 5)
         items = (
             db.query(Item)
             .filter(Item.source_id == source.id)

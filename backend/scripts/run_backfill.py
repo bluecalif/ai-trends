@@ -3,6 +3,13 @@
 Run:
   poetry run python -m backend.scripts.run_backfill
 """
+import sys
+import io
+
+# Fix Windows PowerShell encoding
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
+
 from datetime import datetime, timezone, timedelta
 
 from backend.app.core.database import SessionLocal
@@ -17,7 +24,9 @@ def main():
         print(f"[Backfill] DATABASE_URL={settings.DATABASE_URL}")
         ref = datetime.now(timezone.utc).date()
         svc = GroupBackfill(db)
-        bf = svc.run_backfill(ref, days=21)
+        print(f"[Backfill] Starting backfill for ref_date={ref}, window_days=21")
+        bf = svc.run_backfill(ref, days=21, batch_size=50, verbose=True)
+        print(f"[Backfill] Backfill completed: {bf} items processed")
         inc = svc.run_incremental(datetime.now(timezone.utc) - timedelta(days=1))
         print(f"[Backfill] ref_date={ref} window_days=21 backfilled={bf}, incremental(last24h)={inc}")
     finally:
