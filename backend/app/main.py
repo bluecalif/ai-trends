@@ -13,6 +13,7 @@ from backend.app.api import persons
 from backend.app.api import bookmarks
 from backend.app.api import watch_rules
 from backend.app.api import insights
+from backend.app.api import constants
 from backend.app.core.scheduler import start_scheduler, stop_scheduler, is_scheduler_running
 
 # Configure logging
@@ -64,6 +65,7 @@ app.include_router(persons.router)
 app.include_router(bookmarks.router)
 app.include_router(watch_rules.router)
 app.include_router(insights.router)
+app.include_router(constants.router)
 
 
 @app.get("/")

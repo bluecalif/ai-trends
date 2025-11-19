@@ -87,14 +87,28 @@ poetry run python -m backend.scripts.script_name
 
 ### 1.5 서버 실행
 
-```powershell
-# 백엔드 (FastAPI) - PYTHONPATH 필수
-$env:PYTHONPATH = "C:\Projects\vibe-coding\ideator-books"
-cd backend; python -m uvicorn main:app --reload --port 8000
+**중요**: 모든 서버는 프로젝트 루트(`C:\Projects\vibe-coding\ai-trend`)에서 실행해야 함. `cd` 사용 금지.
 
-# 프론트엔드 (Next.js)
-cd frontend; npm run dev
+```powershell
+# 백엔드 (FastAPI) - 프로젝트 루트에서 실행
+# 프로젝트 루트: C:\Projects\vibe-coding\ai-trend
+poetry run uvicorn backend.app.main:app --reload --host 0.0.0.0 --port 8000
+
+# 또는 PYTHONPATH 설정 후 실행 (필요한 경우)
+$env:PYTHONPATH = "C:\Projects\vibe-coding\ai-trend"
+poetry run uvicorn backend.app.main:app --reload --host 0.0.0.0 --port 8000
+
+# 프론트엔드 (Next.js) - 프로젝트 루트에서 실행
+npm --prefix frontend run dev
+
+# 또는 절대 경로 사용 (세미콜론으로 연결)
+cd C:\Projects\vibe-coding\ai-trend\frontend; npm run dev
 ```
+
+**주의사항**:
+- ❌ `cd backend; poetry run uvicorn backend.app.main:app` → `ModuleNotFoundError` 발생
+- ✅ 프로젝트 루트에서 `poetry run uvicorn backend.app.main:app` 실행
+- `--host 0.0.0.0` 옵션으로 외부 접근 허용 (로컬 네트워크에서 테스트 가능)
 
 ### 1.6 출력 제한
 

@@ -119,73 +119,233 @@
 ## Phase 2: 프론트엔드 UI
 
 ### 2.1 Next.js 프로젝트 설정
-- [ ] `frontend/` 디렉토리 생성
-- [ ] Next.js 14 프로젝트 초기화 (`npx create-next-app@latest`)
-- [ ] TypeScript 설정 확인
-- [ ] Tailwind CSS 설정 확인
-- [ ] `frontend/package.json` 의존성 추가:
-  - axios 또는 fetch wrapper
-  - @tanstack/react-query (데이터 페칭)
-  - react-flow 또는 d3.js (그래프 시각화)
-  - date-fns (날짜 포맷팅)
-- [ ] `frontend/.env.local.example` 생성 (API_BASE_URL)
-- [ ] `frontend/lib/api.ts` 생성 (API 클라이언트)
-- [ ] `frontend/lib/types.ts` 생성 (TypeScript 타입 정의)
+- [x] `frontend/` 디렉토리 생성
+- [x] Next.js 14 프로젝트 초기화 (`npx create-next-app@latest frontend --typescript --tailwind --app --no-src-dir`)
+- [x] TypeScript 설정 확인
+- [x] Tailwind CSS 설정 확인
+- [x] `frontend/package.json` 의존성 추가:
+  - `@tanstack/react-query`: 데이터 페칭 및 캐싱
+  - `axios`: HTTP 클라이언트
+  - `date-fns`: 날짜 포맷팅
+  - `react-flow` 또는 `@reactflow/core`: 관계 그래프 시각화 (선택사항)
+- [x] `frontend/.env.local.example` 생성 (`NEXT_PUBLIC_API_URL=http://localhost:8000`)
+- [x] 기본 디렉토리 구조 생성:
+  - `frontend/lib/api.ts`: API 클라이언트 (axios 기반)
+  - `frontend/lib/types.ts`: TypeScript 타입 정의 (백엔드 스키마와 동기화)
+  - `frontend/lib/constants.ts`: 상수 정의 (FIELDS, CUSTOM_TAGS 등)
+  - `frontend/lib/validators.ts`: 런타임 검증 함수
+  - `frontend/components/`: 재사용 가능한 컴포넌트
+  - `frontend/app/`: Next.js App Router 페이지
+- [x] **백엔드 Constants API 구현** (API Contract 동기화):
+  - [x] `backend/app/api/constants.py` 생성
+  - [x] `GET /api/constants/fields`: FIELDS 목록 반환
+  - [x] `GET /api/constants/custom-tags`: CUSTOM_TAGS 목록 반환
+  - [x] `backend/app/main.py`에 라우터 등록
+- [x] API 클라이언트 구현 (`frontend/lib/api.ts`):
+  - [x] axios 인스턴스 생성 (baseURL: `process.env.NEXT_PUBLIC_API_URL`)
+  - [x] API 메서드 구현:
+    - `getItems()`: 아이템 목록 조회 (필터, 페이지네이션, 정렬)
+    - `getItem()`: 아이템 상세 조회
+    - `getItemGroup()`: 사건 그룹 타임라인 조회
+    - `getGroups()`: 그룹 목록 조회
+    - `getPersons()`: 인물 목록 조회
+    - `getPerson()`: 인물 상세 조회 (타임라인 포함)
+    - `getBookmarks()`: 북마크 목록 조회
+    - `createBookmark()`: 북마크 생성
+    - `getSources()`: 소스 목록 조회
+    - `getConstants()`: 상수 조회 (FIELDS, CUSTOM_TAGS)
+    - 기타 API 메서드
+  - [x] **중요**: 쿼리 파라미터는 snake_case 사용 (`date_from`, `date_to`, `page_size`, `order_by`, `order_desc` 등)
+- [x] 타입 정의 (`frontend/lib/types.ts`):
+  - [x] 백엔드 스키마와 일치하는 TypeScript 인터페이스 정의
+  - [x] `ItemResponse`, `ItemListResponse`, `PersonResponse`, `BookmarkResponse` 등
+  - [x] **체크리스트**: 필드명 일치 (snake_case), 타입 일치, Optional 필드 일치, 배열 타입 일치
+- [x] 상수 정의 (`frontend/lib/constants.ts`):
+  - [x] **옵션 B**: 정적 상수 정의 (백엔드와 수동 동기화) - 초기 구현
+  - [x] `FIELDS`: 분야 목록 (백엔드와 동기화)
+  - [x] `CUSTOM_TAGS`: 커스텀 태그 목록 (백엔드와 동기화)
+  - [x] `FIELD_LABELS`: 분야 한글 레이블 매핑
+  - [x] 타입 정의: `type Field = typeof FIELDS[number]`, `type CustomTag = typeof CUSTOM_TAGS[number]`
+- [x] 런타임 검증 함수 (`frontend/lib/validators.ts`):
+  - [x] `validateField()`: 분야 값 검증
+  - [x] `validateCustomTag()`: 커스텀 태그 값 검증
+  - [x] URL 파라미터 검증에 사용
+- [x] **UX 확인**:
+  - [x] 개발 서버 실행 (`npm run dev`) 및 기본 페이지 접근 확인
+  - [x] API 클라이언트 연결 테스트 (백엔드 API 호출 확인)
+  - [x] 에러 처리 및 로딩 상태 표시 확인
+  - [x] 반응형 디자인 확인 (모바일/데스크톱)
 
 ### 2.2 홈/분야 탭
-- [ ] `frontend/app/layout.tsx` 생성 (기본 레이아웃, 네비게이션)
-- [ ] `frontend/app/page.tsx` 생성:
-  - [ ] 상단 분야 탭 (Research/Industry/Infra/Policy/Funding)
-  - [ ] 기본 필터링된 아이템 리스트
-- [ ] `frontend/components/ItemCard.tsx` 생성:
+- [ ] 기본 레이아웃 (`frontend/app/layout.tsx`):
+  - [ ] 네비게이션 바 (로고, 메뉴)
+  - [ ] 기본 스타일링 (Tailwind CSS)
+  - [ ] React Query Provider 설정
+- [ ] 홈 페이지 (`frontend/app/page.tsx`):
+  - [ ] 기본적으로 Research 분야 아이템 표시
+  - [ ] 분야 탭 컴포넌트 포함
+  - [ ] 아이템 리스트 표시
+- [ ] 분야별 페이지 (`frontend/app/[field]/page.tsx`):
+  - [ ] 동적 라우팅: `/research`, `/industry`, `/infra`, `/policy`, `/funding`
+  - [ ] React Query로 해당 분야 아이템 조회
+  - [ ] 페이지네이션 구현
+  - [ ] **중요**: URL 파라미터 검증 (`validateField()` 사용)
+- [ ] `FieldTabs` 컴포넌트 (`frontend/components/FieldTabs.tsx`):
+  - [ ] 5개 분야 탭 (Research, Industry, Infra, Policy, Funding)
+  - [ ] 현재 선택된 분야 하이라이트
+  - [ ] 클릭 시 해당 분야 페이지로 이동
+- [ ] `ItemCard` 컴포넌트 (`frontend/components/ItemCard.tsx`):
   - [ ] 제목, 요약 표시
-  - [ ] 태그 표시 (IPTC, IAB, 커스텀)
-  - [ ] 출처, 시간 표시
-  - [ ] "동일 사건 N건" 표시
-  - [ ] 클릭 시 원문 링크 이동
-  - [ ] "사건 보기" 버튼
-- [ ] `frontend/app/[field]/page.tsx` 생성 (분야별 필터링된 페이지)
-- [ ] `frontend/components/FieldTabs.tsx` 생성 (분야 탭 컴포넌트)
-- [ ] `frontend/components/TagFilter.tsx` 생성 (태그 필터 컴포넌트)
+  - [ ] 태그 표시 (IPTC, IAB, 커스텀 태그)
+  - [ ] 출처, 시간 표시 (date-fns 사용)
+  - [ ] `dup_group_id`가 있으면 "동일 사건 N건" 표시
+  - [ ] 클릭 시 원문 링크 이동 (새 탭)
+  - [ ] "사건 보기" 버튼 (dup_group_id가 있을 때)
+- [ ] `TagFilter` 컴포넌트 (`frontend/components/TagFilter.tsx`):
+  - [ ] 커스텀 태그 필터 (다중 선택 가능)
+  - [ ] 필터 상태 관리 (React Query 쿼리 파라미터와 연동)
+  - [ ] **중요**: 상수 파일의 CUSTOM_TAGS 사용 (하드코딩 금지)
+- [ ] 페이지네이션 컴포넌트 (`frontend/components/Pagination.tsx`):
+  - [ ] 페이지 번호 표시
+  - [ ] 이전/다음 버튼
+  - [ ] 총 아이템 수 표시
+- [ ] **UX 확인**:
+  - [ ] 홈 페이지 로딩 및 아이템 표시 확인
+  - [ ] 분야 탭 전환 동작 확인 (Research/Industry/Infra/Policy/Funding)
+  - [ ] 아이템 카드 클릭 시 원문 링크 이동 확인
+  - [ ] "사건 보기" 버튼 동작 확인 (dup_group_id가 있는 경우)
+  - [ ] 태그 필터 동작 확인 (다중 선택, 필터링 결과)
+  - [ ] 페이지네이션 동작 확인 (이전/다음, 페이지 번호 클릭)
+  - [ ] 로딩 상태 표시 확인 (데이터 로딩 중)
+  - [ ] 에러 상태 표시 확인 (API 에러 발생 시)
+  - [ ] 반응형 디자인 확인 (모바일/태블릿/데스크톱)
+  - [ ] 접근성 확인 (키보드 네비게이션, 스크린 리더)
 
 ### 2.3 사건 타임라인
-- [ ] `frontend/app/story/[groupId]/page.tsx` 생성:
-  - [ ] dup_group_id 기반 타임라인 UI
-  - [ ] 최초 보도 → 후속/해설 흐름 시각화
-  - [ ] 타임라인 카드 컴포넌트
-- [ ] `frontend/components/TimelineCard.tsx` 생성
+- [ ] 사건 타임라인 페이지 (`frontend/app/story/[groupId]/page.tsx`):
+  - [ ] 동적 라우팅: `/story/{dup_group_id}`
+  - [ ] React Query로 그룹 아이템 조회 (`GET /api/groups/{dup_group_id}`)
+  - [ ] 시간순 정렬된 타임라인 표시
+- [ ] `TimelineCard` 컴포넌트 (`frontend/components/TimelineCard.tsx`):
+  - [ ] 타임라인 아이템 카드
+  - [ ] 시간 표시 (date-fns)
+  - [ ] 제목, 요약, 링크 표시
+  - [ ] 최초 보도/후속 기사 구분 표시
+- [ ] 타임라인 레이아웃:
+  - [ ] 수직 타임라인 UI (시간순)
+  - [ ] 각 아이템을 카드로 표시
+  - [ ] 반응형 디자인 (모바일/데스크톱)
+- [ ] **UX 확인**:
+  - [ ] 사건 타임라인 페이지 접근 확인 (`/story/{dup_group_id}`)
+  - [ ] 타임라인 아이템 시간순 정렬 확인
+  - [ ] 타임라인 카드 클릭 시 원문 링크 이동 확인
+  - [ ] 최초 보도/후속 기사 구분 표시 확인
+  - [ ] 로딩 상태 표시 확인
+  - [ ] 에러 상태 표시 확인 (그룹이 없거나 아이템이 없는 경우)
+  - [ ] 반응형 디자인 확인 (모바일/태블릿/데스크톱)
+  - [ ] 접근성 확인 (키보드 네비게이션)
 
 ### 2.4 인물 페이지
-- [ ] `frontend/app/persons/page.tsx` 생성:
-  - [ ] 인물 리스트 (우선순위/최근 이벤트 정렬)
-  - [ ] 검색 기능
-- [ ] `frontend/app/persons/[id]/page.tsx` 생성:
-  - [ ] 인물 상세 정보
-  - [ ] 타임라인 표시
-  - [ ] 관계 그래프 시각화 (인물-기술-기관-사건)
-- [ ] `frontend/components/PersonCard.tsx` 생성
-- [ ] `frontend/components/RelationshipGraph.tsx` 생성 (React Flow 또는 D3.js)
+- [ ] 인물 목록 페이지 (`frontend/app/persons/page.tsx`):
+  - [ ] 인물 리스트 표시
+  - [ ] 검색 기능 (이름 기반)
+  - [ ] 정렬 (이름순, 최근 이벤트순)
+- [ ] 인물 상세 페이지 (`frontend/app/persons/[id]/page.tsx`):
+  - [ ] 인물 정보 표시 (이름, bio)
+  - [ ] 타임라인 표시 (PersonTimeline 이벤트)
+  - [ ] 관계 그래프 시각화 (선택사항)
+- [ ] `PersonCard` 컴포넌트 (`frontend/components/PersonCard.tsx`):
+  - [ ] 인물 카드 (목록용)
+  - [ ] 이름, bio 미리보기
+  - [ ] 최근 이벤트 수 표시
+- [ ] `RelationshipGraph` 컴포넌트 (`frontend/components/RelationshipGraph.tsx`):
+  - [ ] 인물-기술-기관-사건 관계 그래프
+  - [ ] react-flow 또는 d3.js 사용 (선택사항)
+  - [ ] 노드 클릭 시 상세 정보 표시
+- [ ] **UX 확인**:
+  - [ ] 인물 목록 페이지 접근 및 표시 확인 (`/persons`)
+  - [ ] 인물 검색 기능 동작 확인
+  - [ ] 인물 정렬 기능 확인 (이름순, 최근 이벤트순)
+  - [ ] 인물 상세 페이지 접근 확인 (`/persons/{id}`)
+  - [ ] 인물 타임라인 표시 확인
+  - [ ] 관계 그래프 표시 및 인터랙션 확인 (노드 클릭, 확대/축소)
+  - [ ] 로딩 상태 표시 확인
+  - [ ] 에러 상태 표시 확인 (인물이 없거나 데이터가 없는 경우)
+  - [ ] 반응형 디자인 확인 (모바일/태블릿/데스크톱)
+  - [ ] 접근성 확인 (키보드 네비게이션, 그래프 대체 텍스트)
 
-### 2.5 저장함
-- [ ] `frontend/app/saved/page.tsx` 생성:
-  - [ ] 북마크 목록
-  - [ ] 태그 관리 (추가/삭제/필터)
-  - [ ] 검색 기능
-- [ ] `frontend/components/BookmarkCard.tsx` 생성
-- [ ] `frontend/components/TagManager.tsx` 생성
+### 2.5 저장함 (북마크)
+- [ ] 저장함 페이지 (`frontend/app/saved/page.tsx`):
+  - [ ] 북마크 목록 표시
+  - [ ] 태그 필터링
+  - [ ] 검색 기능 (제목 기반)
+- [ ] `BookmarkCard` 컴포넌트 (`frontend/components/BookmarkCard.tsx`):
+  - [ ] 북마크 카드
+  - [ ] 제목, 메모, 태그 표시
+  - [ ] 원문 링크 이동
+  - [ ] 삭제 버튼
+- [ ] `TagManager` 컴포넌트 (`frontend/components/TagManager.tsx`):
+  - [ ] 태그 추가/삭제 UI
+  - [ ] 태그 목록 표시
+  - [ ] 태그 필터링
+- [ ] 북마크 추가 기능:
+  - [ ] 아이템 카드에 "저장" 버튼 추가
+  - [ ] 북마크 생성 모달/폼
+- [ ] **UX 확인**:
+  - [ ] 저장함 페이지 접근 및 북마크 목록 표시 확인 (`/saved`)
+  - [ ] 북마크 추가 기능 확인 (아이템 카드의 "저장" 버튼)
+  - [ ] 북마크 생성 모달/폼 동작 확인
+  - [ ] 북마크 태그 필터링 동작 확인
+  - [ ] 북마크 검색 기능 확인 (제목 기반)
+  - [ ] 북마크 태그 추가/삭제 기능 확인
+  - [ ] 북마크 삭제 기능 확인
+  - [ ] 북마크 원문 링크 이동 확인
+  - [ ] 로딩 상태 표시 확인
+  - [ ] 에러 상태 표시 확인 (북마크가 없거나 API 에러 발생 시)
+  - [ ] 반응형 디자인 확인 (모바일/태블릿/데스크톱)
+  - [ ] 접근성 확인 (키보드 네비게이션, 폼 접근성)
 
-### 2.6 설정
-- [ ] `frontend/app/settings/page.tsx` 생성:
+### 2.6 설정 페이지
+- [ ] 설정 페이지 (`frontend/app/settings/page.tsx`):
   - [ ] 소스 관리 섹션
-    - [ ] 소스 목록
-    - [ ] 소스 추가/수정/삭제
-    - [ ] OPML Import/Export 기능
   - [ ] 워치 규칙 관리 섹션
-    - [ ] 규칙 목록
-    - [ ] 규칙 추가/수정/삭제 (JSON 편집기)
-  - [ ] 알림 설정 섹션 (선택사항)
-- [ ] `frontend/components/OPMLImporter.tsx` 생성
-- [ ] `frontend/components/WatchRuleEditor.tsx` 생성
+  - [ ] 탭 또는 섹션으로 구분
+- [ ] 소스 관리 UI:
+  - [ ] 소스 목록 표시 (`GET /api/sources`)
+  - [ ] 소스 추가 폼 (`POST /api/sources`)
+  - [ ] 소스 수정/삭제 (`PATCH /DELETE /api/sources/{id}`)
+  - [ ] 활성화/비활성화 토글
+  - [ ] OPML Import/Export 버튼 (Phase 3에서 구현)
+- [ ] 워치 규칙 관리 UI:
+  - [ ] 규칙 목록 표시 (`GET /api/watch-rules`)
+  - [ ] 규칙 추가 폼 (`POST /api/watch-rules`)
+  - [ ] 규칙 수정/삭제 (`PATCH /DELETE /api/watch-rules/{id}`)
+  - [ ] JSON 편집기 (required_keywords, optional_keywords 편집)
+- [ ] `OPMLImporter` 컴포넌트 (`frontend/components/OPMLImporter.tsx`):
+  - [ ] OPML 파일 업로드 UI (Phase 3에서 구현)
+  - [ ] 파일 선택 및 업로드
+- [ ] `WatchRuleEditor` 컴포넌트 (`frontend/components/WatchRuleEditor.tsx`):
+  - [ ] 워치 규칙 편집 폼
+  - [ ] required_keywords, optional_keywords 입력
+  - [ ] JSON 편집 모드
+- [ ] **UX 확인**:
+  - [ ] 설정 페이지 접근 및 섹션 구분 확인 (`/settings`)
+  - [ ] 소스 관리 UI 동작 확인:
+    - [ ] 소스 목록 표시
+    - [ ] 소스 추가 폼 동작
+    - [ ] 소스 수정/삭제 동작
+    - [ ] 활성화/비활성화 토글 동작
+  - [ ] 워치 규칙 관리 UI 동작 확인:
+    - [ ] 규칙 목록 표시
+    - [ ] 규칙 추가 폼 동작
+    - [ ] 규칙 수정/삭제 동작
+    - [ ] JSON 편집기 동작 확인
+  - [ ] 폼 유효성 검증 확인 (필수 필드, 형식 검증)
+  - [ ] 성공/실패 피드백 확인 (저장 성공, 에러 메시지)
+  - [ ] 로딩 상태 표시 확인
+  - [ ] 에러 상태 표시 확인
+  - [ ] 반응형 디자인 확인 (모바일/태블릿/데스크톱)
+  - [ ] 접근성 확인 (키보드 네비게이션, 폼 접근성, 에러 메시지 접근성)
 
 ---
 
@@ -426,11 +586,11 @@
 
 ## 진행 상황 추적
 
-**마지막 업데이트**: 2025-11-19 (Phase 1 완료 ✅, Phase 2 시작 준비)
+**마지막 업데이트**: 2025-11-19 (Phase 1 완료 ✅, Phase 2.1 완료 ✅)
 
-**프로젝트 진행률**: 백엔드 기반 구조 100% 완료, 프론트엔드 0%
+**프로젝트 진행률**: 백엔드 기반 구조 100% 완료, 프론트엔드 Phase 2.1 완료
 
-**현재 단계**: Phase 2 (프론트엔드) 시작
+**현재 단계**: Phase 2.2 (홈/분야 탭) 시작 준비
 
 **Phase 구조**:
 - **Phase 1**: 백엔드 기반 구조 ✅ (완료)
@@ -459,3 +619,55 @@
 - ✅ **단위/통합 테스트**: 테스트 DB 사용 (격리된 테스트 환경)
 
 상세 내용은 `TODOs_v0.md` 및 `.cursor/rules/testing-strategy.mdc`를 참고하세요.
+
+---
+
+## API Contract 동기화 (중요 - 필수 준수)
+
+### 원칙: 단일 진실 공급원 (Single Source of Truth)
+백엔드가 상수와 스키마의 진실 공급원이며, 프론트엔드는 이를 정확히 반영해야 함.
+
+### 필수 체크리스트
+
+#### 백엔드 Constants API 구현 (Phase 2.1)
+- [ ] `backend/app/api/constants.py` 생성
+- [ ] `GET /api/constants/fields`: FIELDS 목록 반환
+- [ ] `GET /api/constants/custom-tags`: CUSTOM_TAGS 목록 반환
+- [ ] `backend/app/main.py`에 라우터 등록
+
+#### 프론트엔드 상수 정의 전략
+- [ ] **옵션 A (권장)**: Constants API 사용 (런타임 동기화)
+- [ ] **옵션 B**: 정적 상수 정의 (백엔드와 수동 동기화)
+- [ ] `frontend/lib/constants.ts`에 상수 정의
+- [ ] 타입 정의: `type Field = typeof FIELDS[number]`, `type CustomTag = typeof CUSTOM_TAGS[number]`
+
+#### 타입 정의 동기화
+- [ ] 필드명 일치 (camelCase vs snake_case 주의 - 백엔드는 snake_case)
+- [ ] 타입 일치 (string, number, boolean, Date → string)
+- [ ] Optional 필드 일치
+- [ ] 배열 타입 일치 (List[str] → string[])
+
+#### API 클라이언트 쿼리 파라미터 동기화
+- [ ] 백엔드는 snake_case 사용, 프론트엔드도 동일하게 사용
+- [ ] `date_from`, `date_to`, `page_size`, `order_by`, `order_desc` 등
+- [ ] axios가 자동으로 snake_case 유지
+
+#### 런타임 검증 함수
+- [ ] `frontend/lib/validators.ts` 생성
+- [ ] `validateField()`: 분야 값 검증
+- [ ] `validateCustomTag()`: 커스텀 태그 값 검증
+- [ ] URL 파라미터 검증에 사용
+
+#### Common Pitfalls 방지
+- [ ] 하드코딩된 문자열 사용 금지 (상수 파일 사용)
+- [ ] camelCase vs snake_case 혼용 금지
+- [ ] 태그 값 대소문자 일치 확인 (예: "agents" vs "Agents")
+- [ ] Query 파라미터 이름 일치 확인
+- [ ] Enum 값 문자열 일치 확인
+
+### 동기화 검증 방법
+- **타입 체크**: TypeScript 컴파일 시 타입 불일치 감지
+- **런타임 검증**: API 호출 시 백엔드 에러 응답으로 검증
+- **수동 검증**: 백엔드 스키마 파일과 프론트엔드 타입 파일 비교
+
+**참고 규칙**: `.cursor/rules/api-contract-sync.mdc` 상세 내용 확인
