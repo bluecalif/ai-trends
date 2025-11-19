@@ -1,0 +1,44 @@
+{
+  "test_name": "test_supabase_pagination_filtering_sorting",
+  "timestamp": "20251119_123236",
+  "pagination": {
+    "page1_count": 10,
+    "page1_total": 469,
+    "page2_count": 10,
+    "page2_total": 469,
+    "page1_page": 1,
+    "page2_page": 2,
+    "consistent_total": true,
+    "no_duplicates": true
+  },
+  "filtering": {
+    "agents": {
+      "status_code": 200,
+      "filtered_count": 0,
+      "total": 0
+    },
+    "world_models": {
+      "status_code": 200,
+      "filtered_count": 0,
+      "total": 0
+    },
+    "non_transformer": {
+      "status_code": 200,
+      "filtered_count": 0,
+      "total": 0
+    },
+    "date_from": {
+      "status_code": 200,
+      "filtered_count": 10,
+      "total": 435
+    }
+  },
+  "sorting": {
+    "desc_order_correct": true,
+    "asc_order_correct": true,
+    "desc_count": 5,
+    "asc_count": 5
+  },
+  "status": "passed",
+  "total_items_in_db": 469
+}

@@ -1,0 +1,1036 @@
+{
+  "test_name": "test_person_tracker_e2e_real_data",
+  "timestamp": "20251119_103214",
+  "window": {
+    "start": "2025-10-29T00:00:00+00:00",
+    "end": "2025-11-19T00:00:00+00:00",
+    "days": 21
+  },
+  "persons_created": [
+    {
+      "id": 90,
+      "name": "Yann LeCun",
+      "bio": "Chief AI Scientist at Meta",
+      "rules": [
+        {
+          "id": 46,
+          "label": "JEPA variants",
+          "include_rules": [
+            "JEPA",
+            "I-JEPA",
+            "V-JEPA",
+            "Meta",
+            "LeCun"
+          ],
+          "exclude_rules": [],
+          "priority": 10
+        }
+      ]
+    },
+    {
+      "id": 91,
+      "name": "Andrej Karpathy",
+      "bio": "Former Director of AI at Tesla, Founder of Eureka Labs",
+      "rules": [
+        {
+          "id": 47,
+          "label": "NanoChat and Eureka Labs",
+          "include_rules": [
+            "NanoChat",
+            "Eureka Labs",
+            "LLM101n",
+            "Karpathy"
+          ],
+          "exclude_rules": [],
+          "priority": 10
+        }
+      ]
+    },
+    {
+      "id": 92,
+      "name": "David Luan",
+      "bio": "Co-founder of Adept AI, Former VP of Engineering at OpenAI",
+      "rules": [
+        {
+          "id": 48,
+          "label": "Agentic and Amazon Nova",
+          "include_rules": [
+            "agentic",
+            "Amazon Nova",
+            "AGI SF Lab",
+            "David Luan"
+          ],
+          "exclude_rules": [],
+          "priority": 10
+        }
+      ]
+    },
+    {
+      "id": 93,
+      "name": "Llion Jones",
+      "bio": "Co-founder of Sakana AI, Former Research Scientist at Google",
+      "rules": [
+        {
+          "id": 49,
+          "label": "Sakana AI models",
+          "include_rules": [
+            "Sakana AI",
+            "Sakana"
+          ],
+          "exclude_rules": [],
+          "priority": 10
+        },
+        {
+          "id": 50,
+          "label": "Sakana AI papers/benchmarks",
+          "include_rules": [
+            "Sakana",
+            "model",
+            "paper",
+            "benchmark"
+          ],
+          "exclude_rules": [],
+          "priority": 5
+        }
+      ]
+    },
+    {
+      "id": 94,
+      "name": "AUI/Apollo-1",
+      "bio": "Neuro-symbolic AI system",
+      "rules": [
+        {
+          "id": 51,
+          "label": "Apollo-1 and neuro-symbolic",
+          "include_rules": [
+            "Apollo-1",
+            "neuro-symbolic",
+            "stateful reasoning"
+          ],
+          "exclude_rules": [],
+          "priority": 10
+        }
+      ]
+    }
+  ],
+  "collection": {
+    "sources": [
+      {
+        "source_id": 291,
+        "source_title": "TechCrunch",
+        "feed_url": "https://techcrunch.com/feed/",
+        "count": 0,
+        "status": "success"
+      },
+      {
+        "source_id": 292,
+        "source_title": "VentureBeat – AI",
+        "feed_url": "https://venturebeat.com/category/ai/feed/",
+        "count": 0,
+        "status": "success"
+      },
+      {
+        "source_id": 293,
+        "source_title": "MarkTechPost",
+        "feed_url": "https://www.marktechpost.com/feed/",
+        "count": 0,
+        "status": "success"
+      },
+      {
+        "source_id": 294,
+        "source_title": "WIRED (All)",
+        "feed_url": "https://www.wired.com/feed/rss",
+        "count": 0,
+        "status": "success"
+      },
+      {
+        "source_id": 295,
+        "source_title": "The Verge (All)",
+        "feed_url": "https://www.theverge.com/rss/index.xml",
+        "count": 0,
+        "status": "success"
+      },
+      {
+        "source_id": 296,
+        "source_title": "IEEE Spectrum – AI",
+        "feed_url": "https://spectrum.ieee.org/rss/fulltext",
+        "count": 0,
+        "status": "success"
+      },
+      {
+        "source_id": 297,
+        "source_title": "AITimes",
+        "feed_url": "https://www.aitimes.com/rss/allArticle.xml",
+        "count": 0,
+        "status": "success"
+      },
+      {
+        "source_id": 298,
+        "source_title": "arXiv – cs.AI",
+        "feed_url": "http://export.arxiv.org/rss/cs.AI",
+        "count": 0,
+        "status": "success"
+      },
+      {
+        "source_id": 299,
+        "source_title": "OpenAI News",
+        "feed_url": "https://openai.com/blog/rss.xml",
+        "count": 0,
+        "status": "success"
+      },
+      {
+        "source_id": 300,
+        "source_title": "The Keyword (Google DeepMind filtered)",
+        "feed_url": "https://blog.google/feed/",
+        "count": 0,
+        "status": "error",
+        "error": "Feed parsing error: <unknown>:38:75: not well-formed (invalid token)"
+      }
+    ],
+    "total_items": 0,
+    "items_in_window": 757
+  },
+  "matching": {
+    "total_items": 1493,
+    "items_in_window": 757,
+    "matched_items": 450,
+    "total_matches": 481,
+    "matches_by_person": {
+      "Yann LeCun": 18,
+      "Andrej Karpathy": 1,
+      "David Luan": 31,
+      "Llion Jones": 429,
+      "AUI/Apollo-1": 2
+    },
+    "matched_items_detail": [
+      {
+        "item_id": 6078,
+        "item_title": "Batch Acquisition Function Evaluations and Decouple Optimizer Updates for Faster Bayesian Optimizati",
+        "published_at": "2025-11-18T20:00:00",
+        "source_id": 298,
+        "matched_persons": [
+          "Llion Jones"
+        ]
+      },
+      {
+        "item_id": 6076,
+        "item_title": "Unlocking the Forgery Detection Potential of Vanilla MLLMs: A Novel Training-Free Pipeline",
+        "published_at": "2025-11-18T20:00:00",
+        "source_id": 298,
+        "matched_persons": [
+          "Llion Jones"
+        ]
+      },
+      {
+        "item_id": 6075,
+        "item_title": "Generalized Denoising Diffusion Codebook Models (gDDCM): Tokenizing images using a pre-trained diffu",
+        "published_at": "2025-11-18T20:00:00",
+        "source_id": 298,
+        "matched_persons": [
+          "Llion Jones"
+        ]
+      },
+      {
+        "item_id": 6073,
+        "item_title": "Dimension vs. Precision: A Comparative Analysis of Autoencoders and Quantization for Efficient Vecto",
+        "published_at": "2025-11-18T20:00:00",
+        "source_id": 298,
+        "matched_persons": [
+          "Llion Jones"
+        ]
+      },
+      {
+        "item_id": 6071,
+        "item_title": "PFAvatar: Pose-Fusion 3D Personalized Avatar Reconstruction from Real-World Outfit-of-the-Day Photos",
+        "published_at": "2025-11-18T20:00:00",
+        "source_id": 298,
+        "matched_persons": [
+          "Llion Jones"
+        ]
+      },
+      {
+        "item_id": 6069,
+        "item_title": "Fine-Grained Representation for Lane Topology Reasoning",
+        "published_at": "2025-11-18T20:00:00",
+        "source_id": 298,
+        "matched_persons": [
+          "Llion Jones"
+        ]
+      },
+      {
+        "item_id": 6067,
+        "item_title": "A Meta-Heuristic Load Balancer for Cloud Computing Systems",
+        "published_at": "2025-11-18T20:00:00",
+        "source_id": 298,
+        "matched_persons": [
+          "Yann LeCun",
+          "Llion Jones"
+        ]
+      },
+      {
+        "item_id": 6066,
+        "item_title": "Embedding Explainable AI in NHS Clinical Safety: The Explainability-Enabled Clinical Safety Framewor",
+        "published_at": "2025-11-18T20:00:00",
+        "source_id": 298,
+        "matched_persons": [
+          "Llion Jones"
+        ]
+      },
+      {
+        "item_id": 6065,
+        "item_title": "MedBuild AI: An Agent-Based Hybrid Intelligence Framework for Reshaping Agency in Healthcare Infrast",
+        "published_at": "2025-11-18T20:00:00",
+        "source_id": 298,
+        "matched_persons": [
+          "Llion Jones"
+        ]
+      },
+      {
+        "item_id": 6064,
+        "item_title": "A Style is Worth One Code: Unlocking Code-to-Style Image Generation with Discrete Style Space",
+        "published_at": "2025-11-18T20:00:00",
+        "source_id": 298,
+        "matched_persons": [
+          "Llion Jones"
+        ]
+      },
+      {
+        "item_id": 6063,
+        "item_title": "LocalBench: Benchmarking LLMs on County-Level Local Knowledge and Reasoning",
+        "published_at": "2025-11-18T20:00:00",
+        "source_id": 298,
+        "matched_persons": [
+          "Llion Jones"
+        ]
+      },
+      {
+        "item_id": 6062,
+        "item_title": "LoopTool: Closing the Data-Training Loop for Robust LLM Tool Calls",
+        "published_at": "2025-11-18T20:00:00",
+        "source_id": 298,
+        "matched_persons": [
+          "Llion Jones"
+        ]
+      },
+      {
+        "item_id": 6061,
+        "item_title": "Tele-LLM-Hub: Building Context-Aware Multi-Agent LLM Systems for Telecom Networks",
+        "published_at": "2025-11-18T20:00:00",
+        "source_id": 298,
+        "matched_persons": [
+          "Llion Jones"
+        ]
+      },
+      {
+        "item_id": 6060,
+        "item_title": "FGM-HD: Boosting Generation Diversity of Fractal Generative Models through Hausdorff Dimension Induc",
+        "published_at": "2025-11-18T20:00:00",
+        "source_id": 298,
+        "matched_persons": [
+          "Llion Jones"
+        ]
+      },
+      {
+        "item_id": 6059,
+        "item_title": "Energy Consumption of Dataframe Libraries for End-to-End Deep Learning Pipelines:A Comparative Analy",
+        "published_at": "2025-11-18T20:00:00",
+        "source_id": 298,
+        "matched_persons": [
+          "Llion Jones"
+        ]
+      },
+      {
+        "item_id": 6058,
+        "item_title": "Resilient by Design -- Active Inference for Distributed Continuum Intelligence",
+        "published_at": "2025-11-18T20:00:00",
+        "source_id": 298,
+        "matched_persons": [
+          "Llion Jones"
+        ]
+      },
+      {
+        "item_id": 6057,
+        "item_title": "Resource Efficient Sleep Staging via Multi-Level Masking and Prompt Learning",
+        "published_at": "2025-11-18T20:00:00",
+        "source_id": 298,
+        "matched_persons": [
+          "Llion Jones"
+        ]
+      },
+      {
+        "item_id": 6056,
+        "item_title": "Physics-Informed Neural Networks for Real-Time Gas Crossover Prediction in PEM Electrolyzers: First ",
+        "published_at": "2025-11-18T20:00:00",
+        "source_id": 298,
+        "matched_persons": [
+          "Llion Jones"
+        ]
+      },
+      {
+        "item_id": 6055,
+        "item_title": "MusRec: Zero-Shot Text-to-Music Editing via Rectified Flow and Diffusion Transformers",
+        "published_at": "2025-11-18T20:00:00",
+        "source_id": 298,
+        "matched_persons": [
+          "Llion Jones"
+        ]
+      },
+      {
+        "item_id": 6054,
+        "item_title": "Leveraging LLM-based agents for social science research: insights from citation network simulations",
+        "published_at": "2025-11-18T20:00:00",
+        "source_id": 298,
+        "matched_persons": [
+          "Llion Jones"
+        ]
+      },
+      {
+        "item_id": 6053,
+        "item_title": "Deploying Rapid Damage Assessments from sUAS Imagery for Disaster Response",
+        "published_at": "2025-11-18T20:00:00",
+        "source_id": 298,
+        "matched_persons": [
+          "Llion Jones"
+        ]
+      },
+      {
+        "item_id": 6052,
+        "item_title": "DRIP: Defending Prompt Injection via Token-wise Representation Editing and Residual Instruction Fusi",
+        "published_at": "2025-11-18T20:00:00",
+        "source_id": 298,
+        "matched_persons": [
+          "Llion Jones"
+        ]
+      },
+      {
+        "item_id": 6051,
+        "item_title": "Clone Deterministic 3D Worlds",
+        "published_at": "2025-11-18T20:00:00",
+        "source_id": 298,
+        "matched_persons": [
+          "Llion Jones"
+        ]
+      },
+      {
+        "item_id": 6050,
+        "item_title": "Posterior Sampling by Combining Diffusion Models with Annealed Langevin Dynamics",
+        "published_at": "2025-11-18T20:00:00",
+        "source_id": 298,
+        "matched_persons": [
+          "Llion Jones"
+        ]
+      },
+      {
+        "item_id": 6049,
+        "item_title": "MMEdge: Accelerating On-device Multimodal Inference via Pipelined Sensing and Encoding",
+        "published_at": "2025-11-18T20:00:00",
+        "source_id": 298,
+        "matched_persons": [
+          "Llion Jones"
+        ]
+      },
+      {
+        "item_id": 6047,
+        "item_title": "From Reasoning LLMs to BERT: A Two-Stage Distillation Framework for Search Relevance",
+        "published_at": "2025-11-18T20:00:00",
+        "source_id": 298,
+        "matched_persons": [
+          "Llion Jones"
+        ]
+      },
+      {
+        "item_id": 6045,
+        "item_title": "A More Realistic Evaluation of Cross-Frequency Transfer Learning and Foundation Forecasting Models",
+        "published_at": "2025-11-18T20:00:00",
+        "source_id": 298,
+        "matched_persons": [
+          "Llion Jones"
+        ]
+      },
+      {
+        "item_id": 6044,
+        "item_title": "Towards Sharper Object Boundaries in Self-Supervised Depth Estimation",
+        "published_at": "2025-11-18T20:00:00",
+        "source_id": 298,
+        "matched_persons": [
+          "Llion Jones"
+        ]
+      },
+      {
+        "item_id": 6043,
+        "item_title": "Patent Language Model Pretraining with ModernBERT",
+        "published_at": "2025-11-18T20:00:00",
+        "source_id": 298,
+        "matched_persons": [
+          "Llion Jones"
+        ]
+      },
+      {
+        "item_id": 6041,
+        "item_title": "Efficient Decoding Methods for Language Models on Encrypted Data",
+        "published_at": "2025-11-18T20:00:00",
+        "source_id": 298,
+        "matched_persons": [
+          "Llion Jones"
+        ]
+      },
+      {
+        "item_id": 6039,
+        "item_title": "DepthVision: Enabling Robust Vision-Language Models with GAN-Based LiDAR-to-RGB Synthesis for Autono",
+        "published_at": "2025-11-18T20:00:00",
+        "source_id": 298,
+        "matched_persons": [
+          "Llion Jones"
+        ]
+      },
+      {
+        "item_id": 6038,
+        "item_title": "Automatic Differentiation of Agent-Based Models",
+        "published_at": "2025-11-18T20:00:00",
+        "source_id": 298,
+        "matched_persons": [
+          "Llion Jones"
+        ]
+      },
+      {
+        "item_id": 6037,
+        "item_title": "Do Retrieval Augmented Language Models Know When They Don't Know?",
+        "published_at": "2025-11-18T20:00:00",
+        "source_id": 298,
+        "matched_persons": [
+          "Llion Jones"
+        ]
+      },
+      {
+        "item_id": 6035,
+        "item_title": "Spatial Policy: Guiding Visuomotor Robotic Manipulation with Spatial-Aware Modeling and Reasoning",
+        "published_at": "2025-11-18T20:00:00",
+        "source_id": 298,
+        "matched_persons": [
+          "Llion Jones"
+        ]
+      },
+      {
+        "item_id": 6034,
+        "item_title": "RynnEC: Bringing MLLMs into Embodied World",
+        "published_at": "2025-11-18T20:00:00",
+        "source_id": 298,
+        "matched_persons": [
+          "Llion Jones"
+        ]
+      },
+      {
+        "item_id": 6032,
+        "item_title": "MOON: Generative MLLM-based Multimodal Representation Learning for E-commerce Product Understanding",
+        "published_at": "2025-11-18T20:00:00",
+        "source_id": 298,
+        "matched_persons": [
+          "Llion Jones"
+        ]
+      },
+      {
+        "item_id": 6030,
+        "item_title": "Explaining Similarity in Vision-Language Encoders with Weighted Banzhaf Interactions",
+        "published_at": "2025-11-18T20:00:00",
+        "source_id": 298,
+        "matched_persons": [
+          "Llion Jones"
+        ]
+      },
+      {
+        "item_id": 6027,
+        "item_title": "SlotMatch: Distilling Object-Centric Representations for Unsupervised Video Segmentation",
+        "published_at": "2025-11-18T20:00:00",
+        "source_id": 298,
+        "matched_persons": [
+          "Llion Jones"
+        ]
+      },
+      {
+        "item_id": 6025,
+        "item_title": "GMAT: Grounded Multi-Agent Clinical Description Generation for Text Encoder in Vision-Language MIL f",
+        "published_at": "2025-11-18T20:00:00",
+        "source_id": 298,
+        "matched_persons": [
+          "Llion Jones"
+        ]
+      },
+      {
+        "item_id": 6024,
+        "item_title": "AgentArmor: Enforcing Program Analysis on Agent Runtime Trace to Defend Against Prompt Injection",
+        "published_at": "2025-11-18T20:00:00",
+        "source_id": 298,
+        "matched_persons": [
+          "Llion Jones"
+        ]
+      },
+      {
+        "item_id": 6023,
+        "item_title": "Cross-Domain Few-Shot Learning with Coalescent Projections and Latent Space Reservation",
+        "published_at": "2025-11-18T20:00:00",
+        "source_id": 298,
+        "matched_persons": [
+          "Llion Jones"
+        ]
+      },
+      {
+        "item_id": 6022,
+        "item_title": "FastDINOv2: Frequency Based Curriculum Learning Improves Robustness and Training Speed",
+        "published_at": "2025-11-18T20:00:00",
+        "source_id": 298,
+        "matched_persons": [
+          "Llion Jones"
+        ]
+      },
+      {
+        "item_id": 6021,
+        "item_title": "OptScale: Probabilistic Optimality for Inference-time Scaling",
+        "published_at": "2025-11-18T20:00:00",
+        "source_id": 298,
+        "matched_persons": [
+          "Llion Jones"
+        ]
+      },
+      {
+        "item_id": 6020,
+        "item_title": "EvoLM: In Search of Lost Language Model Training Dynamics",
+        "published_at": "2025-11-18T20:00:00",
+        "source_id": 298,
+        "matched_persons": [
+          "Llion Jones"
+        ]
+      },
+      {
+        "item_id": 6018,
+        "item_title": "Foundation Models in Medical Imaging: A Review and Outlook",
+        "published_at": "2025-11-18T20:00:00",
+        "source_id": 298,
+        "matched_persons": [
+          "Llion Jones"
+        ]
+      },
+      {
+        "item_id": 6016,
+        "item_title": "OG-VLA: Orthographic Image Generation for 3D-Aware Vision-Language Action Model",
+        "published_at": "2025-11-18T20:00:00",
+        "source_id": 298,
+        "matched_persons": [
+          "Llion Jones"
+        ]
+      },
+      {
+        "item_id": 6014,
+        "item_title": "MCTSr-Zero: Self-Reflective Psychological Counseling Dialogues Generation via Principles and Adaptiv",
+        "published_at": "2025-11-18T20:00:00",
+        "source_id": 298,
+        "matched_persons": [
+          "Llion Jones"
+        ]
+      },
+      {
+        "item_id": 6013,
+        "item_title": "In-context Language Learning for Endangered Languages in Speech Recognition",
+        "published_at": "2025-11-18T20:00:00",
+        "source_id": 298,
+        "matched_persons": [
+          "Llion Jones"
+        ]
+      },
+      {
+        "item_id": 6012,
+        "item_title": "SpecEdge: Scalable Edge-Assisted Serving Framework for Interactive LLMs",
+        "published_at": "2025-11-18T20:00:00",
+        "source_id": 298,
+        "matched_persons": [
+          "Llion Jones"
+        ]
+      },
+      {
+        "item_id": 6010,
+        "item_title": "Anti-adversarial Learning: Desensitizing Prompts for Large Language Models",
+        "published_at": "2025-11-18T20:00:00",
+        "source_id": 298,
+        "matched_persons": [
+          "Llion Jones"
+        ]
+      }
+    ]
+  },
+  "timeline_events": [
+    {
+      "person_id": 90,
+      "person_name": "Yann LeCun",
+      "item_id": 4666,
+      "item_title": "Inside Hyundai’s Massive Metaplant",
+      "event_type": "investment",
+      "description": "Inside Hyundai’s Massive Metaplant - <img src=\"https://spectrum.ieee.org/media-library/a-vast-manufacturing-hall-stretches-into-the-distance-with-robotic-vehicles-visible-in-the-foreground.jpg?id=62037653&amp;width=2000&amp;height=1500&a",
+      "created_at": "2025-11-19T10:34:06.417373"
+    },
+    {
+      "person_id": 90,
+      "person_name": "Yann LeCun",
+      "item_id": 4659,
+      "item_title": "Startup Using Nanotips and Naphthalene for New Satellite Thruster",
+      "event_type": "research_direction",
+      "description": "Startup Using Nanotips and Naphthalene for New Satellite Thruster - <img src=\"https://spectrum.ieee.org/media-library/orbital-arc-s-prototype-is-a-small-metal-canister-with-black-and-red-wires-and-a-clamp-with-a-wing-nut.jpg?id=62097074&amp;width=2000&amp;height=1500&",
+      "created_at": "2025-11-19T10:34:05.379365"
+    },
+    {
+      "person_id": 90,
+      "person_name": "Yann LeCun",
+      "item_id": 5743,
+      "item_title": "Meta AI Introduces DreamGym: A Textual Experience Synthesizer For Reinforcement learning RL Agents",
+      "event_type": "product",
+      "description": "Meta AI Introduces DreamGym: A Textual Experience Synthesizer For Reinforcement learning RL Agents - <p>Reinforcement learning RL for large language model LLM agents looks attractive on paper, but in practice it breaks on cost, infrastructure and reward noise. Training an agent that clicks through we",
+      "created_at": "2025-11-19T10:34:02.047483"
+    },
+    {
+      "person_id": 90,
+      "person_name": "Yann LeCun",
+      "item_id": 4599,
+      "item_title": "Meta releases a new tool to protect reels creators from having their work stolen",
+      "event_type": "product",
+      "description": "Meta releases a new tool to protect reels creators from having their work stolen - On Monday, Meta introduced Facebook content protection, a mobile tool designed to detect when a creator's original reels posted to Facebook are being used without their permission. The new tool extend",
+      "created_at": "2025-11-19T10:33:59.726836"
+    },
+    {
+      "person_id": 90,
+      "person_name": "Yann LeCun",
+      "item_id": 4642,
+      "item_title": "Google is fighting the defamation battle Meta caved on",
+      "event_type": "research_direction",
+      "description": "Google is fighting the defamation battle Meta caved on - Google filed a motion to dismiss a defamation lawsuit brought by anti-corporate diversity activist Robby Starbuck, who claimed Google’s AI falsely associated him with sexual assault allegations and a ",
+      "created_at": "2025-11-19T10:33:59.432093"
+    },
+    {
+      "person_id": 90,
+      "person_name": "Yann LeCun",
+      "item_id": 4838,
+      "item_title": "Specification, Application, and Operationalization of a Metamodel of Fairness",
+      "event_type": "product",
+      "description": "Specification, Application, and Operationalization of a Metamodel of Fairness - arXiv:2511.11144v1 Announce Type: cross \nAbstract: This paper presents the AR fairness metamodel, aimed at formally representing, analyzing, and comparing fairness scenarios. The metamodel provides an",
+      "created_at": "2025-11-19T10:33:44.686383"
+    },
+    {
+      "person_id": 90,
+      "person_name": "Yann LeCun",
+      "item_id": 4805,
+      "item_title": "DINOv3 as a Frozen Encoder for CRPS-Oriented Probabilistic Rainfall Nowcasting",
+      "event_type": "product",
+      "description": "DINOv3 as a Frozen Encoder for CRPS-Oriented Probabilistic Rainfall Nowcasting - arXiv:2511.10894v1 Announce Type: cross \nAbstract: This paper proposes a competitive and computationally efficient approach to probabilistic rainfall nowcasting. A video projector (V-JEPA Vision Trans",
+      "created_at": "2025-11-19T10:33:40.803595"
+    },
+    {
+      "person_id": 90,
+      "person_name": "Yann LeCun",
+      "item_id": 4797,
+      "item_title": "Adaptive Digital Twin of Sheet Metal Forming via Proper Orthogonal Decomposition-Based Koopman Operator with Model Predictive Control",
+      "event_type": "product",
+      "description": "Adaptive Digital Twin of Sheet Metal Forming via Proper Orthogonal Decomposition-Based Koopman Operator with Model Predictive Control - arXiv:2511.10852v1 Announce Type: cross \nAbstract: Digital Twin (DT) technologies are transforming manufacturing by enabling real-time prediction, monitoring, and control of complex processes. Yet, ap",
+      "created_at": "2025-11-19T10:33:39.351960"
+    },
+    {
+      "person_id": 90,
+      "person_name": "Yann LeCun",
+      "item_id": 4765,
+      "item_title": "Evaluating Open-Weight Large Language Models for Structured Data Extraction from Narrative Medical Reports Across Multiple Use Cases and Languages",
+      "event_type": "product",
+      "description": "Evaluating Open-Weight Large Language Models for Structured Data Extraction from Narrative Medical Reports Across Multiple Use Cases and Languages - arXiv:2511.10658v1 Announce Type: cross \nAbstract: Large language models (LLMs) are increasingly used to extract structured information from free-text clinical records, but prior work often focuses on",
+      "created_at": "2025-11-19T10:33:34.548812"
+    },
+    {
+      "person_id": 90,
+      "person_name": "Yann LeCun",
+      "item_id": 4968,
+      "item_title": "LeJEPA: Provable and Scalable Self-Supervised Learning Without the Heuristics",
+      "event_type": "organization",
+      "description": "LeJEPA: Provable and Scalable Self-Supervised Learning Without the Heuristics - arXiv:2511.08544v3 Announce Type: replace-cross \nAbstract: Learning manipulable representations of the world and its dynamics is central to AI. Joint-Embedding Predictive Architectures (JEPAs) offer a",
+      "created_at": "2025-11-19T10:33:28.088528"
+    },
+    {
+      "person_id": 91,
+      "person_name": "Andrej Karpathy",
+      "item_id": 5839,
+      "item_title": "What happens when nanochat meets DiLoCo?",
+      "event_type": "product",
+      "description": "What happens when nanochat meets DiLoCo? - arXiv:2511.13761v1 Announce Type: cross \nAbstract: Although LLM training is typically centralized with high-bandwidth interconnects and large compute budgets, emerging methods target communication-con",
+      "created_at": "2025-11-19T10:33:13.264589"
+    },
+    {
+      "person_id": 92,
+      "person_name": "David Luan",
+      "item_id": 5002,
+      "item_title": "How we built OWL, the new architecture behind our ChatGPT-based browser, Atlas",
+      "event_type": "research_direction",
+      "description": "How we built OWL, the new architecture behind our ChatGPT-based browser, Atlas - A deep dive into OWL, the new architecture powering ChatGPT Atlas—decoupling Chromium, enabling fast startup, rich UI, and agentic browsing with ChatGPT.",
+      "created_at": "2025-11-19T10:34:07.378137"
+    },
+    {
+      "person_id": 92,
+      "person_name": "David Luan",
+      "item_id": 5001,
+      "item_title": "Introducing Aardvark: OpenAI’s agentic security researcher",
+      "event_type": "organization",
+      "description": "Introducing Aardvark: OpenAI’s agentic security researcher - OpenAI introduces Aardvark, an AI-powered security researcher that autonomously finds, validates, and helps fix software vulnerabilities at scale. The system is in private beta—sign up to join early t",
+      "created_at": "2025-11-19T10:34:07.142839"
+    },
+    {
+      "person_id": 92,
+      "person_name": "David Luan",
+      "item_id": 4990,
+      "item_title": "Notion’s rebuild for agentic AI: How GPT‑5 helped unlock autonomous workflows",
+      "event_type": "product",
+      "description": "Notion’s rebuild for agentic AI: How GPT‑5 helped unlock autonomous workflows - Discover how Notion rebuilt its AI architecture with GPT-5 to create autonomous agents that reason, act, and adapt across workflows. Learn how this shift unlocked smarter, faster, and more flexible pr",
+      "created_at": "2025-11-19T10:34:05.914383"
+    },
+    {
+      "person_id": 92,
+      "person_name": "David Luan",
+      "item_id": 4610,
+      "item_title": "Human-centric IAM is failing: Agentic AI requires a new identity control plane",
+      "event_type": "research_direction",
+      "description": "Human-centric IAM is failing: Agentic AI requires a new identity control plane - <p>The race to deploy <a href=\"https://venturebeat.com/ai/6-proven-lessons-from-the-ai-projects-that-broke-before-they-scaled\">agentic AI is on</a>. Across the enterprise, systems that can plan, take ",
+      "created_at": "2025-11-19T10:34:03.516149"
+    },
+    {
+      "person_id": 92,
+      "person_name": "David Luan",
+      "item_id": 4608,
+      "item_title": "In a sea of agents, AWS bets on structured adherence and spec fidelity",
+      "event_type": "research_direction",
+      "description": "In a sea of agents, AWS bets on structured adherence and spec fidelity - <p>Despite <a href=\"https://venturebeat.com/ai/vibe-coding-is-dead-agentic-swarm-coding-is-the-new-enterprise-moat\"><u>new methods </u></a>emerging, enterprises continue to turn to autonomous coding a",
+      "created_at": "2025-11-19T10:34:02.961147"
+    },
+    {
+      "person_id": 92,
+      "person_name": "David Luan",
+      "item_id": 4891,
+      "item_title": "Spilling the Beans: Teaching LLMs to Self-Report Their Hidden Objectives",
+      "event_type": "product",
+      "description": "Spilling the Beans: Teaching LLMs to Self-Report Their Hidden Objectives - arXiv:2511.06626v3 Announce Type: replace \nAbstract: As AI systems become more capable of complex agentic tasks, they also become more capable of pursuing undesirable objectives and causing harm. Prev",
+      "created_at": "2025-11-19T10:33:51.183311"
+    },
+    {
+      "person_id": 92,
+      "person_name": "David Luan",
+      "item_id": 4856,
+      "item_title": "NOVA: An Agentic Framework for Automated Histopathology Analysis and Discovery",
+      "event_type": "product",
+      "description": "NOVA: An Agentic Framework for Automated Histopathology Analysis and Discovery - arXiv:2511.11324v1 Announce Type: cross \nAbstract: Digitized histopathology analysis involves complex, time-intensive workflows and specialized expertise, limiting its accessibility. We introduce NOVA",
+      "created_at": "2025-11-19T10:33:47.045693"
+    },
+    {
+      "person_id": 92,
+      "person_name": "David Luan",
+      "item_id": 4840,
+      "item_title": "Refine and Align: Confidence Calibration through Multi-Agent Interaction in VQA",
+      "event_type": "product",
+      "description": "Refine and Align: Confidence Calibration through Multi-Agent Interaction in VQA - arXiv:2511.11169v1 Announce Type: cross \nAbstract: In the context of Visual Question Answering (VQA) and Agentic AI, calibration refers to how closely an AI system's confidence in its answers reflects",
+      "created_at": "2025-11-19T10:33:45.106753"
+    },
+    {
+      "person_id": 92,
+      "person_name": "David Luan",
+      "item_id": 4762,
+      "item_title": "Empirical Characterization of Temporal Constraint Processing in LLMs",
+      "event_type": "product",
+      "description": "Empirical Characterization of Temporal Constraint Processing in LLMs - arXiv:2511.10654v1 Announce Type: cross \nAbstract: When deploying LLMs in agentic architectures requiring real-time decisions under temporal constraints, we assume they reliably determine whether acti",
+      "created_at": "2025-11-19T10:33:34.005507"
+    },
+    {
+      "person_id": 92,
+      "person_name": "David Luan",
+      "item_id": 4758,
+      "item_title": "Unsupervised Cycle Detection in Agentic Applications",
+      "event_type": "product",
+      "description": "Unsupervised Cycle Detection in Agentic Applications - arXiv:2511.10650v1 Announce Type: cross \nAbstract: Agentic applications powered by Large Language Models exhibit non-deterministic behaviors that can form hidden execution cycles, silently consuming r",
+      "created_at": "2025-11-19T10:33:33.330403"
+    },
+    {
+      "person_id": 93,
+      "person_name": "Llion Jones",
+      "item_id": 4999,
+      "item_title": "AWS and OpenAI announce multi-year strategic partnership",
+      "event_type": "product",
+      "description": "AWS and OpenAI announce multi-year strategic partnership - OpenAI and AWS have entered a multi-year, $38 billion partnership to scale advanced AI workloads. AWS will provide world-class infrastructure and compute capacity to power OpenAI’s next generation of ",
+      "created_at": "2025-11-19T10:34:06.937908"
+    },
+    {
+      "person_id": 93,
+      "person_name": "Llion Jones",
+      "item_id": 4998,
+      "item_title": "Introducing IndQA",
+      "event_type": "product",
+      "description": "Introducing IndQA - OpenAI introduces IndQA, a new benchmark for evaluating AI systems in Indian languages. Built with domain experts, IndQA tests cultural understanding and reasoning across 12 languages and 10 knowledge",
+      "created_at": "2025-11-19T10:34:06.782916"
+    },
+    {
+      "person_id": 93,
+      "person_name": "Llion Jones",
+      "item_id": 4989,
+      "item_title": "Understanding prompt injections: a frontier security challenge",
+      "event_type": "research_direction",
+      "description": "Understanding prompt injections: a frontier security challenge - Prompt injections are a frontier security challenge for AI systems. Learn how these attacks work and how OpenAI is advancing research, training models, and building safeguards for users.",
+      "created_at": "2025-11-19T10:34:05.718364"
+    },
+    {
+      "person_id": 93,
+      "person_name": "Llion Jones",
+      "item_id": 4987,
+      "item_title": "GPT-5.1: A smarter, more conversational ChatGPT",
+      "event_type": "investment",
+      "description": "GPT-5.1: A smarter, more conversational ChatGPT - We’re upgrading the GPT-5 series with warmer, more capable models and new ways to customize ChatGPT’s tone and style. GPT-5.1 starts rolling out today to paid users.",
+      "created_at": "2025-11-19T10:34:05.100370"
+    },
+    {
+      "person_id": 93,
+      "person_name": "Llion Jones",
+      "item_id": 4980,
+      "item_title": "Understanding neural networks through sparse circuits",
+      "event_type": "research_direction",
+      "description": "Understanding neural networks through sparse circuits - OpenAI is exploring mechanistic interpretability to understand how neural networks reason. Our new sparse model approach could make AI systems more transparent and support safer, more reliable behavio",
+      "created_at": "2025-11-19T10:34:04.632370"
+    },
+    {
+      "person_id": 93,
+      "person_name": "Llion Jones",
+      "item_id": 4612,
+      "item_title": "ChatGPT Group Chats are here … but not for everyone (yet)",
+      "event_type": "organization",
+      "description": "ChatGPT Group Chats are here … but not for everyone (yet) - <p>It was originally found in <a href=\"https://x.com/btibor91/status/1988029080726630822?s=20\">leaked code and publicized by AI influencers on X</a>, but OpenAI has made it official: <a href=\"https://",
+      "created_at": "2025-11-19T10:34:04.296710"
+    },
+    {
+      "person_id": 93,
+      "person_name": "Llion Jones",
+      "item_id": 4611,
+      "item_title": "Google’s new AI training method helps small models tackle complex reasoning",
+      "event_type": "paper",
+      "description": "Google’s new AI training method helps small models tackle complex reasoning - <p>Researchers at <a href=\"https://research.google/teams/cloud-ai-research/\">Google Cloud</a> and <a href=\"https://www.ucla.edu/\">UCLA</a> have proposed a new reinforcement learning framework that sig",
+      "created_at": "2025-11-19T10:34:04.108154"
+    },
+    {
+      "person_id": 93,
+      "person_name": "Llion Jones",
+      "item_id": 4631,
+      "item_title": "The Best TVs We’ve Reviewed in 2025: Sony, Samsung, LG, and More",
+      "event_type": "research_direction",
+      "description": "The Best TVs We’ve Reviewed in 2025: Sony, Samsung, LG, and More - From LEDs to fancy OLED models, in 4K and beyond, these are our favorite televisions at every price.",
+      "created_at": "2025-11-19T10:34:03.753132"
+    },
+    {
+      "person_id": 93,
+      "person_name": "Llion Jones",
+      "item_id": 5746,
+      "item_title": "AI Interview Series #2: Explain Some of the Common Model Context Protocol (MCP) Security Vulnerabilities",
+      "event_type": "investment",
+      "description": "AI Interview Series #2: Explain Some of the Common Model Context Protocol (MCP) Security Vulnerabilities - <p>In this part of the Interview Series, we’ll look at some of the common security vulnerabilities in the Model Context Protocol (MCP) — a framework designed to let LLMs safely interact with external ",
+      "created_at": "2025-11-19T10:34:03.202136"
+    },
+    {
+      "person_id": 93,
+      "person_name": "Llion Jones",
+      "item_id": 4607,
+      "item_title": "Phi-4 proves that a 'data-first' SFT methodology is the new differentiator",
+      "event_type": "paper",
+      "description": "Phi-4 proves that a 'data-first' SFT methodology is the new differentiator - <p>AI engineers often chase performance by scaling up LLM parameters and data, but the trend toward smaller, more efficient, and better-focused models has accelerated. </p><p>The <a href=\"https://arxi",
+      "created_at": "2025-11-19T10:34:02.703152"
+    },
+    {
+      "person_id": 94,
+      "person_name": "AUI/Apollo-1",
+      "item_id": 4763,
+      "item_title": "Spectral Neuro-Symbolic Reasoning II: Semantic Node Merging, Entailment Filtering, and Knowledge Graph Alignment",
+      "event_type": "investment",
+      "description": "Spectral Neuro-Symbolic Reasoning II: Semantic Node Merging, Entailment Filtering, and Knowledge Graph Alignment - arXiv:2511.10655v1 Announce Type: cross \nAbstract: This report extends the Spectral Neuro-Symbolic Reasoning (Spectral NSR) framework by introducing three semantically grounded enhancements: (1) trans",
+      "created_at": "2025-11-19T10:33:34.271727"
+    },
+    {
+      "person_id": 94,
+      "person_name": "AUI/Apollo-1",
+      "item_id": 5814,
+      "item_title": "A Neuro-Symbolic Framework for Reasoning under Perceptual Uncertainty: Bridging Continuous Perception and Discrete Symbolic Planning",
+      "event_type": "investment",
+      "description": "A Neuro-Symbolic Framework for Reasoning under Perceptual Uncertainty: Bridging Continuous Perception and Discrete Symbolic Planning - arXiv:2511.14533v1 Announce Type: new \nAbstract: Bridging continuous perceptual signals and discrete symbolic reasoning is a fundamental challenge in AI systems that must operate under uncertainty. We",
+      "created_at": "2025-11-19T10:33:16.520847"
+    }
+  ],
+  "status": "success",
+  "database_url_masked": "postgresql://***:***@aws-1-ap-northeast-2.pooler.supabase.com:6543/postgres",
+  "database_tables": [
+    "alembic_version",
+    "bookmarks",
+    "dup_group_meta",
+    "entities",
+    "item_entities",
+    "items",
+    "person_timeline",
+    "persons",
+    "sources",
+    "watch_rules"
+  ],
+  "has_items_table": true,
+  "total_items_in_db": 1493,
+  "source_statistics": [
+    {
+      "source_id": 299,
+      "title": "OpenAI News",
+      "feed_url": "https://openai.com/blog/rss.xml",
+      "item_count": 734
+    },
+    {
+      "source_id": 298,
+      "title": "arXiv – cs.AI",
+      "feed_url": "http://export.arxiv.org/rss/cs.AI",
+      "item_count": 545
+    },
+    {
+      "source_id": 297,
+      "title": "AITimes",
+      "feed_url": "https://www.aitimes.com/rss/allArticle.xml",
+      "item_count": 77
+    },
+    {
+      "source_id": 291,
+      "title": "TechCrunch",
+      "feed_url": "https://techcrunch.com/feed/",
+      "item_count": 40
+    },
+    {
+      "source_id": 296,
+      "title": "IEEE Spectrum – AI",
+      "feed_url": "https://spectrum.ieee.org/rss/fulltext",
+      "item_count": 30
+    },
+    {
+      "source_id": 294,
+      "title": "WIRED (All)",
+      "feed_url": "https://www.wired.com/feed/rss",
+      "item_count": 29
+    },
+    {
+      "source_id": 295,
+      "title": "The Verge (All)",
+      "feed_url": "https://www.theverge.com/rss/index.xml",
+      "item_count": 15
+    },
+    {
+      "source_id": 292,
+      "title": "VentureBeat – AI",
+      "feed_url": "https://venturebeat.com/category/ai/feed/",
+      "item_count": 13
+    },
+    {
+      "source_id": 293,
+      "title": "MarkTechPost",
+      "feed_url": "https://www.marktechpost.com/feed/",
+      "item_count": 10
+    },
+    {
+      "source_id": 300,
+      "title": "The Keyword (Google DeepMind filtered)",
+      "feed_url": "https://blog.google/feed/",
+      "item_count": 0
+    }
+  ]
+}

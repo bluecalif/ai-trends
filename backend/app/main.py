@@ -7,6 +7,12 @@ from fastapi.middleware.cors import CORSMiddleware
 from backend.app.core.config import get_settings
 from backend.app.api import rss
 from backend.app.api import groups
+from backend.app.api import items
+from backend.app.api import sources
+from backend.app.api import persons
+from backend.app.api import bookmarks
+from backend.app.api import watch_rules
+from backend.app.api import insights
 from backend.app.core.scheduler import start_scheduler, stop_scheduler, is_scheduler_running
 
 # Configure logging
@@ -52,6 +58,12 @@ app.add_middleware(
 # Register routers
 app.include_router(rss.router, prefix="/api/rss")
 app.include_router(groups.router)
+app.include_router(items.router)
+app.include_router(sources.router)
+app.include_router(persons.router)
+app.include_router(bookmarks.router)
+app.include_router(watch_rules.router)
+app.include_router(insights.router)
 
 
 @app.get("/")

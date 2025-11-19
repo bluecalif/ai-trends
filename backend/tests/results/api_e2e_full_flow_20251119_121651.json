@@ -1,0 +1,104 @@
+{
+  "test_name": "test_api_e2e_full_flow",
+  "timestamp": "20251119_121651",
+  "data_preparation": {
+    "sources_created": 0,
+    "items_collected": 0,
+    "items_in_db": 100,
+    "status": "completed"
+  },
+  "api_tests": {
+    "items": {
+      "list": {
+        "status_code": 200,
+        "has_items": true,
+        "total": 1177,
+        "page": 1,
+        "page_size": 10
+      },
+      "detail": {
+        "status_code": 200,
+        "item_id": 6187,
+        "has_data": true
+      },
+      "filter_custom_tag": {
+        "status_code": 200,
+        "filtered_count": 0
+      }
+    },
+    "sources": {
+      "list": {
+        "status_code": 200,
+        "count": 10
+      },
+      "detail": {
+        "status_code": 200,
+        "source_id": 307,
+        "has_data": true
+      }
+    },
+    "persons": {
+      "list": {
+        "status_code": 200,
+        "count": 5
+      },
+      "detail": {
+        "status_code": 200,
+        "person_id": 104,
+        "has_timeline": true,
+        "has_graph": true
+      }
+    },
+    "bookmarks": {
+      "list": {
+        "status_code": 200,
+        "count": 0
+      },
+      "create": {
+        "status_code": 201,
+        "bookmark_id": 13
+      },
+      "delete": {
+        "status_code": 204,
+        "bookmark_id": 13
+      }
+    },
+    "watch_rules": {
+      "list": {
+        "status_code": 200,
+        "count": 6
+      },
+      "detail": {
+        "status_code": 200,
+        "rule_id": 62,
+        "has_data": true
+      }
+    },
+    "insights": {
+      "weekly": {
+        "status_code": 200,
+        "has_keywords": false,
+        "has_person_insights": true
+      },
+      "keywords": {
+        "status_code": 200,
+        "trends_count": 0
+      },
+      "person": {
+        "status_code": 200,
+        "person_id": 104,
+        "has_events": true
+      }
+    }
+  },
+  "status": "passed",
+  "summary": {
+    "total_endpoints_tested": 6,
+    "items_api": true,
+    "sources_api": true,
+    "persons_api": true,
+    "bookmarks_api": true,
+    "watch_rules_api": true,
+    "insights_api": true
+  }
+}

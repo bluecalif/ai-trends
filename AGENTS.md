@@ -56,6 +56,35 @@ $env:LOG_LEVEL = "DEBUG"; python script.py
 python -c 'print("Hello")'
 ```
 
+#### 모듈 실행 시 경로 문제 해결
+
+**문제**: `python backend/scripts/script.py` 또는 `python backend/tests/test_file.py` 실행 시 `ModuleNotFoundError: No module named 'backend'` 발생
+
+**원인**: Python이 프로젝트 루트를 모듈 경로에 포함하지 않아 `backend` 모듈을 찾지 못함
+
+**해결 방법** (우선순위 순):
+
+```powershell
+# 1. -m 옵션 사용 (권장 - 가장 안정적)
+poetry run python -m backend.scripts.delete_old_openai_items --days 21
+poetry run python -m pytest backend/tests/ -v
+poetry run python -m backend.tests.test_file
+
+# 2. PYTHONPATH 설정 후 실행
+$env:PYTHONPATH = "C:\Projects\vibe-coding\ai-trend"
+poetry run python backend/scripts/script.py
+poetry run python backend/tests/test_file.py
+
+# 3. 프로젝트 루트에서 직접 실행 (절대 경로)
+cd C:\Projects\vibe-coding\ai-trend
+poetry run python -m backend.scripts.script_name
+```
+
+**권장 사항**:
+- **항상 `python -m` 형식 사용** (스크립트, 테스트 모두)
+- Poetry 사용 시: `poetry run python -m backend.모듈경로`
+- 일반 Python 사용 시: `python -m backend.모듈경로` (프로젝트 루트에서 실행)
+
 ### 1.5 서버 실행
 
 ```powershell

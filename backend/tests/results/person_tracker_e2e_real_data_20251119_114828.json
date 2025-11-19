@@ -1,0 +1,190 @@
+{
+  "test_name": "test_person_tracker_e2e_real_data",
+  "timestamp": "20251119_114828",
+  "window": {
+    "start": "2025-10-29T00:00:00+00:00",
+    "end": "2025-11-19T00:00:00+00:00",
+    "days": 21
+  },
+  "persons_created": [
+    {
+      "id": 104,
+      "name": "Yann LeCun",
+      "bio": "Chief AI Scientist at Meta",
+      "rules": [
+        {
+          "id": 62,
+          "label": "JEPA variants",
+          "include_rules": [
+            "JEPA",
+            "I-JEPA",
+            "V-JEPA",
+            "Meta",
+            "LeCun"
+          ],
+          "exclude_rules": [],
+          "required_keywords": [],
+          "optional_keywords": [
+            "JEPA",
+            "I-JEPA",
+            "V-JEPA",
+            "Meta",
+            "LeCun"
+          ],
+          "priority": 10
+        }
+      ]
+    },
+    {
+      "id": 105,
+      "name": "Andrej Karpathy",
+      "bio": "Former Director of AI at Tesla, Founder of Eureka Labs",
+      "rules": [
+        {
+          "id": 63,
+          "label": "NanoChat and Eureka Labs",
+          "include_rules": [
+            "NanoChat",
+            "Eureka Labs",
+            "LLM101n",
+            "Karpathy"
+          ],
+          "exclude_rules": [],
+          "required_keywords": [],
+          "optional_keywords": [
+            "NanoChat",
+            "Eureka Labs",
+            "LLM101n",
+            "Karpathy"
+          ],
+          "priority": 10
+        }
+      ]
+    },
+    {
+      "id": 106,
+      "name": "David Luan",
+      "bio": "Co-founder of Adept AI, Former VP of Engineering at OpenAI",
+      "rules": [
+        {
+          "id": 64,
+          "label": "Agentic and Amazon Nova",
+          "include_rules": [
+            "agentic",
+            "Amazon Nova",
+            "AGI SF Lab",
+            "David Luan"
+          ],
+          "exclude_rules": [],
+          "required_keywords": [],
+          "optional_keywords": [
+            "Amazon Nova",
+            "AGI SF Lab",
+            "David Luan",
+            "Adept AI"
+          ],
+          "priority": 10
+        }
+      ]
+    },
+    {
+      "id": 107,
+      "name": "Llion Jones",
+      "bio": "Co-founder of Sakana AI, Former Research Scientist at Google",
+      "rules": [
+        {
+          "id": 65,
+          "label": "Sakana AI models",
+          "include_rules": [
+            "Sakana AI",
+            "Sakana"
+          ],
+          "exclude_rules": [],
+          "required_keywords": [],
+          "optional_keywords": [
+            "Sakana AI",
+            "Sakana"
+          ],
+          "priority": 10
+        },
+        {
+          "id": 66,
+          "label": "Sakana AI papers/benchmarks",
+          "include_rules": [
+            "Sakana",
+            "model",
+            "paper",
+            "benchmark"
+          ],
+          "exclude_rules": [
+            "arxiv",
+            "arXiv"
+          ],
+          "required_keywords": [
+            "Sakana"
+          ],
+          "optional_keywords": [
+            "paper",
+            "benchmark"
+          ],
+          "priority": 5
+        }
+      ]
+    },
+    {
+      "id": 108,
+      "name": "AUI/Apollo-1",
+      "bio": "Neuro-symbolic AI system",
+      "rules": [
+        {
+          "id": 67,
+          "label": "Apollo-1 and neuro-symbolic",
+          "include_rules": [
+            "Apollo-1",
+            "neuro-symbolic",
+            "stateful reasoning"
+          ],
+          "exclude_rules": [],
+          "required_keywords": [],
+          "optional_keywords": [
+            "Apollo-1",
+            "neuro-symbolic",
+            "stateful reasoning"
+          ],
+          "priority": 10
+        }
+      ]
+    }
+  ],
+  "collection": {
+    "sources": [],
+    "total_items": 0,
+    "items_in_window": 0
+  },
+  "matching": {
+    "total_items": 0,
+    "items_in_window": 0,
+    "matched_items": 0,
+    "total_matches": 0,
+    "matches_by_person": {}
+  },
+  "timeline_events": [],
+  "status": "error",
+  "database_url_masked": "postgresql://***:***@aws-1-ap-northeast-2.pooler.supabase.com:6543/postgres",
+  "database_tables": [
+    "alembic_version",
+    "bookmarks",
+    "dup_group_meta",
+    "entities",
+    "item_entities",
+    "items",
+    "person_timeline",
+    "persons",
+    "sources",
+    "watch_rules"
+  ],
+  "has_items_table": true,
+  "total_items_in_db": 0,
+  "source_statistics": [],
+  "error": "No items in database after RSS collection"
+}

@@ -1,0 +1,281 @@
+{
+  "test_name": "test_person_tracker_e2e_real_data",
+  "timestamp": "20251119_103108",
+  "window": {
+    "start": "2025-10-29T00:00:00+00:00",
+    "end": "2025-11-19T00:00:00+00:00",
+    "days": 21
+  },
+  "persons_created": [
+    {
+      "id": 90,
+      "name": "Yann LeCun",
+      "bio": "Chief AI Scientist at Meta",
+      "rules": [
+        {
+          "id": 46,
+          "label": "JEPA variants",
+          "include_rules": [
+            "JEPA",
+            "I-JEPA",
+            "V-JEPA",
+            "Meta",
+            "LeCun"
+          ],
+          "exclude_rules": [],
+          "priority": 10
+        }
+      ]
+    },
+    {
+      "id": 91,
+      "name": "Andrej Karpathy",
+      "bio": "Former Director of AI at Tesla, Founder of Eureka Labs",
+      "rules": [
+        {
+          "id": 47,
+          "label": "NanoChat and Eureka Labs",
+          "include_rules": [
+            "NanoChat",
+            "Eureka Labs",
+            "LLM101n",
+            "Karpathy"
+          ],
+          "exclude_rules": [],
+          "priority": 10
+        }
+      ]
+    },
+    {
+      "id": 92,
+      "name": "David Luan",
+      "bio": "Co-founder of Adept AI, Former VP of Engineering at OpenAI",
+      "rules": [
+        {
+          "id": 48,
+          "label": "Agentic and Amazon Nova",
+          "include_rules": [
+            "agentic",
+            "Amazon Nova",
+            "AGI SF Lab",
+            "David Luan"
+          ],
+          "exclude_rules": [],
+          "priority": 10
+        }
+      ]
+    },
+    {
+      "id": 93,
+      "name": "Llion Jones",
+      "bio": "Co-founder of Sakana AI, Former Research Scientist at Google",
+      "rules": [
+        {
+          "id": 49,
+          "label": "Sakana AI models",
+          "include_rules": [
+            "Sakana AI",
+            "Sakana"
+          ],
+          "exclude_rules": [],
+          "priority": 10
+        },
+        {
+          "id": 50,
+          "label": "Sakana AI papers/benchmarks",
+          "include_rules": [
+            "Sakana",
+            "model",
+            "paper",
+            "benchmark"
+          ],
+          "exclude_rules": [],
+          "priority": 5
+        }
+      ]
+    },
+    {
+      "id": 94,
+      "name": "AUI/Apollo-1",
+      "bio": "Neuro-symbolic AI system",
+      "rules": [
+        {
+          "id": 51,
+          "label": "Apollo-1 and neuro-symbolic",
+          "include_rules": [
+            "Apollo-1",
+            "neuro-symbolic",
+            "stateful reasoning"
+          ],
+          "exclude_rules": [],
+          "priority": 10
+        }
+      ]
+    }
+  ],
+  "collection": {
+    "sources": [
+      {
+        "source_id": 291,
+        "source_title": "TechCrunch",
+        "feed_url": "https://techcrunch.com/feed/",
+        "count": 20,
+        "status": "success"
+      },
+      {
+        "source_id": 292,
+        "source_title": "VentureBeat – AI",
+        "feed_url": "https://venturebeat.com/category/ai/feed/",
+        "count": 6,
+        "status": "success"
+      },
+      {
+        "source_id": 293,
+        "source_title": "MarkTechPost",
+        "feed_url": "https://www.marktechpost.com/feed/",
+        "count": 10,
+        "status": "success"
+      },
+      {
+        "source_id": 294,
+        "source_title": "WIRED (All)",
+        "feed_url": "https://www.wired.com/feed/rss",
+        "count": 6,
+        "status": "success"
+      },
+      {
+        "source_id": 295,
+        "source_title": "The Verge (All)",
+        "feed_url": "https://www.theverge.com/rss/index.xml",
+        "count": 8,
+        "status": "success"
+      },
+      {
+        "source_id": 296,
+        "source_title": "IEEE Spectrum – AI",
+        "feed_url": "https://spectrum.ieee.org/rss/fulltext",
+        "count": 0,
+        "status": "success"
+      },
+      {
+        "source_id": 297,
+        "source_title": "AITimes",
+        "feed_url": "https://www.aitimes.com/rss/allArticle.xml",
+        "count": 27,
+        "status": "success"
+      },
+      {
+        "source_id": 298,
+        "source_title": "arXiv – cs.AI",
+        "feed_url": "http://export.arxiv.org/rss/cs.AI",
+        "count": 291,
+        "status": "success"
+      },
+      {
+        "source_id": 299,
+        "source_title": "OpenAI News",
+        "feed_url": "https://openai.com/blog/rss.xml",
+        "count": 0,
+        "status": "success"
+      },
+      {
+        "source_id": 300,
+        "source_title": "The Keyword (Google DeepMind filtered)",
+        "feed_url": "https://blog.google/feed/",
+        "count": 0,
+        "status": "error",
+        "error": "Feed parsing error: <unknown>:38:75: not well-formed (invalid token)"
+      }
+    ],
+    "total_items": 368,
+    "items_in_window": 0
+  },
+  "matching": {
+    "total_items": 1493,
+    "items_in_window": 0,
+    "matched_items": 0,
+    "total_matches": 0,
+    "matches_by_person": {}
+  },
+  "timeline_events": [],
+  "status": "error",
+  "database_url_masked": "postgresql://***:***@aws-1-ap-northeast-2.pooler.supabase.com:6543/postgres",
+  "database_tables": [
+    "alembic_version",
+    "bookmarks",
+    "dup_group_meta",
+    "entities",
+    "item_entities",
+    "items",
+    "person_timeline",
+    "persons",
+    "sources",
+    "watch_rules"
+  ],
+  "has_items_table": true,
+  "total_items_in_db": 1125,
+  "source_statistics": [
+    {
+      "source_id": 299,
+      "title": "OpenAI News",
+      "feed_url": "https://openai.com/blog/rss.xml",
+      "item_count": 734
+    },
+    {
+      "source_id": 298,
+      "title": "arXiv – cs.AI",
+      "feed_url": "http://export.arxiv.org/rss/cs.AI",
+      "item_count": 254
+    },
+    {
+      "source_id": 297,
+      "title": "AITimes",
+      "feed_url": "https://www.aitimes.com/rss/allArticle.xml",
+      "item_count": 50
+    },
+    {
+      "source_id": 296,
+      "title": "IEEE Spectrum – AI",
+      "feed_url": "https://spectrum.ieee.org/rss/fulltext",
+      "item_count": 30
+    },
+    {
+      "source_id": 294,
+      "title": "WIRED (All)",
+      "feed_url": "https://www.wired.com/feed/rss",
+      "item_count": 23
+    },
+    {
+      "source_id": 291,
+      "title": "TechCrunch",
+      "feed_url": "https://techcrunch.com/feed/",
+      "item_count": 20
+    },
+    {
+      "source_id": 295,
+      "title": "The Verge (All)",
+      "feed_url": "https://www.theverge.com/rss/index.xml",
+      "item_count": 7
+    },
+    {
+      "source_id": 292,
+      "title": "VentureBeat – AI",
+      "feed_url": "https://venturebeat.com/category/ai/feed/",
+      "item_count": 7
+    },
+    {
+      "source_id": 300,
+      "title": "The Keyword (Google DeepMind filtered)",
+      "feed_url": "https://blog.google/feed/",
+      "item_count": 0
+    },
+    {
+      "source_id": 293,
+      "title": "MarkTechPost",
+      "feed_url": "https://www.marktechpost.com/feed/",
+      "item_count": 0
+    }
+  ],
+  "error": "can't compare offset-naive and offset-aware datetimes",
+  "traceback": "Traceback (most recent call last):\n  File \"C:\\Projects\\vibe-coding\\ai-trend\\backend\\tests\\e2e\\test_person_tracker_e2e.py\", line 341, in test_person_tracker_e2e_real_data\n    if item.published_at and start_dt <= item.published_at <= end_dt\n                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nTypeError: can't compare offset-naive and offset-aware datetimes\n"
+}

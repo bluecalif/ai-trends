@@ -20,4 +20,23 @@ PRD_RSS_SOURCES: List[Dict[str, str]] = [
     {"title": "The Keyword (Google DeepMind filtered)", "feed_url": "https://blog.google/feed/", "site_url": "https://blog.google/technology/google-deepmind/"},
 ]
 
+# Field categories for news items (분야)
+FIELDS = [
+    "research",
+    "industry",
+    "infra",
+    "policy",
+    "funding"
+]
+
+# Custom AI tags for classification
+CUSTOM_TAGS = [
+    "agents",
+    "world_models",
+    "non_transformer",
+    "neuro_symbolic",
+    "foundational_models",
+    "inference_infra"
+]
+
 

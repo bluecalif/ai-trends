@@ -1,0 +1,575 @@
+{
+  "test_name": "test_person_tracker_e2e_real_data",
+  "timestamp": "20251119_115903",
+  "window": {
+    "start": "2025-10-29T00:00:00+00:00",
+    "end": "2025-11-19T00:00:00+00:00",
+    "days": 21
+  },
+  "persons_created": [
+    {
+      "id": 104,
+      "name": "Yann LeCun",
+      "bio": "Chief AI Scientist at Meta",
+      "rules": [
+        {
+          "id": 62,
+          "label": "JEPA variants",
+          "include_rules": [
+            "JEPA",
+            "I-JEPA",
+            "V-JEPA",
+            "Meta",
+            "LeCun"
+          ],
+          "exclude_rules": [],
+          "required_keywords": [],
+          "optional_keywords": [
+            "JEPA",
+            "I-JEPA",
+            "V-JEPA",
+            "Meta",
+            "LeCun"
+          ],
+          "priority": 10
+        }
+      ]
+    },
+    {
+      "id": 105,
+      "name": "Andrej Karpathy",
+      "bio": "Former Director of AI at Tesla, Founder of Eureka Labs",
+      "rules": [
+        {
+          "id": 63,
+          "label": "NanoChat and Eureka Labs",
+          "include_rules": [
+            "NanoChat",
+            "Eureka Labs",
+            "LLM101n",
+            "Karpathy"
+          ],
+          "exclude_rules": [],
+          "required_keywords": [],
+          "optional_keywords": [
+            "NanoChat",
+            "Eureka Labs",
+            "LLM101n",
+            "Karpathy"
+          ],
+          "priority": 10
+        }
+      ]
+    },
+    {
+      "id": 106,
+      "name": "David Luan",
+      "bio": "Co-founder of Adept AI, Former VP of Engineering at OpenAI",
+      "rules": [
+        {
+          "id": 64,
+          "label": "Agentic and Amazon Nova",
+          "include_rules": [
+            "agentic",
+            "Amazon Nova",
+            "AGI SF Lab",
+            "David Luan"
+          ],
+          "exclude_rules": [],
+          "required_keywords": [],
+          "optional_keywords": [
+            "Amazon Nova",
+            "AGI SF Lab",
+            "David Luan",
+            "Adept AI"
+          ],
+          "priority": 10
+        }
+      ]
+    },
+    {
+      "id": 107,
+      "name": "Llion Jones",
+      "bio": "Co-founder of Sakana AI, Former Research Scientist at Google",
+      "rules": [
+        {
+          "id": 65,
+          "label": "Sakana AI models",
+          "include_rules": [
+            "Sakana AI",
+            "Sakana"
+          ],
+          "exclude_rules": [],
+          "required_keywords": [],
+          "optional_keywords": [
+            "Sakana AI",
+            "Sakana"
+          ],
+          "priority": 10
+        },
+        {
+          "id": 66,
+          "label": "Sakana AI papers/benchmarks",
+          "include_rules": [
+            "Sakana",
+            "model",
+            "paper",
+            "benchmark"
+          ],
+          "exclude_rules": [
+            "arxiv",
+            "arXiv"
+          ],
+          "required_keywords": [
+            "Sakana"
+          ],
+          "optional_keywords": [
+            "paper",
+            "benchmark"
+          ],
+          "priority": 5
+        }
+      ]
+    },
+    {
+      "id": 108,
+      "name": "AUI/Apollo-1",
+      "bio": "Neuro-symbolic AI system",
+      "rules": [
+        {
+          "id": 67,
+          "label": "Apollo-1 and neuro-symbolic",
+          "include_rules": [
+            "Apollo-1",
+            "neuro-symbolic",
+            "stateful reasoning"
+          ],
+          "exclude_rules": [],
+          "required_keywords": [],
+          "optional_keywords": [
+            "Apollo-1",
+            "neuro-symbolic",
+            "stateful reasoning"
+          ],
+          "priority": 10
+        }
+      ]
+    }
+  ],
+  "collection": {
+    "sources": [
+      {
+        "source_id": 307,
+        "source_title": "TechCrunch",
+        "feed_url": "https://techcrunch.com/feed/",
+        "count": 20,
+        "status": "success"
+      },
+      {
+        "source_id": 308,
+        "source_title": "VentureBeat – AI",
+        "feed_url": "https://venturebeat.com/category/ai/feed/",
+        "count": 7,
+        "status": "success"
+      },
+      {
+        "source_id": 309,
+        "source_title": "MarkTechPost",
+        "feed_url": "https://www.marktechpost.com/feed/",
+        "count": 10,
+        "status": "success"
+      },
+      {
+        "source_id": 310,
+        "source_title": "WIRED (All)",
+        "feed_url": "https://www.wired.com/feed/rss",
+        "count": 22,
+        "status": "success"
+      },
+      {
+        "source_id": 311,
+        "source_title": "The Verge (All)",
+        "feed_url": "https://www.theverge.com/rss/index.xml",
+        "count": 8,
+        "status": "success"
+      },
+      {
+        "source_id": 312,
+        "source_title": "IEEE Spectrum – AI",
+        "feed_url": "https://spectrum.ieee.org/rss/fulltext",
+        "count": 30,
+        "status": "success"
+      },
+      {
+        "source_id": 313,
+        "source_title": "AITimes",
+        "feed_url": "https://www.aitimes.com/rss/allArticle.xml",
+        "count": 50,
+        "status": "success"
+      },
+      {
+        "source_id": 314,
+        "source_title": "arXiv – cs.AI",
+        "feed_url": "http://export.arxiv.org/rss/cs.AI",
+        "count": 295,
+        "status": "success"
+      },
+      {
+        "source_id": 315,
+        "source_title": "OpenAI News",
+        "feed_url": "https://openai.com/blog/rss.xml",
+        "count": 735,
+        "status": "success"
+      },
+      {
+        "source_id": 316,
+        "source_title": "The Keyword (Google DeepMind filtered)",
+        "feed_url": "https://blog.google/feed/",
+        "count": 0,
+        "status": "error",
+        "error": "Feed parsing error: <unknown>:38:75: not well-formed (invalid token)"
+      }
+    ],
+    "total_items": 1177,
+    "items_in_window": 440
+  },
+  "matching": {
+    "total_items": 1177,
+    "items_in_window": 440,
+    "matched_items": 12,
+    "total_matches": 12,
+    "matches_by_person": {
+      "Yann LeCun": 10,
+      "Andrej Karpathy": 1,
+      "David Luan": 0,
+      "Llion Jones": 0,
+      "AUI/Apollo-1": 1
+    },
+    "matched_items_detail": [
+      {
+        "item_id": 6520,
+        "item_title": "A Meta-Heuristic Load Balancer for Cloud Computing Systems",
+        "published_at": "2025-11-18T20:00:00",
+        "source_id": 314,
+        "matched_persons": [
+          {
+            "person_name": "Yann LeCun",
+            "person_id": 104,
+            "matched_keywords": [
+              "Meta"
+            ],
+            "rule_label": "JEPA variants"
+          }
+        ]
+      },
+      {
+        "item_id": 6263,
+        "item_title": "A Neuro-Symbolic Framework for Reasoning under Perceptual Uncertainty: Bridging Continuous Perceptio",
+        "published_at": "2025-11-18T20:00:00",
+        "source_id": 314,
+        "matched_persons": [
+          {
+            "person_name": "AUI/Apollo-1",
+            "person_id": 108,
+            "matched_keywords": [
+              "neuro-symbolic"
+            ],
+            "rule_label": "Apollo-1 and neuro-symbolic"
+          }
+        ]
+      },
+      {
+        "item_id": 6288,
+        "item_title": "What happens when nanochat meets DiLoCo?",
+        "published_at": "2025-11-18T20:00:00",
+        "source_id": 314,
+        "matched_persons": [
+          {
+            "person_name": "Andrej Karpathy",
+            "person_id": 105,
+            "matched_keywords": [
+              "NanoChat"
+            ],
+            "rule_label": "NanoChat and Eureka Labs"
+          }
+        ]
+      },
+      {
+        "item_id": 6328,
+        "item_title": "MRI Plane Orientation Detection using a Context-Aware 2.5D Model",
+        "published_at": "2025-11-18T20:00:00",
+        "source_id": 314,
+        "matched_persons": [
+          {
+            "person_name": "Yann LeCun",
+            "person_id": 104,
+            "matched_keywords": [
+              "Meta"
+            ],
+            "rule_label": "JEPA variants"
+          }
+        ]
+      },
+      {
+        "item_id": 6369,
+        "item_title": "H-LDM: Hierarchical Latent Diffusion Models for Controllable and Interpretable PCG Synthesis from Cl",
+        "published_at": "2025-11-18T20:00:00",
+        "source_id": 314,
+        "matched_persons": [
+          {
+            "person_name": "Yann LeCun",
+            "person_id": 104,
+            "matched_keywords": [
+              "Meta"
+            ],
+            "rule_label": "JEPA variants"
+          }
+        ]
+      },
+      {
+        "item_id": 6441,
+        "item_title": "KWT-Tiny: RISC-V Accelerated, Embedded Keyword Spotting Transformer",
+        "published_at": "2025-11-18T20:00:00",
+        "source_id": 314,
+        "matched_persons": [
+          {
+            "person_name": "Yann LeCun",
+            "person_id": 104,
+            "matched_keywords": [
+              "Meta"
+            ],
+            "rule_label": "JEPA variants"
+          }
+        ]
+      },
+      {
+        "item_id": 6117,
+        "item_title": "How to Build an Agentic Deep Reinforcement Learning System with Curriculum Progression, Adaptive Exp",
+        "published_at": "2025-11-18T14:35:45",
+        "source_id": 309,
+        "matched_persons": [
+          {
+            "person_name": "Yann LeCun",
+            "person_id": 104,
+            "matched_keywords": [
+              "Meta"
+            ],
+            "rule_label": "JEPA variants"
+          }
+        ]
+      },
+      {
+        "item_id": 6099,
+        "item_title": "Meta wins antitrust trial as judge denies that it’s a monopoly",
+        "published_at": "2025-11-18T10:01:45",
+        "source_id": 307,
+        "matched_persons": [
+          {
+            "person_name": "Yann LeCun",
+            "person_id": 104,
+            "matched_keywords": [
+              "Meta"
+            ],
+            "rule_label": "JEPA variants"
+          }
+        ]
+      },
+      {
+        "item_id": 6129,
+        "item_title": "This Quest 3S Bundle Is $50 Off and Includes a Game and Gift Card",
+        "published_at": "2025-11-18T09:54:04",
+        "source_id": 310,
+        "matched_persons": [
+          {
+            "person_name": "Yann LeCun",
+            "person_id": 104,
+            "matched_keywords": [
+              "Meta"
+            ],
+            "rule_label": "JEPA variants"
+          }
+        ]
+      },
+      {
+        "item_id": 6123,
+        "item_title": "Meta AI Introduces DreamGym: A Textual Experience Synthesizer For Reinforcement learning RL Agents",
+        "published_at": "2025-11-17T00:17:14",
+        "source_id": 309,
+        "matched_persons": [
+          {
+            "person_name": "Yann LeCun",
+            "person_id": 104,
+            "matched_keywords": [
+              "Meta"
+            ],
+            "rule_label": "JEPA variants"
+          }
+        ]
+      },
+      {
+        "item_id": 6173,
+        "item_title": "Startup Using Nanotips and Naphthalene for New Satellite Thruster",
+        "published_at": "2025-11-09T05:00:02",
+        "source_id": 312,
+        "matched_persons": [
+          {
+            "person_name": "Yann LeCun",
+            "person_id": 104,
+            "matched_keywords": [
+              "Meta"
+            ],
+            "rule_label": "JEPA variants"
+          }
+        ]
+      },
+      {
+        "item_id": 6180,
+        "item_title": "Inside Hyundai’s Massive Metaplant",
+        "published_at": "2025-11-05T05:00:03",
+        "source_id": 312,
+        "matched_persons": [
+          {
+            "person_name": "Yann LeCun",
+            "person_id": 104,
+            "matched_keywords": [
+              "Meta"
+            ],
+            "rule_label": "JEPA variants"
+          }
+        ]
+      }
+    ],
+    "keyword_statistics": {
+      "Meta": 10,
+      "neuro-symbolic": 1,
+      "NanoChat": 1
+    }
+  },
+  "timeline_events": [
+    {
+      "person_id": 104,
+      "person_name": "Yann LeCun",
+      "item_id": 6180,
+      "item_title": "Inside Hyundai’s Massive Metaplant",
+      "event_type": "investment",
+      "description": "Inside Hyundai’s Massive Metaplant - <img src=\"https://spectrum.ieee.org/media-library/a-vast-manufacturing-hall-stretches-into-the-distance-with-robotic-vehicles-visible-in-the-foreground.jpg?id=62037653&amp;width=1200&amp;height=800&am",
+      "created_at": "2025-11-19T11:59:44.125045"
+    },
+    {
+      "person_id": 104,
+      "person_name": "Yann LeCun",
+      "item_id": 6173,
+      "item_title": "Startup Using Nanotips and Naphthalene for New Satellite Thruster",
+      "event_type": "research_direction",
+      "description": "Startup Using Nanotips and Naphthalene for New Satellite Thruster - <img src=\"https://spectrum.ieee.org/media-library/orbital-arc-s-prototype-is-a-small-metal-canister-with-black-and-red-wires-and-a-clamp-with-a-wing-nut.jpg?id=62097074&amp;width=1200&amp;height=800&a",
+      "created_at": "2025-11-19T11:59:43.592048"
+    },
+    {
+      "person_id": 104,
+      "person_name": "Yann LeCun",
+      "item_id": 6123,
+      "item_title": "Meta AI Introduces DreamGym: A Textual Experience Synthesizer For Reinforcement learning RL Agents",
+      "event_type": "product",
+      "description": "Meta AI Introduces DreamGym: A Textual Experience Synthesizer For Reinforcement learning RL Agents - <p>Reinforcement learning RL for large language model LLM agents looks attractive on paper, but in practice it breaks on cost, infrastructure and reward noise. Training an agent that clicks through we",
+      "created_at": "2025-11-19T11:59:42.558083"
+    },
+    {
+      "person_id": 104,
+      "person_name": "Yann LeCun",
+      "item_id": 6129,
+      "item_title": "This Quest 3S Bundle Is $50 Off and Includes a Game and Gift Card",
+      "event_type": "research_direction",
+      "description": "This Quest 3S Bundle Is $50 Off and Includes a Game and Gift Card - Pick up a new Meta headset, Walking Dead: Saints & Sinners, and pocket a $50 gift card in the process.",
+      "created_at": "2025-11-19T11:59:40.209403"
+    },
+    {
+      "person_id": 104,
+      "person_name": "Yann LeCun",
+      "item_id": 6099,
+      "item_title": "Meta wins antitrust trial as judge denies that it’s a monopoly",
+      "event_type": "research_direction",
+      "description": "Meta wins antitrust trial as judge denies that it’s a monopoly - A federal judge ruled that Meta is not a monopoly in a lawsuit with the FTC.",
+      "created_at": "2025-11-19T11:59:39.915387"
+    },
+    {
+      "person_id": 104,
+      "person_name": "Yann LeCun",
+      "item_id": 6117,
+      "item_title": "How to Build an Agentic Deep Reinforcement Learning System with Curriculum Progression, Adaptive Exploration, and Meta-Level UCB Planning",
+      "event_type": "product",
+      "description": "How to Build an Agentic Deep Reinforcement Learning System with Curriculum Progression, Adaptive Exploration, and Meta-Level UCB Planning - <p>In this tutorial, we build an advanced agentic Deep Reinforcement Learning system that guides an agent to learn not only actions within an environment but also how to choose its own training strate",
+      "created_at": "2025-11-19T11:59:39.485411"
+    },
+    {
+      "person_id": 104,
+      "person_name": "Yann LeCun",
+      "item_id": 6441,
+      "item_title": "KWT-Tiny: RISC-V Accelerated, Embedded Keyword Spotting Transformer",
+      "event_type": "product",
+      "description": "KWT-Tiny: RISC-V Accelerated, Embedded Keyword Spotting Transformer - arXiv:2407.16026v2 Announce Type: replace-cross \nAbstract: This paper explores the adaptation of Transformerbased models for edge devices through the quantisation and hardware acceleration of the ARM ",
+      "created_at": "2025-11-19T11:59:38.488892"
+    },
+    {
+      "person_id": 104,
+      "person_name": "Yann LeCun",
+      "item_id": 6369,
+      "item_title": "H-LDM: Hierarchical Latent Diffusion Models for Controllable and Interpretable PCG Synthesis from Clinical Metadata",
+      "event_type": "product",
+      "description": "H-LDM: Hierarchical Latent Diffusion Models for Controllable and Interpretable PCG Synthesis from Clinical Metadata - arXiv:2511.14312v1 Announce Type: cross \nAbstract: Phonocardiogram (PCG) analysis is vital for cardiovascular disease diagnosis, yet the scarcity of labeled pathological data hinders the capability of",
+      "created_at": "2025-11-19T11:59:36.192889"
+    },
+    {
+      "person_id": 104,
+      "person_name": "Yann LeCun",
+      "item_id": 6328,
+      "item_title": "MRI Plane Orientation Detection using a Context-Aware 2.5D Model",
+      "event_type": "product",
+      "description": "MRI Plane Orientation Detection using a Context-Aware 2.5D Model - arXiv:2511.14021v1 Announce Type: cross \nAbstract: Humans can easily identify anatomical planes (axial, coronal, and sagittal) on a 2D MRI slice, but automated systems struggle with this task. Missing",
+      "created_at": "2025-11-19T11:59:34.671905"
+    },
+    {
+      "person_id": 104,
+      "person_name": "Yann LeCun",
+      "item_id": 6520,
+      "item_title": "A Meta-Heuristic Load Balancer for Cloud Computing Systems",
+      "event_type": "product",
+      "description": "A Meta-Heuristic Load Balancer for Cloud Computing Systems - arXiv:2511.11721v2 Announce Type: replace-cross \nAbstract: This paper presents a strategy to allocate services on a Cloud system without overloading nodes and maintaining the system stability with min",
+      "created_at": "2025-11-19T11:59:31.191626"
+    },
+    {
+      "person_id": 105,
+      "person_name": "Andrej Karpathy",
+      "item_id": 6288,
+      "item_title": "What happens when nanochat meets DiLoCo?",
+      "event_type": "product",
+      "description": "What happens when nanochat meets DiLoCo? - arXiv:2511.13761v1 Announce Type: cross \nAbstract: Although LLM training is typically centralized with high-bandwidth interconnects and large compute budgets, emerging methods target communication-con",
+      "created_at": "2025-11-19T11:59:33.211984"
+    },
+    {
+      "person_id": 108,
+      "person_name": "AUI/Apollo-1",
+      "item_id": 6263,
+      "item_title": "A Neuro-Symbolic Framework for Reasoning under Perceptual Uncertainty: Bridging Continuous Perception and Discrete Symbolic Planning",
+      "event_type": "investment",
+      "description": "A Neuro-Symbolic Framework for Reasoning under Perceptual Uncertainty: Bridging Continuous Perception and Discrete Symbolic Planning - arXiv:2511.14533v1 Announce Type: new \nAbstract: Bridging continuous perceptual signals and discrete symbolic reasoning is a fundamental challenge in AI systems that must operate under uncertainty. We",
+      "created_at": "2025-11-19T11:59:32.382500"
+    }
+  ],
+  "status": "success",
+  "database_url_masked": "postgresql://***:***@aws-1-ap-northeast-2.pooler.supabase.com:6543/postgres",
+  "database_tables": [
+    "alembic_version",
+    "bookmarks",
+    "dup_group_meta",
+    "entities",
+    "item_entities",
+    "items",
+    "person_timeline",
+    "persons",
+    "sources",
+    "watch_rules"
+  ],
+  "has_items_table": true,
+  "total_items_in_db": 0,
+  "source_statistics": []
+}
