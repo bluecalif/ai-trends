@@ -248,8 +248,15 @@ function WatchRuleModal({
   isLoading,
   error,
 }: WatchRuleModalProps) {
-  const [label, setLabel] = useState(rule?.label || '')
+  // Find person name from person_id
+  const getPersonName = (id: number | null) => {
+    if (!id) return ''
+    const person = persons.find((p) => p.id === id)
+    return person?.name || ''
+  }
+
   const [personId, setPersonId] = useState<number | null>(rule?.person_id || null)
+  const [label, setLabel] = useState(rule?.label || getPersonName(rule?.person_id || null))
   const [priority, setPriority] = useState(rule?.priority || 0)
   const [requiredKeywords, setRequiredKeywords] = useState<string[]>(
     rule?.required_keywords || []
@@ -272,9 +279,18 @@ function WatchRuleModal({
     if (jsonMode) {
       try {
         const parsed = JSON.parse(jsonText)
+        // If person_id is set, use person name as label
+        let finalLabel = parsed.label
+        if (parsed.person_id) {
+          const selectedPerson = persons.find((p) => p.id === parsed.person_id)
+          if (selectedPerson) {
+            finalLabel = selectedPerson.name
+          }
+        }
+        
         if (rule) {
           onSave({
-            label: parsed.label || null,
+            label: finalLabel || null,
             required_keywords: parsed.required_keywords || null,
             optional_keywords: parsed.optional_keywords || null,
             include_rules: parsed.include_rules || null,
@@ -284,7 +300,7 @@ function WatchRuleModal({
           })
         } else {
           onSave({
-            label: parsed.label,
+            label: finalLabel,
             required_keywords: parsed.required_keywords || [],
             optional_keywords: parsed.optional_keywords || [],
             include_rules: parsed.include_rules || [],
@@ -298,9 +314,12 @@ function WatchRuleModal({
         return
       }
     } else {
+      // Ensure label is set from person name if person is selected
+      const finalLabel = personId ? getPersonName(personId) : label
+      
       if (rule) {
         onSave({
-          label: label || null,
+          label: finalLabel || null,
           required_keywords: requiredKeywords.length > 0 ? requiredKeywords : null,
           optional_keywords: optionalKeywords.length > 0 ? optionalKeywords : null,
           include_rules: includeRules.length > 0 ? includeRules : null,
@@ -310,7 +329,7 @@ function WatchRuleModal({
         })
       } else {
         onSave({
-          label,
+          label: finalLabel,
           required_keywords: requiredKeywords,
           optional_keywords: optionalKeywords,
           include_rules: includeRules,
@@ -381,35 +400,34 @@ function WatchRuleModal({
             <>
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Label *
-                </label>
-                <input
-                  type="text"
-                  value={label}
-                  onChange={(e) => setLabel(e.target.value)}
-                  required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              </div>
-
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Person
+                  Person (Label) *
                 </label>
                 <select
                   value={personId || ''}
-                  onChange={(e) =>
-                    setPersonId(e.target.value ? parseInt(e.target.value) : null)
-                  }
+                  onChange={(e) => {
+                    const selectedPersonId = e.target.value ? parseInt(e.target.value) : null
+                    setPersonId(selectedPersonId)
+                    // Auto-set label to person name
+                    if (selectedPersonId) {
+                      const selectedPerson = persons.find((p) => p.id === selectedPersonId)
+                      setLabel(selectedPerson?.name || '')
+                    } else {
+                      setLabel('')
+                    }
+                  }}
+                  required
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
-                  <option value="">None</option>
+                  <option value="">Select a person...</option>
                   {persons.map((person) => (
                     <option key={person.id} value={person.id}>
                       {person.name}
                     </option>
                   ))}
                 </select>
+                <p className="mt-1 text-xs text-gray-500">
+                  The person's name will be used as the label
+                </p>
               </div>
 
               <div className="mb-4">
