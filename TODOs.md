@@ -313,28 +313,23 @@
   - [ ] 접근성 확인 (키보드 네비게이션, 폼 접근성)
 
 ### 2.6 설정 페이지
-- [ ] 설정 페이지 (`frontend/app/settings/page.tsx`):
-  - [ ] 소스 관리 섹션
-  - [ ] 워치 규칙 관리 섹션
-  - [ ] 탭 또는 섹션으로 구분
-- [ ] 소스 관리 UI:
-  - [ ] 소스 목록 표시 (`GET /api/sources`)
-  - [ ] 소스 추가 폼 (`POST /api/sources`)
-  - [ ] 소스 수정/삭제 (`PATCH /DELETE /api/sources/{id}`)
-  - [ ] 활성화/비활성화 토글
-  - [ ] OPML Import/Export 버튼 (Phase 3에서 구현)
-- [ ] 워치 규칙 관리 UI:
-  - [ ] 규칙 목록 표시 (`GET /api/watch-rules`)
-  - [ ] 규칙 추가 폼 (`POST /api/watch-rules`)
-  - [ ] 규칙 수정/삭제 (`PATCH /DELETE /api/watch-rules/{id}`)
-  - [ ] JSON 편집기 (required_keywords, optional_keywords 편집)
-- [ ] `OPMLImporter` 컴포넌트 (`frontend/components/OPMLImporter.tsx`):
-  - [ ] OPML 파일 업로드 UI (Phase 3에서 구현)
-  - [ ] 파일 선택 및 업로드
-- [ ] `WatchRuleEditor` 컴포넌트 (`frontend/components/WatchRuleEditor.tsx`):
-  - [ ] 워치 규칙 편집 폼
-  - [ ] required_keywords, optional_keywords 입력
-  - [ ] JSON 편집 모드
+- [x] 설정 페이지 (`frontend/app/settings/page.tsx`):
+  - [x] 소스 관리 섹션
+  - [x] 워치 규칙 관리 섹션
+  - [x] 탭으로 구분
+- [x] 소스 관리 UI (`SourcesSection` 컴포넌트):
+  - [x] 소스 목록 표시 (`GET /api/sources`)
+  - [x] 소스 추가 폼 (`POST /api/sources`)
+  - [x] 소스 수정/삭제 (`PUT /DELETE /api/sources/{id}`)
+  - [x] 활성화/비활성화 토글
+  - [x] OPML Import/Export는 Phase 3에서 구현 예정
+- [x] 워치 규칙 관리 UI (`WatchRulesSection` 컴포넌트):
+  - [x] 규칙 목록 표시 (`GET /api/watch-rules`)
+  - [x] 규칙 추가 폼 (`POST /api/watch-rules`)
+  - [x] 규칙 수정/삭제 (`PATCH /DELETE /api/watch-rules/{id}`)
+  - [x] JSON 편집 모드 (Form/JSON 모드 전환)
+  - [x] required_keywords, optional_keywords, include_rules, exclude_rules 편집
+- [x] API 클라이언트 수정 (`updateSource` PUT 메서드로 수정)
 - [ ] **UX 확인**:
   - [ ] 설정 페이지 접근 및 섹션 구분 확인 (`/settings`)
   - [ ] 소스 관리 UI 동작 확인:
@@ -599,11 +594,11 @@
 
 ## 진행 상황 추적
 
-**마지막 업데이트**: 2025-11-19 (Phase 1 완료 ✅, Phase 2.1 완료 ✅, Phase 2.2 완료 ✅, Phase 2.3 완료 ✅, Phase 2.4 완료 ✅, Phase 2.5 구현 완료)
+**마지막 업데이트**: 2025-11-19 (Phase 1 완료 ✅, Phase 2.1 완료 ✅, Phase 2.2 완료 ✅, Phase 2.3 완료 ✅, Phase 2.4 완료 ✅, Phase 2.5 완료 ✅, Phase 2.6 구현 완료)
 
-**프로젝트 진행률**: 백엔드 기반 구조 100% 완료, 프론트엔드 Phase 2.5 구현 완료 (UX 확인 대기)
+**프로젝트 진행률**: 백엔드 기반 구조 100% 완료, 프론트엔드 Phase 2.6 구현 완료 (UX 확인 대기)
 
-**현재 단계**: Phase 2.5 (저장함/북마크) UX 확인
+**현재 단계**: Phase 2.6 (설정 페이지) UX 확인
 
 **Phase 구조**:
 - **Phase 1**: 백엔드 기반 구조 ✅ (완료)

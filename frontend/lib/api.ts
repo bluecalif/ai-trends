@@ -169,7 +169,7 @@ export const api = {
     sourceId: number,
     sourceData: SourceUpdate
   ): Promise<SourceResponse> => {
-    const { data } = await apiClient.patch<SourceResponse>(
+    const { data } = await apiClient.put<SourceResponse>(
       `/api/sources/${sourceId}`,
       sourceData
     )
