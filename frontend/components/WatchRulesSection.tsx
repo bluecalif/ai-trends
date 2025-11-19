@@ -101,13 +101,10 @@ export function WatchRulesSection() {
               <div className="flex items-start justify-between mb-4">
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900">
-                    {rule.label}
+                    {rule.person_id
+                      ? persons?.find((p) => p.id === rule.person_id)?.name || rule.label
+                      : rule.label}
                   </h3>
-                  {rule.person_id && (
-                    <p className="text-sm text-gray-500 mt-1">
-                      Person ID: {rule.person_id}
-                    </p>
-                  )}
                   <p className="text-sm text-gray-500">Priority: {rule.priority}</p>
                 </div>
                 <div className="flex gap-2">
@@ -272,6 +269,19 @@ function WatchRuleModal({
   )
   const [jsonMode, setJsonMode] = useState(false)
   const [jsonText, setJsonText] = useState('')
+  const [isAddPersonModalOpen, setIsAddPersonModalOpen] = useState(false)
+  const queryClient = useQueryClient()
+
+  const createPersonMutation = useMutation({
+    mutationFn: (personData: { name: string; bio?: string | null }) =>
+      api.createPerson(personData),
+    onSuccess: (newPerson) => {
+      queryClient.invalidateQueries({ queryKey: ['persons'] })
+      setPersonId(newPerson.id)
+      setLabel(newPerson.name)
+      setIsAddPersonModalOpen(false)
+    },
+  })
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -399,9 +409,18 @@ function WatchRuleModal({
           ) : (
             <>
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Person (Label) *
-                </label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Person (Label) *
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => setIsAddPersonModalOpen(true)}
+                    className="text-sm text-blue-600 hover:text-blue-800"
+                  >
+                    + Add Person
+                  </button>
+                </div>
                 <select
                   value={personId || ''}
                   onChange={(e) => {
@@ -476,6 +495,100 @@ function WatchRuleModal({
             <div className="mb-4 bg-red-50 border border-red-200 rounded-lg p-3">
               <p className="text-red-800 text-sm">
                 {error instanceof Error ? error.message : 'Failed to save rule'}
+              </p>
+            </div>
+          )}
+
+          <div className="flex justify-end gap-2">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isLoading ? 'Saving...' : 'Save'}
+            </button>
+          </div>
+        </form>
+      </div>
+
+      {isAddPersonModalOpen && (
+        <AddPersonModal
+          onClose={() => setIsAddPersonModalOpen(false)}
+          onSave={(personData) => createPersonMutation.mutate(personData)}
+          isLoading={createPersonMutation.isPending}
+          error={createPersonMutation.error}
+        />
+      )}
+    </div>
+  )
+}
+
+interface AddPersonModalProps {
+  onClose: () => void
+  onSave: (personData: { name: string; bio?: string | null }) => void
+  isLoading: boolean
+  error: unknown
+}
+
+function AddPersonModal({
+  onClose,
+  onSave,
+  isLoading,
+  error,
+}: AddPersonModalProps) {
+  const [name, setName] = useState('')
+  const [bio, setBio] = useState('')
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    onSave({
+      name,
+      bio: bio || null,
+    })
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+      <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+        <h2 className="text-xl font-bold text-gray-900 mb-4">Add Person</h2>
+
+        <form onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Name *
+            </label>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
+
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Bio (optional)
+            </label>
+            <textarea
+              value={bio}
+              onChange={(e) => setBio(e.target.value)}
+              rows={3}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
+
+          {error && (
+            <div className="mb-4 bg-red-50 border border-red-200 rounded-lg p-3">
+              <p className="text-red-800 text-sm">
+                {error instanceof Error ? error.message : 'Failed to create person'}
               </p>
             </div>
           )}
