@@ -330,7 +330,9 @@
   - [x] JSON 편집 모드 (Form/JSON 모드 전환)
   - [x] required_keywords, optional_keywords, include_rules, exclude_rules 편집
 - [x] API 클라이언트 수정 (`updateSource` PUT 메서드로 수정)
-- [ ] **UX 확인**:
+- [x] Watch Rules 라벨을 인물 이름으로 자동 설정
+- [x] Watch Rules 모달에서 인물 추가 기능
+- [x] **UX 확인**:
   - [ ] 설정 페이지 접근 및 섹션 구분 확인 (`/settings`)
   - [ ] 소스 관리 UI 동작 확인:
     - [ ] 소스 목록 표시
@@ -594,11 +596,11 @@
 
 ## 진행 상황 추적
 
-**마지막 업데이트**: 2025-11-19 (Phase 1 완료 ✅, Phase 2.1 완료 ✅, Phase 2.2 완료 ✅, Phase 2.3 완료 ✅, Phase 2.4 완료 ✅, Phase 2.5 완료 ✅, Phase 2.6 구현 완료)
+**마지막 업데이트**: 2025-11-19 (Phase 1 완료 ✅, Phase 2 완료 ✅)
 
-**프로젝트 진행률**: 백엔드 기반 구조 100% 완료, 프론트엔드 Phase 2.6 구현 완료 (UX 확인 대기)
+**프로젝트 진행률**: 백엔드 기반 구조 100% 완료, 프론트엔드 Phase 2 완료
 
-**현재 단계**: Phase 2.6 (설정 페이지) UX 확인
+**현재 단계**: Phase 3 (고급 기능) 시작 준비
 
 **Phase 구조**:
 - **Phase 1**: 백엔드 기반 구조 ✅ (완료)
