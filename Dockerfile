@@ -26,7 +26,11 @@ ENV POETRY_NO_INTERACTION=1 \
 COPY pyproject.toml poetry.lock* ./
 
 # Install dependencies (without dev dependencies)
-RUN poetry install --no-dev && rm -rf $POETRY_CACHE_DIR
+# Create virtual environment in project directory and verify installation
+RUN poetry config virtualenvs.in-project true && \
+    poetry install --no-dev && \
+    rm -rf $POETRY_CACHE_DIR && \
+    test -f /app/.venv/bin/uvicorn || (echo "ERROR: uvicorn not installed in virtual environment" && exit 1)
 
 # Add Poetry virtual environment to PATH
 ENV PATH="/app/.venv/bin:$PATH"
@@ -39,7 +43,7 @@ COPY backend/ ./backend/
 EXPOSE 8000
 
 # Default command (can be overridden in Railway settings)
-# For API server: uvicorn backend.app.main:app --host 0.0.0.0 --port $PORT
-# For Worker: python -m backend.scripts.worker
-CMD ["uvicorn", "backend.app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# For API server: Use absolute path to uvicorn in virtual environment
+# For Worker: /app/.venv/bin/python -m backend.scripts.worker
+CMD ["/app/.venv/bin/uvicorn", "backend.app.main:app", "--host", "0.0.0.0", "--port", "8000"]
 
