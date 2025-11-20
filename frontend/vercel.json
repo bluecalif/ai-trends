@@ -4,6 +4,7 @@
   "framework": "nextjs",
   "installCommand": "npm install",
   "devCommand": "npm run dev",
+  "rootDirectory": "frontend",
   "rewrites": [
     {
       "source": "/api/:path*",
