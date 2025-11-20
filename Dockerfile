@@ -28,6 +28,9 @@ COPY pyproject.toml poetry.lock* ./
 # Install dependencies (without dev dependencies)
 RUN poetry install --no-dev && rm -rf $POETRY_CACHE_DIR
 
+# Add Poetry virtual environment to PATH
+ENV PATH="/app/.venv/bin:$PATH"
+
 # Copy application code
 COPY backend/ ./backend/
 # alembic.ini and alembic/ are already included in backend/ directory
@@ -37,6 +40,6 @@ EXPOSE 8000
 
 # Default command (can be overridden in Railway settings)
 # For API server: uvicorn backend.app.main:app --host 0.0.0.0 --port $PORT
-# For Worker: poetry run python -m backend.scripts.worker
-CMD ["poetry", "run", "uvicorn", "backend.app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# For Worker: python -m backend.scripts.worker
+CMD ["uvicorn", "backend.app.main:app", "--host", "0.0.0.0", "--port", "8000"]
 
