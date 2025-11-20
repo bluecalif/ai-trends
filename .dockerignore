@@ -1,0 +1,55 @@
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv
+poetry.lock
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+*.log
+backend/tests/results/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Frontend
+frontend/
+node_modules/
+.next/
+out/
+
+# Documentation
+docs/
+*.md
+!README.md
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build
+dist/
+build/
+*.egg-info/
+

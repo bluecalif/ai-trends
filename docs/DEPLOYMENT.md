@@ -4,10 +4,45 @@
 
 ## 목차
 
-1. [프로덕션 환경변수 설정](#프로덕션-환경변수-설정)
-2. [데이터베이스 마이그레이션](#데이터베이스-마이그레이션)
-3. [배포 아키텍처](#배포-아키텍처)
-4. [보안 고려사항](#보안-고려사항)
+1. [빠른 시작](#빠른-시작)
+2. [프로덕션 환경변수 설정](#프로덕션-환경변수-설정)
+3. [데이터베이스 마이그레이션](#데이터베이스-마이그레이션)
+4. [배포 아키텍처](#배포-아키텍처)
+5. [Railway 배포 (백엔드)](#railway-배포-백엔드)
+6. [Vercel 배포 (프론트엔드)](#vercel-배포-프론트엔드)
+7. [보안 고려사항](#보안-고려사항)
+
+---
+
+## 빠른 시작
+
+### 배포 순서
+
+1. **백엔드 API 배포** (Railway)
+   - Railway 프로젝트 생성
+   - API 서비스 배포
+   - Worker 서비스 배포
+   - 환경변수 설정
+   - 도메인 확인
+
+2. **프론트엔드 배포** (Vercel)
+   - Vercel 프로젝트 생성
+   - 환경변수 설정 (`NEXT_PUBLIC_API_URL`)
+   - 배포 실행
+   - 도메인 확인
+
+3. **CORS 설정 업데이트**
+   - 백엔드 `CORS_ORIGINS`에 프론트엔드 도메인 추가
+
+4. **배포 검증**
+   - Health check 확인
+   - API 엔드포인트 테스트
+   - 프론트엔드-백엔드 연동 확인
+
+### 상세 가이드
+
+- **Railway 배포**: `docs/RAILWAY_DEPLOYMENT.md` 참고
+- **Vercel 배포**: `docs/VERCEL_DEPLOYMENT.md` 참고
 
 ---
 
@@ -305,6 +340,72 @@ Get-Content backup_*.sql | Select-Object -First 50
 5. **프론트엔드 배포**: Next.js 앱 배포
 
 자세한 배포 방법은 `TODOs.md`의 Phase 5 섹션을 참고하세요.
+
+---
+
+## Railway 배포 (백엔드)
+
+Railway는 Dockerfile 기반 배포를 지원합니다. 상세 가이드는 `docs/RAILWAY_DEPLOYMENT.md`를 참고하세요.
+
+### 주요 단계
+
+1. **Railway 프로젝트 생성**
+   - GitHub 저장소 연동
+   - 프로젝트 이름 설정
+
+2. **API 서비스 배포**
+   - 서비스 생성 (이름: `api`)
+   - Dockerfile 자동 감지
+   - 시작 명령: `poetry run uvicorn backend.app.main:app --host 0.0.0.0 --port $PORT`
+   - 환경변수 설정
+
+3. **Worker 서비스 배포**
+   - 서비스 생성 (이름: `worker`)
+   - 동일한 Dockerfile 사용
+   - 시작 명령: `poetry run python -m backend.scripts.worker`
+   - 환경변수 설정 (API와 동일)
+
+4. **도메인 생성**
+   - Railway 대시보드 → Settings → Networking
+   - "Generate Domain" 클릭
+   - 생성된 도메인을 프론트엔드 `NEXT_PUBLIC_API_URL`에 설정
+
+### 필수 파일
+
+- `Dockerfile`: 프로젝트 루트에 위치
+- `.dockerignore`: 빌드 최적화
+- `pyproject.toml`: Poetry 의존성 관리
+- `poetry.lock`: 의존성 잠금 파일
+
+---
+
+## Vercel 배포 (프론트엔드)
+
+Vercel은 Next.js를 자동으로 감지하고 배포합니다. 상세 가이드는 `docs/VERCEL_DEPLOYMENT.md`를 참고하세요.
+
+### 주요 단계
+
+1. **Vercel 프로젝트 생성**
+   - GitHub 저장소 연동
+   - Root Directory: `frontend`
+   - Framework Preset: Next.js (자동 감지)
+
+2. **환경변수 설정**
+   - `NEXT_PUBLIC_API_URL`: Railway API 도메인
+
+3. **배포 실행**
+   - 자동 배포 (GitHub push 시)
+   - 또는 수동 배포
+
+4. **도메인 확인**
+   - Vercel 기본 도메인 확인
+   - 백엔드 `CORS_ORIGINS`에 추가
+
+### 필수 파일
+
+- `frontend/vercel.json`: Vercel 설정 (선택사항)
+- `frontend/package.json`: Next.js 프로젝트 설정
+- `frontend/next.config.ts`: Next.js 설정
 
 ---
 

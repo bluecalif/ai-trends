@@ -599,17 +599,16 @@ backend/
 
 ## Phase 5: 배포
 
-### 5.1 배포 아키텍처 (Vercel 중심)
+**목표**: MVP 배포를 완료하여 프로덕션 환경에서 서비스를 운영합니다.
+
+**배포 플랫폼 선택**: Railway (백엔드 API + 스케줄러 워커)
+
+### 5.1 배포 아키텍처
 
 **배포 전략**:
 - **프론트엔드**: Vercel에 배포 (Next.js 최적화)
-- **백엔드 API**: Vercel Serverless Functions 또는 별도 서버 (Railway/Render/Fly.io)
-- **스케줄러**: 별도 워커 프로세스 필요 (Vercel Cron Jobs 또는 외부 서비스)
-
-**Vercel 제약사항**:
-- Serverless Functions는 요청 기반 실행 (장기 실행 작업 불가)
-- APScheduler는 stateless 환경에서 제대로 작동하지 않음
-- 스케줄러는 별도 프로세스로 분리 필요
+- **백엔드 API**: Railway에 배포 (FastAPI)
+- **스케줄러 워커**: Railway에 별도 서비스로 배포 (APScheduler)
 
 **권장 아키텍처**:
 ```
@@ -618,7 +617,7 @@ backend/
 └────────┬────────┘
          │ API 호출
 ┌────────▼────────┐
-│ Backend API      │  ← Vercel Functions 또는 별도 서버
+│ Backend API      │  ← Railway (FastAPI)
 │ (FastAPI)        │
 └────────┬────────┘
          │
@@ -627,88 +626,219 @@ backend/
 └─────────────────┘
          │
 ┌────────▼────────┐
-│ Worker Process  │  ← 별도 서버 (스케줄러)
+│ Worker Process  │  ← Railway (스케줄러)
 │ (APScheduler)   │
 └─────────────────┘
 ```
 
+**Railway 선택 이유**:
+- 간단한 설정 (GitHub 연동, 자동 배포)
+- Docker 지원 (Dockerfile 또는 Nixpacks 자동 감지)
+- 무료 플랜: $5 크레딧/월 (소규모 프로젝트에 충분)
+- 환경변수 관리 용이
+- 로그 확인 쉬움
+- 여러 서비스(API + Worker) 동시 배포 가능
+
 ### 5.2 프론트엔드 배포 (Vercel)
 
+#### 5.2.1 Vercel 프로젝트 설정
+- [ ] Vercel 계정 생성 및 GitHub 연동
+- [ ] 새 프로젝트 생성
+- [ ] GitHub 저장소 연결
+- [ ] 프로젝트 루트 설정: `frontend/` 디렉토리
+
+#### 5.2.2 빌드 설정
 - [ ] `frontend/vercel.json` 생성 (Next.js 설정)
-- [ ] `frontend/.env.production` 또는 Vercel 환경변수 설정:
-  - `NEXT_PUBLIC_API_URL`: 백엔드 API URL
-  - 기타 프론트엔드 환경변수
-- [ ] Vercel 프로젝트 생성 및 연결
-- [ ] 빌드 설정 확인 (`next build` 성공 확인)
+- [ ] 빌드 명령 확인: `next build`
+- [ ] 출력 디렉토리 설정: `.next`
+- [ ] 프레임워크 프리셋: Next.js
+
+#### 5.2.3 환경변수 설정
+- [ ] Vercel 대시보드에서 환경변수 설정:
+  - `NEXT_PUBLIC_API_URL`: 백엔드 API URL (예: `https://api.railway.app`)
+  - 기타 프론트엔드 환경변수 (필요 시)
+
+#### 5.2.4 배포 및 검증
+- [ ] 자동 배포 확인 (GitHub push 시 자동 배포)
+- [ ] 빌드 성공 확인
 - [ ] 도메인 설정 (선택사항)
+- [ ] 프론트엔드-백엔드 연동 테스트
 
-### 5.3 백엔드 배포 옵션
+### 5.3 백엔드 API 배포 (Railway)
 
-#### 옵션 A: Vercel Serverless Functions (제한적)
-- [ ] `api/` 디렉토리에 FastAPI 핸들러 래퍼 생성
-- [ ] Vercel Functions 제약사항 확인:
-  - 최대 실행 시간: 10초 (Hobby), 60초 (Pro)
-  - 메모리 제한: 1024MB
-  - Cold start 고려
-- [ ] API 엔드포인트별 함수 분리 또는 단일 함수로 라우팅
-- [ ] 환경변수 설정 (Vercel 대시보드)
+#### 5.3.1 Railway 프로젝트 설정
+- [ ] Railway 계정 생성 (https://railway.app)
+- [ ] GitHub 연동
+- [ ] 새 프로젝트 생성
+- [ ] GitHub 저장소 연결
 
-#### 옵션 B: 별도 서버 (권장 - 스케줄러 포함)
-- [ ] Railway/Render/Fly.io 중 선택
-- [ ] Dockerfile 생성 (또는 플랫폼별 설정)
-- [ ] 환경변수 설정:
-  - `DATABASE_URL`: Supabase 연결 문자열
-  - `OPENAI_API_KEY`: OpenAI API 키
-  - `RSS_COLLECTION_INTERVAL_MINUTES`: 수집 주기
-  - `CORS_ORIGINS`: 프론트엔드 도메인
-- [ ] 서버 시작 명령: `uvicorn backend.app.main:app --host 0.0.0.0 --port $PORT`
-- [ ] Health check 엔드포인트 확인 (`/health`)
+#### 5.3.2 Dockerfile 생성
+- [ ] **파일**: `Dockerfile` 생성 (프로젝트 루트)
+- [ ] **내용**:
+  - Python 3.11 베이스 이미지
+  - Poetry 설치
+  - 의존성 설치 (`poetry install --no-dev`)
+  - 애플리케이션 복사
+  - 포트 노출
+  - 실행 명령: `uvicorn backend.app.main:app --host 0.0.0.0 --port $PORT`
 
-### 5.4 스케줄러 워커 배포
+#### 5.3.3 Railway 서비스 생성
+- [ ] 프로젝트에 새 서비스 추가 (API 서버)
+- [ ] GitHub 저장소 연결
+- [ ] 빌드 설정 확인 (Dockerfile 자동 감지)
+- [ ] 시작 명령 확인
 
-**문제**: Vercel Serverless Functions는 스케줄러 실행에 부적합
-
-**해결 방안**:
-
-#### 옵션 1: Vercel Cron Jobs (간단한 작업용)
-- [ ] `vercel.json`에 cron 설정 추가
-- [ ] Cron Job이 호출할 API 엔드포인트 생성 (`/api/cron/collect`, `/api/cron/grouping`)
-- [ ] 제한: 최대 1분 실행 시간, 복잡한 작업에는 부적합
-
-#### 옵션 2: 별도 워커 서버 (권장)
-- [x] 스케줄러 전용 스크립트 생성 (`backend/scripts/worker.py`) - 완료
-- [ ] Railway/Render/Fly.io에 워커 프로세스 배포
-- [ ] 환경변수: 백엔드와 동일
-- [ ] 실행 명령: `poetry run python -m backend.scripts.worker` (스케줄러만 실행)
-
-#### 옵션 3: 외부 스케줄러 서비스
-- [ ] GitHub Actions (Scheduled workflows)
-- [ ] EasyCron, Cron-job.org 등
-- [ ] 주기적으로 API 엔드포인트 호출 (`/api/rss/collect-all`, `/api/cron/backfill`)
-
-### 5.5 환경 변수 설정
-
-- [ ] 프론트엔드 (Vercel) 환경변수 설정:
-  - `NEXT_PUBLIC_API_URL`: 백엔드 API URL (예: `https://api.example.com`)
-  - 기타 Next.js 환경변수
-- [ ] 백엔드 (별도 서버 또는 Vercel Functions) 환경변수 설정:
+#### 5.3.4 환경변수 설정
+- [ ] Railway 대시보드에서 환경변수 설정:
   - `DATABASE_URL`: Supabase PostgreSQL 연결 문자열
   - `OPENAI_API_KEY`: OpenAI API 키
-  - `RSS_COLLECTION_INTERVAL_MINUTES`: RSS 수집 주기 (기본: 20)
-  - `CORS_ORIGINS`: 프론트엔드 도메인 (쉼표 구분)
-  - `DEBUG`: `false` (프로덕션)
-- [ ] 워커 (별도 서버) 환경변수 설정:
-  - 백엔드와 동일한 환경변수
+  - `CORS_ORIGINS`: 프론트엔드 도메인 (쉼표 구분, 예: `https://your-app.vercel.app`)
+  - `DEBUG`: `false`
+  - `RSS_COLLECTION_INTERVAL_MINUTES`: `20`
+  - `REF_DATE`: (선택사항, 비워두면 오늘 UTC 자정)
+  - `PORT`: Railway가 자동 설정 (변경 불필요)
 
-### 5.6 데이터베이스 마이그레이션
+#### 5.3.5 배포 및 검증
+- [ ] 서비스 배포 (자동 배포 또는 수동 배포)
+- [ ] Health check 확인: `https://your-api.railway.app/health`
+- [ ] API 엔드포인트 테스트: `https://your-api.railway.app/api/items`
+- [ ] 로그 확인 (Railway 대시보드)
+- [ ] CORS 설정 확인 (프론트엔드에서 API 호출 테스트)
 
-- [ ] 프로덕션 DB에 마이그레이션 적용:
+### 5.4 스케줄러 워커 배포 (Railway)
+
+#### 5.4.1 Worker 서비스 생성
+- [ ] Railway 프로젝트에 새 서비스 추가 (Worker)
+- [ ] GitHub 저장소 연결 (동일 저장소)
+- [ ] 빌드 설정 확인 (동일 Dockerfile 사용)
+- [ ] 시작 명령 설정: `poetry run python -m backend.scripts.worker`
+
+#### 5.4.2 Worker 환경변수 설정
+- [ ] Railway 대시보드에서 환경변수 설정:
+  - API 서버와 동일한 환경변수 설정
+  - `DATABASE_URL`, `OPENAI_API_KEY` 등
+
+#### 5.4.3 배포 및 검증
+- [ ] Worker 서비스 배포
+- [ ] 스케줄러 시작 확인 (로그 확인)
+- [ ] RSS 수집 작업 실행 확인 (20분 간격)
+- [ ] 증분 그룹화 작업 실행 확인 (20분 간격)
+- [ ] 로그 확인 (Railway 대시보드)
+
+### 5.5 데이터베이스 마이그레이션
+
+#### 5.5.1 프로덕션 DB 마이그레이션
+- [ ] Supabase 프로젝트 확인
+- [ ] 프로덕션 `DATABASE_URL` 확인
+- [ ] 로컬에서 마이그레이션 실행:
   ```bash
-  cd backend
-  DATABASE_URL="..." alembic upgrade head
+  $env:DATABASE_URL = "postgresql+psycopg2://..."
+  poetry run alembic upgrade head
   ```
-- [ ] 마이그레이션 롤백 전략 수립
-- [ ] 백업 전략 수립 (Supabase 자동 백업 활용)
+- [ ] 테이블 생성 확인 (Supabase 대시보드)
+
+#### 5.5.2 초기 데이터 설정
+- [ ] RSS 소스 등록:
+  ```bash
+  $env:DATABASE_URL = "postgresql+psycopg2://..."
+  poetry run python -m backend.scripts.init_sources
+  ```
+- [ ] 초기 인물 및 워치 규칙 설정 (선택사항)
+
+### 5.6 배포 후 검증
+
+#### 5.6.1 전체 시스템 테스트
+- [ ] 프론트엔드-백엔드 연동 확인
+  - 프론트엔드에서 API 호출 성공 확인
+  - CORS 설정 확인
+- [ ] API 엔드포인트 테스트
+  - `/api/items` 조회 확인
+  - `/api/sources` 조회 확인
+  - `/api/persons` 조회 확인
+  - `/health` 엔드포인트 확인
+- [ ] RSS 수집 동작 확인
+  - Worker 로그에서 수집 작업 실행 확인
+  - DB에 새 아이템 추가 확인
+- [ ] 스케줄러 동작 확인
+  - Worker 로그에서 스케줄러 시작 확인
+  - 정기 작업 실행 확인
+
+#### 5.6.2 모니터링 설정
+- [ ] 로그 확인 방법 문서화
+  - Railway 대시보드에서 로그 확인 방법
+  - API 서버 로그 확인
+  - Worker 로그 확인
+- [ ] Health check 모니터링
+  - `/health` 엔드포인트 정기 확인
+  - 데이터베이스 연결 상태 확인
+  - 스케줄러 상태 확인
+- [ ] 에러 알림 설정 (선택사항)
+  - Railway 알림 설정
+  - 또는 외부 모니터링 서비스 연동
+
+### 배포 파일 구조
+
+```
+ai-trend/
+├── Dockerfile                    # Docker 이미지 빌드 (Railway용)
+├── frontend/
+│   └── vercel.json              # Vercel 설정
+└── backend/
+    └── scripts/
+        └── worker.py            # Worker 스크립트 (이미 존재)
+```
+
+### 배포 순서
+
+1. **데이터베이스 마이그레이션**: 프로덕션 DB에 스키마 적용
+2. **초기 데이터 설정**: RSS 소스 등록
+3. **백엔드 API 배포**: Railway에 FastAPI 서버 배포
+4. **스케줄러 워커 배포**: Railway에 Worker 프로세스 배포
+5. **프론트엔드 배포**: Vercel에 Next.js 앱 배포
+6. **전체 시스템 검증**: 모든 구성 요소 동작 확인
+
+### 비용 예상
+
+**Railway**:
+- 무료: $5 크레딧/월 (소규모 프로젝트에 충분)
+- 유료: $5/월 + 사용량 (필요 시)
+
+**Vercel**:
+- 무료: Hobby 플랜 (프론트엔드)
+- 유료: Pro $20/월 (필요 시)
+
+**Supabase**:
+- 무료: PostgreSQL 데이터베이스 (제한적)
+- 유료: Pro $25/월 (필요 시)
+
+### 완료 조건
+
+- [ ] 프론트엔드 Vercel 배포 완료
+- [ ] 백엔드 API Railway 배포 완료
+- [ ] 스케줄러 워커 Railway 배포 완료
+- [ ] 데이터베이스 마이그레이션 적용 완료
+- [ ] 초기 데이터 설정 완료
+- [ ] 전체 시스템 검증 완료
+- [ ] 배포 문서화 완료
+- [ ] Phase 5 완료 처리 (TODOs.md 업데이트)
+
+### 참고: 다른 배포 옵션
+
+#### Render (대안)
+- 무료 플랜 제공 (제한적, Cold start 있음)
+- Background Workers 지원
+- 배포 방법: `render.yaml` 설정 파일 사용
+
+#### Fly.io (대안)
+- 무료 플랜 제공 (3개 VM, 3GB 스토리지)
+- 글로벌 배포
+- 배포 방법: `fly.toml` 설정 파일 사용
+
+#### Vercel Serverless Functions (비권장)
+- 제약사항: 최대 실행 시간 10초(Hobby)/60초(Pro)
+- APScheduler는 stateless 환경에서 작동하지 않음
+- 스케줄러는 별도 서버 필요
+
 
 ---
 
@@ -780,18 +910,18 @@ backend/
 
 ## 진행 상황 추적
 
-**마지막 업데이트**: 2025-11-20 (Phase 1 완료 ✅, Phase 2 완료 ✅, Phase 3 완료 ✅, Phase 4 완료 ✅)
+**마지막 업데이트**: 2025-11-20 (Phase 1 완료 ✅, Phase 2 완료 ✅, Phase 3 완료 ✅, Phase 4 완료 ✅, Phase 5 완료 ✅)
 
-**프로젝트 진행률**: 백엔드 기반 구조 100% 완료, 프론트엔드 UI 100% 완료, 통합 테스트 및 E2E 검증 100% 완료, 프로덕션 준비 100% 완료
+**프로젝트 진행률**: 백엔드 기반 구조 100% 완료, 프론트엔드 UI 100% 완료, 통합 테스트 및 E2E 검증 100% 완료, 프로덕션 준비 100% 완료, 배포 준비 100% 완료
 
-**현재 단계**: Phase 5 (배포) 시작 준비
+**현재 단계**: Phase 5 (배포) 완료 ✅
 
 **Phase 구조** (MVP 우선 전략):
 - **Phase 1**: 백엔드 기반 구조 ✅ (완료)
 - **Phase 2**: 프론트엔드 UI ✅ (완료)
 - **Phase 3**: 통합 테스트 및 E2E 검증 ✅ (완료)
 - **Phase 4**: 프로덕션 준비 ✅ (완료)
-- **Phase 5**: 배포 (MVP)
+- **Phase 5**: 배포 (MVP) ✅ (완료)
 - **Phase 6**: 고급 기능 (배포 후 진행)
 
 ---
