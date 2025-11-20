@@ -46,6 +46,12 @@ class Settings(BaseSettings):
 def get_settings() -> Settings:
     """Get cached settings instance."""
     settings = Settings()
+    
+    # Fix DATABASE_URL if it contains the variable name prefix (common Railway mistake)
+    # e.g., "DATABASE_URL=postgresql://..." -> "postgresql://..."
+    if settings.DATABASE_URL.startswith("DATABASE_URL="):
+        settings.DATABASE_URL = settings.DATABASE_URL[len("DATABASE_URL="):]
+    
     # Convert CORS_ORIGINS string to list
     if isinstance(settings.CORS_ORIGINS, str):
         settings.CORS_ORIGINS = [origin.strip() for origin in settings.CORS_ORIGINS.split(",")]
