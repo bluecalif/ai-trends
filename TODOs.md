@@ -642,23 +642,40 @@ backend/
 ### 5.2 프론트엔드 배포 (Vercel)
 
 #### 5.2.1 Vercel 프로젝트 설정
-- [ ] Vercel 계정 생성 및 GitHub 연동
-- [ ] 새 프로젝트 생성
-- [ ] GitHub 저장소 연결
-- [ ] 프로젝트 루트 설정: `frontend/` 디렉토리
+- [x] Vercel 계정 생성 및 GitHub 연동
+- [x] 새 프로젝트 생성
+- [x] GitHub 저장소 연결
+- [x] 프로젝트 루트 설정: `frontend/` 디렉토리 (Vercel UI에서 설정)
 
 #### 5.2.2 빌드 설정
-- [ ] `frontend/vercel.json` 생성 (Next.js 설정)
-- [ ] 빌드 명령 확인: `next build`
-- [ ] 출력 디렉토리 설정: `.next`
-- [ ] 프레임워크 프리셋: Next.js
+- [x] `frontend/vercel.json` 생성 시도 (후 삭제 - Vercel이 지원하지 않음)
+- [x] 빌드 명령 확인: `next build --webpack` (webpack 명시적 사용)
+- [x] 출력 디렉토리 설정: `.next` (기본값)
+- [x] 프레임워크 프리셋: Next.js (자동 감지)
+- [x] `frontend/next.config.ts` webpack 설정 추가 (경로 별칭 해석)
+- [x] `frontend/tsconfig.json` baseUrl 설정 추가
 
 #### 5.2.3 환경변수 설정
 - [ ] Vercel 대시보드에서 환경변수 설정:
-  - `NEXT_PUBLIC_API_URL`: 백엔드 API URL (예: `https://api.railway.app`)
+  - `NEXT_PUBLIC_API_URL`: 백엔드 API URL (Railway URL 확인 후 설정 필요)
   - 기타 프론트엔드 환경변수 (필요 시)
 
-#### 5.2.4 배포 및 검증
+#### 5.2.4 배포 문제 해결
+- [x] **문제 발견**: `Module not found: Can't resolve '@/lib/constants'` 오류
+- [x] **원인 분석**: 
+  - `.gitignore`의 `lib/` 패턴이 `frontend/lib/`도 무시함
+  - `constants.ts`, `validators.ts`, `providers.tsx` 파일이 Git에 커밋되지 않음
+  - Vercel 빌드 시 `lib` 디렉토리에 `api.ts`만 존재
+- [x] **해결 조치**:
+  - `.gitignore` 수정: `lib/` → `/lib/` (프로젝트 루트만 무시)
+  - `frontend/next.config.ts`에 디버깅 로그 추가 (파일 존재 여부 확인)
+  - webpack resolve 설정 강화 (extensions 명시적 설정)
+- [ ] **진행 중**: 파일을 Git에 추가하고 커밋 필요
+  - `git add frontend/lib/constants.ts frontend/lib/validators.ts frontend/lib/providers.tsx`
+  - 커밋 및 푸시 후 Vercel 재배포
+
+#### 5.2.5 배포 및 검증
+- [ ] 파일 Git 추가 및 커밋 완료
 - [ ] 자동 배포 확인 (GitHub push 시 자동 배포)
 - [ ] 빌드 성공 확인
 - [ ] 도메인 설정 (선택사항)
@@ -667,43 +684,61 @@ backend/
 ### 5.3 백엔드 API 배포 (Railway)
 
 #### 5.3.1 Railway 프로젝트 설정
-- [ ] Railway 계정 생성 (https://railway.app)
-- [ ] GitHub 연동
-- [ ] 새 프로젝트 생성
-- [ ] GitHub 저장소 연결
+- [x] Railway 계정 생성 (https://railway.app)
+- [x] GitHub 연동
+- [x] 새 프로젝트 생성
+- [x] GitHub 저장소 연결
 
-#### 5.3.2 Dockerfile 생성
-- [ ] **파일**: `Dockerfile` 생성 (프로젝트 루트)
-- [ ] **내용**:
+#### 5.3.2 Dockerfile 생성 및 수정
+- [x] **파일**: `Dockerfile` 생성 (프로젝트 루트)
+- [x] **초기 문제 및 해결**:
+  - [x] **문제 1**: `alembic/` 디렉토리 경로 오류
+    - **원인**: `alembic/`가 `backend/` 안에 있는데 루트에서 복사 시도
+    - **해결**: `COPY backend/ ./backend/`로 통합 (alembic 포함)
+  - [x] **문제 2**: `uvicorn` 명령어를 찾을 수 없음
+    - **원인**: Poetry 가상환경 경로가 PATH에 없음
+    - **해결**: `ENV PATH="/app/.venv/bin:$PATH"` 추가 및 절대 경로 사용 (`/app/.venv/bin/uvicorn`)
+  - [x] **문제 3**: Poetry 가상환경 생성 확인
+    - **해결**: `poetry config virtualenvs.in-project true` 및 설치 검증 추가
+- [x] **최종 Dockerfile 구조**:
   - Python 3.11 베이스 이미지
-  - Poetry 설치
+  - Poetry 1.8.5 설치
   - 의존성 설치 (`poetry install --no-dev`)
-  - 애플리케이션 복사
-  - 포트 노출
-  - 실행 명령: `uvicorn backend.app.main:app --host 0.0.0.0 --port $PORT`
+  - 애플리케이션 복사 (`COPY backend/ ./backend/`)
+  - 포트 노출 (8000)
+  - 실행 명령: `/app/.venv/bin/uvicorn backend.app.main:app --host 0.0.0.0 --port 8000`
 
 #### 5.3.3 Railway 서비스 생성
-- [ ] 프로젝트에 새 서비스 추가 (API 서버)
-- [ ] GitHub 저장소 연결
-- [ ] 빌드 설정 확인 (Dockerfile 자동 감지)
-- [ ] 시작 명령 확인
+- [x] 프로젝트에 새 서비스 추가 (API 서버)
+- [x] GitHub 저장소 연결
+- [x] 빌드 설정 확인 (Dockerfile 자동 감지)
+- [x] 시작 명령 확인
 
-#### 5.3.4 환경변수 설정
-- [ ] Railway 대시보드에서 환경변수 설정:
-  - `DATABASE_URL`: Supabase PostgreSQL 연결 문자열
-  - `OPENAI_API_KEY`: OpenAI API 키
-  - `CORS_ORIGINS`: 프론트엔드 도메인 (쉼표 구분, 예: `https://your-app.vercel.app`)
-  - `DEBUG`: `false`
-  - `RSS_COLLECTION_INTERVAL_MINUTES`: `20`
-  - `REF_DATE`: (선택사항, 비워두면 오늘 UTC 자정)
-  - `PORT`: Railway가 자동 설정 (변경 불필요)
+#### 5.3.4 환경변수 설정 및 문제 해결
+- [x] Railway 대시보드에서 환경변수 설정:
+  - [x] `DATABASE_URL`: Supabase PostgreSQL 연결 문자열
+    - **형식**: `postgresql+psycopg2://user:password@host:port/db?sslmode=require`
+    - **주의**: `postgresql://` → `postgresql+psycopg2://` (드라이버 명시)
+    - **주의**: `?sslmode=require` 추가 (Supabase 필수)
+  - [x] `OPENAI_API_KEY`: OpenAI API 키
+  - [x] `CORS_ORIGINS`: 프론트엔드 도메인 (쉼표 구분)
+  - [x] `DEBUG`: `false`
+  - [x] `RSS_COLLECTION_INTERVAL_MINUTES`: `20`
+  - [x] `REF_DATE`: (선택사항, 비워두면 오늘 UTC 자정)
+  - [x] `PORT`: Railway가 자동 설정 (변경 불필요)
+- [x] **DATABASE_URL 파싱 오류 해결**:
+  - [x] **문제**: `DATABASE_URL` 값에 `DATABASE_URL=` 접두사 포함
+    - **원인**: Railway 환경변수 설정 시 값에 변수명이 포함됨
+    - **해결**: `backend/app/core/config.py`에 validator 추가하여 접두사 자동 제거
+  - [x] **디버깅 로그 추가**: `backend/app/core/database.py`에 DATABASE_URL 마스킹 로그 추가
 
 #### 5.3.5 배포 및 검증
-- [ ] 서비스 배포 (자동 배포 또는 수동 배포)
-- [ ] Health check 확인: `https://your-api.railway.app/health`
-- [ ] API 엔드포인트 테스트: `https://your-api.railway.app/api/items`
-- [ ] 로그 확인 (Railway 대시보드)
-- [ ] CORS 설정 확인 (프론트엔드에서 API 호출 테스트)
+- [x] 서비스 배포 (자동 배포)
+- [x] Health check 확인: `https://your-api.railway.app/health`
+  - **결과**: `{ status: "healthy", scheduler_running: true, database_connected: true }`
+- [x] API 엔드포인트 테스트: `https://your-api.railway.app/api/items`
+- [x] 로그 확인 (Railway 대시보드)
+- [ ] CORS 설정 확인 (프론트엔드 배포 후 테스트)
 
 ### 5.4 스케줄러 워커 배포 (Railway)
 
@@ -910,18 +945,30 @@ ai-trend/
 
 ## 진행 상황 추적
 
-**마지막 업데이트**: 2025-11-20 (Phase 1 완료 ✅, Phase 2 완료 ✅, Phase 3 완료 ✅, Phase 4 완료 ✅, Phase 5 완료 ✅)
+**마지막 업데이트**: 2025-11-20 (Phase 1 완료 ✅, Phase 2 완료 ✅, Phase 3 완료 ✅, Phase 4 완료 ✅, Phase 5 진행 중 🔄)
 
-**프로젝트 진행률**: 백엔드 기반 구조 100% 완료, 프론트엔드 UI 100% 완료, 통합 테스트 및 E2E 검증 100% 완료, 프로덕션 준비 100% 완료, 배포 준비 100% 완료
+**프로젝트 진행률**: 
+- 백엔드 기반 구조 100% 완료 ✅
+- 프론트엔드 UI 100% 완료 ✅
+- 통합 테스트 및 E2E 검증 100% 완료 ✅
+- 프로덕션 준비 100% 완료 ✅
+- 배포 진행 중 🔄
+  - 백엔드 API (Railway): 배포 완료 ✅
+  - 프론트엔드 (Vercel): 배포 진행 중 (Module not found 오류 해결 중)
 
-**현재 단계**: Phase 5 (배포) 완료 ✅
+**현재 단계**: Phase 5 (배포) 진행 중 🔄
 
 **Phase 구조** (MVP 우선 전략):
 - **Phase 1**: 백엔드 기반 구조 ✅ (완료)
 - **Phase 2**: 프론트엔드 UI ✅ (완료)
 - **Phase 3**: 통합 테스트 및 E2E 검증 ✅ (완료)
 - **Phase 4**: 프로덕션 준비 ✅ (완료)
-- **Phase 5**: 배포 (MVP) ✅ (완료)
+- **Phase 5**: 배포 (MVP) 🔄 (진행 중)
+  - 5.3 백엔드 API 배포: 완료 ✅
+  - 5.2 프론트엔드 배포: 진행 중 (파일 Git 추가 필요)
+  - 5.4 스케줄러 워커 배포: 대기 중
+  - 5.5 데이터베이스 마이그레이션: 대기 중
+  - 5.6 배포 후 검증: 대기 중
 - **Phase 6**: 고급 기능 (배포 후 진행)
 
 ---

@@ -10,7 +10,7 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
+/lib/
 lib64/
 parts/
 sdist/
@@ -62,6 +62,7 @@ Thumbs.db
 
 # Cursor
 .cursor/
+!.cursor/rules/
 
 # Alembic
 alembic/versions/*.pyc
