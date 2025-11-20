@@ -49,6 +49,29 @@ export function WatchRulesSection() {
     },
   })
 
+  // Type guard to check if data is WatchRuleCreate
+  const isWatchRuleCreate = (
+    data: WatchRuleCreate | WatchRuleUpdate
+  ): data is WatchRuleCreate => {
+    // WatchRuleCreate requires label to be a non-null string
+    const isCreate =
+      typeof data.label === 'string' && data.label.length > 0
+
+    if (!isCreate) {
+      console.warn('[WatchRulesSection] Type guard failed: data is not WatchRuleCreate', {
+        data,
+        labelType: typeof data.label,
+        labelValue: data.label,
+      })
+    } else {
+      console.log('[WatchRulesSection] Type guard passed: data is WatchRuleCreate', {
+        label: data.label,
+      })
+    }
+
+    return isCreate
+  }
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
@@ -58,7 +81,7 @@ export function WatchRulesSection() {
     )
   }
 
-  if (error) {
+  if (error != null) {
     return (
       <div className="bg-red-50 border border-red-200 rounded-lg p-4">
         <p className="text-red-800 font-medium">Error loading watch rules</p>
@@ -206,7 +229,43 @@ export function WatchRulesSection() {
         <WatchRuleModal
           persons={persons || []}
           onClose={() => setIsAddModalOpen(false)}
-          onSave={(data) => createMutation.mutate(data)}
+          onSave={(data) => {
+            console.log('[WatchRulesSection] onSave called (add mode)', {
+              data,
+              dataKeys: Object.keys(data),
+            })
+
+            if (isWatchRuleCreate(data)) {
+              console.log('[WatchRulesSection] Type guard passed, calling createMutation')
+              createMutation.mutate(data)
+            } else {
+              console.error(
+                '[WatchRulesSection] Type guard failed: Expected WatchRuleCreate but got WatchRuleUpdate',
+                { data }
+              )
+              // Fallback: try to convert WatchRuleUpdate to WatchRuleCreate
+              if (data.label) {
+                console.warn(
+                  '[WatchRulesSection] Attempting to convert WatchRuleUpdate to WatchRuleCreate',
+                  { data }
+                )
+                createMutation.mutate({
+                  label: data.label,
+                  include_rules: data.include_rules ?? [],
+                  exclude_rules: data.exclude_rules ?? [],
+                  required_keywords: data.required_keywords ?? [],
+                  optional_keywords: data.optional_keywords ?? [],
+                  priority: data.priority ?? 0,
+                  person_id: data.person_id ?? null,
+                })
+              } else {
+                console.error(
+                  '[WatchRulesSection] Cannot convert: missing required fields',
+                  { data }
+                )
+              }
+            }
+          }}
           isLoading={createMutation.isPending}
           error={createMutation.error}
         />
@@ -491,7 +550,7 @@ function WatchRuleModal({
             </>
           )}
 
-          {error && (
+          {error != null && (
             <div className="mb-4 bg-red-50 border border-red-200 rounded-lg p-3">
               <p className="text-red-800 text-sm">
                 {error instanceof Error ? error.message : 'Failed to save rule'}
@@ -585,7 +644,7 @@ function AddPersonModal({
             />
           </div>
 
-          {error && (
+          {error != null && (
             <div className="mb-4 bg-red-50 border border-red-200 rounded-lg p-3">
               <p className="text-red-800 text-sm">
                 {error instanceof Error ? error.message : 'Failed to create person'}

@@ -378,7 +378,7 @@ function SourceModal({
             </label>
           </div>
 
-          {error && (
+          {error != null && (
             <div className="mb-4 bg-red-50 border border-red-200 rounded-lg p-3">
               <p className="text-red-800 text-sm">
                 {error instanceof Error ? error.message : 'Failed to save source'}
