@@ -1,10 +1,10 @@
 """FastAPI application entry point."""
-import logging
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from backend.app.core.config import get_settings
+from backend.app.core.logging import setup_logging, get_logger
 from backend.app.api import rss
 from backend.app.api import groups
 from backend.app.api import items
@@ -16,13 +16,9 @@ from backend.app.api import insights
 from backend.app.api import constants
 from backend.app.core.scheduler import start_scheduler, stop_scheduler, is_scheduler_running
 
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format="[%(asctime)s] %(levelname)s [%(name)s] %(message)s",
-    datefmt="%Y-%m-%d %H:%M:%S",
-)
-logger = logging.getLogger(__name__)
+# Configure logging (development/production aware)
+setup_logging()
+logger = get_logger(__name__)
 
 settings = get_settings()
 
@@ -79,9 +75,31 @@ async def root():
 
 @app.get("/health")
 async def health_check():
-    """Health check endpoint."""
+    """Health check endpoint.
+    
+    Returns:
+        dict: Health status including:
+            - status: "healthy" or "unhealthy"
+            - scheduler_running: Whether the scheduler is running
+            - database_connected: Whether the database connection is active
+    """
+    from sqlalchemy import text
+    from backend.app.core.database import get_engine
+    
+    db_status = "connected"
+    try:
+        engine = get_engine()
+        with engine.connect() as conn:
+            conn.execute(text("SELECT 1"))
+    except Exception as e:
+        logger.error(f"Database health check failed: {e}")
+        db_status = "disconnected"
+    
+    overall_status = "healthy" if db_status == "connected" and is_scheduler_running() else "unhealthy"
+    
     return {
-        "status": "healthy",
+        "status": overall_status,
         "scheduler_running": is_scheduler_running(),
+        "database_connected": db_status == "connected",
     }
 
