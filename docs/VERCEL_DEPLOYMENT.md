@@ -28,10 +28,15 @@
 2. GitHub 저장소 선택: `bluecalif/ai-trends`
 3. 프로젝트 설정:
    - **Framework Preset**: Next.js (자동 감지)
-   - **Root Directory**: `frontend`
-   - **Build Command**: `npm run build` (기본값)
+   - **Root Directory**: `frontend` ⚠️ **중요**: 반드시 `frontend`로 설정
+   - **Build Command**: `npm run build` (기본값, Root Directory 설정 시 자동 적용)
    - **Output Directory**: `.next` (기본값)
    - **Install Command**: `npm install` (기본값)
+
+**⚠️ 주의사항**:
+- Root Directory를 `frontend`로 설정하지 않으면 경로 별칭(`@/lib/*`) 해석 오류 발생
+- `vercel.json`에 `rootDirectory` 속성을 추가하면 안 됨 (Vercel이 지원하지 않음)
+- 프로젝트 생성 후 Settings → General에서 Root Directory 확인 가능
 
 ---
 
@@ -171,12 +176,62 @@ CORS_ORIGINS=https://ai-trend-monitor.vercel.app,https://your-custom-domain.com
 3. 의존성 설치 오류 확인
 4. 환경변수 확인 (`NEXT_PUBLIC_API_URL`)
 
-**문제**: `Module not found` 오류
+**문제**: `Module not found: Can't resolve '@/lib/constants'` 오류
+
+**원인**: Root Directory 설정이 제대로 적용되지 않음
+
+**해결 방법 1: 프로젝트 재생성 (권장)**
+
+**단계별 가이드**:
+
+1. **기존 프로젝트 확인** (선택사항):
+   - Vercel 대시보드 → 현재 프로젝트 확인
+   - 필요시 기존 프로젝트 삭제 (Settings → General → Delete Project)
+
+2. **새 프로젝트 생성**:
+   - Vercel 대시보드 → "Add New..." → "Project" 클릭
+   - GitHub 저장소 선택: `bluecalif/ai-trends`
+   - 브랜치: `main`
+
+3. **프로젝트 설정** (⚠️ 중요):
+   - **Root Directory**: `frontend` ⚠️ **반드시 설정**
+   - **Framework Preset**: `Next.js` (자동 감지되지만 확인)
+   - **Build Command**: `npm run build` (기본값, Root Directory 설정 시 자동 적용)
+   - **Output Directory**: `.next` (기본값)
+   - **Install Command**: `npm install` (기본값)
+
+4. **프로젝트 생성 및 배포**:
+   - "Deploy" 버튼 클릭
+   - 첫 배포 진행 (약 2-3분 소요)
+
+5. **환경변수 설정**:
+   - 배포 완료 후 Settings → Environment Variables
+   - `NEXT_PUBLIC_API_URL` 추가 (Railway API URL)
+   - 환경변수 추가 후 "Redeploy" 실행
+
+6. **배포 검증**:
+   - 빌드 로그에서 오류 없음 확인
+   - 프론트엔드 페이지 로드 확인
+   - API 연동 확인
+
+**해결 방법 2: Root Directory 재설정**
+1. Vercel 대시보드 → 프로젝트 → Settings → General
+2. "Root Directory" 필드 확인
+3. `frontend`로 설정되어 있는지 확인
+4. 설정 변경 후 "Redeploy" 실행
+
+**해결 방법 3: 빌드 캐시 삭제**
+1. Vercel 대시보드 → 프로젝트 → Settings → General
+2. "Clear Build Cache" 클릭
+3. "Redeploy" 실행
+
+**문제**: `Module not found` 오류 (일반)
 
 **해결**:
 1. `package.json` 의존성 확인
 2. `node_modules` 삭제 후 재설치
 3. Vercel 빌드 캐시 삭제 (Settings → General → Clear Build Cache)
+4. Root Directory 설정 확인
 
 ### API 연결 실패
 
