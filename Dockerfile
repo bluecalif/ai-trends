@@ -30,8 +30,7 @@ RUN poetry install --no-dev && rm -rf $POETRY_CACHE_DIR
 
 # Copy application code
 COPY backend/ ./backend/
-COPY alembic.ini ./
-COPY alembic/ ./alembic/
+# alembic.ini and alembic/ are already included in backend/ directory
 
 # Expose port (Railway will set PORT environment variable)
 EXPOSE 8000
