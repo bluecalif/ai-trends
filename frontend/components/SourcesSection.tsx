@@ -46,6 +46,35 @@ export function SourcesSection() {
     })
   }
 
+  // Type guard to check if data is SourceCreate
+  const isSourceCreate = (
+    data: SourceCreate | SourceUpdate
+  ): data is SourceCreate => {
+    // SourceCreate requires title and feed_url to be non-null strings
+    const isCreate =
+      typeof data.title === 'string' &&
+      data.title.length > 0 &&
+      typeof data.feed_url === 'string' &&
+      data.feed_url.length > 0
+
+    if (!isCreate) {
+      console.warn('[SourcesSection] Type guard failed: data is not SourceCreate', {
+        data,
+        titleType: typeof data.title,
+        titleValue: data.title,
+        feedUrlType: typeof data.feed_url,
+        feedUrlValue: data.feed_url,
+      })
+    } else {
+      console.log('[SourcesSection] Type guard passed: data is SourceCreate', {
+        title: data.title,
+        feed_url: data.feed_url,
+      })
+    }
+
+    return isCreate
+  }
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
@@ -166,7 +195,42 @@ export function SourcesSection() {
       {isAddModalOpen && (
         <SourceModal
           onClose={() => setIsAddModalOpen(false)}
-          onSave={(data) => createMutation.mutate(data)}
+          onSave={(data) => {
+            console.log('[SourcesSection] onSave called (add mode)', {
+              data,
+              dataKeys: Object.keys(data),
+            })
+
+            if (isSourceCreate(data)) {
+              console.log('[SourcesSection] Type guard passed, calling createMutation')
+              createMutation.mutate(data)
+            } else {
+              console.error(
+                '[SourcesSection] Type guard failed: Expected SourceCreate but got SourceUpdate',
+                { data }
+              )
+              // Fallback: try to convert SourceUpdate to SourceCreate
+              if (data.title && data.feed_url) {
+                console.warn(
+                  '[SourcesSection] Attempting to convert SourceUpdate to SourceCreate',
+                  { data }
+                )
+                createMutation.mutate({
+                  title: data.title,
+                  feed_url: data.feed_url,
+                  site_url: data.site_url ?? null,
+                  category: data.category ?? null,
+                  lang: data.lang ?? 'en',
+                  is_active: data.is_active ?? true,
+                })
+              } else {
+                console.error(
+                  '[SourcesSection] Cannot convert: missing required fields',
+                  { data }
+                )
+              }
+            }
+          }}
           isLoading={createMutation.isPending}
           error={createMutation.error}
         />

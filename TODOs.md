@@ -513,7 +513,64 @@
   - 데이터베이스 연결 상태 확인 추가
   - 상세 상태 정보 반환 (선택사항)
 
-#### 4.3.3 에러 추적 (선택사항)
+#### 4.3.3 배포 전 검증 (프로덕션 빌드 테스트) ✅
+- [x] **목적**: 배포 전 로컬에서 프로덕션 빌드를 테스트하여 타입 오류 및 빌드 문제를 사전에 발견
+- [x] **배경**: 
+  - `next dev` (개발 모드)는 타입 오류를 경고로만 표시하고 빌드를 계속 진행할 수 있음
+  - `next build` (프로덕션 빌드)는 타입 오류가 있으면 빌드 실패
+  - Vercel은 `next build`를 실행하므로, 로컬에서 빌드 테스트를 하지 않으면 배포 시 오류 발견
+  - `.gitignore` 패턴이 의도치 않게 중요한 파일을 무시할 수 있음 (예: `lib/` 패턴이 `frontend/lib/`도 무시)
+  - 로컬에서는 파일이 존재하지만 Git에 커밋되지 않으면 배포 환경에 파일이 없어 빌드 실패
+- [x] **검증 항목**:
+  - [x] `.gitignore` 확인:
+    ```bash
+    # Git에 추적되는 파일 확인
+    git ls-files frontend/lib/
+    git ls-files backend/
+    
+    # .gitignore에 의해 무시되는 파일 확인
+    git check-ignore -v frontend/lib/*.ts
+    git check-ignore -v backend/**/*.py
+    ```
+    - **목적**: `.gitignore` 패턴이 의도치 않게 중요한 파일을 무시하는지 확인
+    - **배경**: 
+      - 로컬에서는 파일이 존재하지만 Git에 커밋되지 않으면 배포 시 누락됨
+      - 예: `lib/` 패턴이 `frontend/lib/`도 무시하는 경우
+      - Vercel/Railway는 Git 저장소를 클론하므로, Git에 없는 파일은 배포 환경에 존재하지 않음
+    - **확인 사항**:
+      - 필수 파일이 Git에 포함되어 있는지 확인
+      - `.gitignore` 패턴이 의도치 않은 파일을 무시하지 않는지 확인
+      - 특히 하위 디렉토리(`frontend/`, `backend/`)의 파일 확인
+  - [x] 프론트엔드 프로덕션 빌드 테스트:
+    ```bash
+    cd frontend
+    npm run build
+    ```
+    - TypeScript 타입 오류 확인
+    - 빌드 성공 여부 확인
+    - 빌드 산출물 확인 (`.next` 디렉토리)
+  - [x] 백엔드 프로덕션 빌드 테스트 (Docker):
+    ```bash
+    docker build -t ai-trend-backend .
+    docker run -p 8000:8000 ai-trend-backend
+    ```
+    - Docker 이미지 빌드 성공 확인
+    - 컨테이너 실행 확인
+    - Health check 확인 (`/health` 엔드포인트)
+- [x] **체크리스트**:
+  - [x] `.gitignore` 확인 완료 (필수 파일이 Git에 포함되어 있는지 확인)
+  - [x] 프론트엔드 빌드 성공 확인
+  - [x] 백엔드 Docker 빌드 성공 확인
+  - [x] 타입 오류 없음 확인
+  - [x] 빌드 산출물 정상 생성 확인
+- [x] **권장 사항**:
+  - 배포 전 반드시 `.gitignore` 확인 수행 (필수 파일이 Git에 포함되어 있는지)
+  - 배포 전 반드시 로컬에서 프로덕션 빌드 테스트 수행
+  - CI/CD 파이프라인에 빌드 테스트 단계 추가 (선택사항)
+  - 타입 오류는 개발 중에도 주의 깊게 확인
+  - `.gitignore` 패턴 수정 시 하위 디렉토리 영향 확인 (예: `lib/` → `/lib/`)
+
+#### 4.3.4 에러 추적 (선택사항)
 - [ ] **작업**: Sentry 또는 유사 서비스 연동 검토
 - [ ] **우선순위**: 낮음 (MVP에서는 선택사항)
 - [ ] **내용**:
@@ -521,7 +578,7 @@
   - 에러 자동 수집 및 알림
   - 프로덕션 환경에서만 활성화
 
-#### 4.3.4 메트릭 수집 (선택사항)
+#### 4.3.5 메트릭 수집 (선택사항)
 - [ ] **작업**: 기본 메트릭 수집 구현 검토
 - [ ] **우선순위**: 낮음 (MVP에서는 선택사항)
 - [ ] **내용**:
@@ -556,6 +613,7 @@ backend/
 - [x] 개발자 가이드 작성 완료
 - [x] 로깅 설정 개선 완료 (개발/프로덕션 분리)
 - [x] Health check 엔드포인트 개선 완료
+- [x] 배포 전 검증 (프로덕션 빌드 테스트) 완료
 - [x] Phase 4 완료 처리 (TODOs.md 업데이트)
 
 ### 주요 결과
@@ -570,6 +628,11 @@ backend/
   - 프로덕션: JSON 형식 (로그 수집 서비스 연동)
 - **Health Check**: 데이터베이스 연결 상태 확인 추가
 - **환경변수**: 예시 파일 존재 확인 (`backend/.env.example`)
+- **배포 전 검증**: 프로덕션 빌드 테스트 프로세스 수립
+  - `.gitignore` 확인: 필수 파일이 Git에 포함되어 있는지 확인
+  - 프론트엔드: `npm run build` 로컬 테스트
+  - 백엔드: Docker 빌드 및 실행 테스트
+  - 타입 오류 사전 발견 프로세스 확립
 
 ### 참고 파일
 
@@ -585,6 +648,7 @@ backend/
 - 환경변수 예시 파일
 - 데이터베이스 마이그레이션 가이드
 - 로깅 설정 개선
+- 배포 전 검증 (프로덕션 빌드 테스트)
 
 **중간 (권장)**:
 - 사용자 가이드
@@ -661,23 +725,35 @@ backend/
   - 기타 프론트엔드 환경변수 (필요 시)
 
 #### 5.2.4 배포 문제 해결
-- [x] **문제 발견**: `Module not found: Can't resolve '@/lib/constants'` 오류
-- [x] **원인 분석**: 
+- [x] **문제 1 발견**: `Module not found: Can't resolve '@/lib/constants'` 오류
+- [x] **문제 1 원인 분석**: 
   - `.gitignore`의 `lib/` 패턴이 `frontend/lib/`도 무시함
   - `constants.ts`, `validators.ts`, `providers.tsx` 파일이 Git에 커밋되지 않음
   - Vercel 빌드 시 `lib` 디렉토리에 `api.ts`만 존재
-- [x] **해결 조치**:
+- [x] **문제 1 해결 조치**:
   - `.gitignore` 수정: `lib/` → `/lib/` (프로젝트 루트만 무시)
   - `frontend/next.config.ts`에 디버깅 로그 추가 (파일 존재 여부 확인)
   - webpack resolve 설정 강화 (extensions 명시적 설정)
-- [ ] **진행 중**: 파일을 Git에 추가하고 커밋 필요
-  - `git add frontend/lib/constants.ts frontend/lib/validators.ts frontend/lib/providers.tsx`
-  - 커밋 및 푸시 후 Vercel 재배포
+- [x] **문제 1 해결 완료**: 파일 Git 추가 및 푸시 완료 (`f9eed75`)
+- [x] **문제 2 발견**: TypeScript 타입 오류
+  - **오류 위치**: `./components/SourcesSection.tsx:169:51`
+  - **오류 내용**: `Argument of type 'SourceCreate | SourceUpdate' is not assignable to parameter of type 'SourceCreate'`
+  - **상세**: `SourceUpdate`의 `title`이 `string | null | undefined`인데, `SourceCreate`는 `string`을 요구
+- [x] **문제 2 해결 완료**:
+  - **원인**: `SourceModal`의 `onSave`가 `SourceCreate | SourceUpdate`를 받지만, `createMutation.mutate`는 `SourceCreate`만 받음
+  - **해결 조치**:
+    - 타입 가드 함수 `isSourceCreate()` 추가 (런타임 검증)
+    - 디버깅 로그 추가 (타입 검증 과정 추적)
+    - 폴백 로직 추가 (SourceUpdate → SourceCreate 변환 시도)
+  - **구현 내용**:
+    - `isSourceCreate()`: `title`과 `feed_url`이 필수 문자열인지 확인
+    - `onSave` 콜백에서 타입 가드 사용 및 상세 로그 출력
+    - 타입 불일치 시 에러 로그 및 폴백 처리
 
 #### 5.2.5 배포 및 검증
-- [ ] 파일 Git 추가 및 커밋 완료
-- [ ] 자동 배포 확인 (GitHub push 시 자동 배포)
-- [ ] 빌드 성공 확인
+- [x] 파일 Git 추가 및 커밋 완료
+- [x] 자동 배포 확인 (GitHub push 시 자동 배포)
+- [ ] 빌드 성공 확인 (TypeScript 타입 오류 해결 필요)
 - [ ] 도메인 설정 (선택사항)
 - [ ] 프론트엔드-백엔드 연동 테스트
 
@@ -954,7 +1030,9 @@ ai-trend/
 - 프로덕션 준비 100% 완료 ✅
 - 배포 진행 중 🔄
   - 백엔드 API (Railway): 배포 완료 ✅
-  - 프론트엔드 (Vercel): 배포 진행 중 (Module not found 오류 해결 중)
+  - 프론트엔드 (Vercel): 배포 진행 중
+    - ✅ Module not found 오류 해결 (파일 Git 추가 완료)
+    - 🔄 TypeScript 타입 오류 해결 필요 (`SourcesSection.tsx`)
 
 **현재 단계**: Phase 5 (배포) 진행 중 🔄
 
@@ -965,7 +1043,9 @@ ai-trend/
 - **Phase 4**: 프로덕션 준비 ✅ (완료)
 - **Phase 5**: 배포 (MVP) 🔄 (진행 중)
   - 5.3 백엔드 API 배포: 완료 ✅
-  - 5.2 프론트엔드 배포: 진행 중 (파일 Git 추가 필요)
+  - 5.2 프론트엔드 배포: 진행 중
+    - ✅ 파일 Git 추가 완료
+    - 🔄 TypeScript 타입 오류 해결 필요
   - 5.4 스케줄러 워커 배포: 대기 중
   - 5.5 데이터베이스 마이그레이션: 대기 중
   - 5.6 배포 후 검증: 대기 중
