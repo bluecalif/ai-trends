@@ -1,7 +1,7 @@
 # AI Trend Monitor - 작업 계획서 (TODOs)
 
 > 이 문서는 PRD_ai-trend.md를 바탕으로 작성된 상세 구현 계획서입니다.  
-> Phase 1, 2는 완료되었으며 핵심만 요약합니다. 상세 내용은 `v1_TODOs.md`를 참고하세요.
+> Phase 1은 완료되었으며 핵심만 요약합니다. 상세 내용은 `TODOs_v0.md`를 참고하세요.
 
 ---
 
@@ -50,7 +50,7 @@
 
 #### 1.4 요약 서비스 ✅
 - RSS description 사용 (MVP)
-- 원문 기반 AI 요약은 Phase 6로 이동
+- 원문 기반 AI 요약은 Phase 3로 이동
 - E2E 테스트 통과
 
 #### 1.5 엔티티 추출 서비스 ✅
@@ -61,7 +61,6 @@
 #### 1.6 분류 서비스 ✅
 - IPTC Media Topics + IAB Content Taxonomy + 커스텀 AI 태그 분류
 - OpenAI(gpt-4o-mini) 기반 분류 + 휴리스틱 폴백
-- field 추론 로직 추가 (research, industry, infra, policy, funding)
 - E2E 테스트 통과
 
 #### 1.7 중복/사건 묶음 서비스 ✅
@@ -86,7 +85,6 @@
   - `/api/bookmarks` - 북마크 관리
   - `/api/watch-rules` - 워치 규칙 관리
   - `/api/insights` - 인사이트 및 트렌드
-  - `/api/constants` - 상수 제공 (FIELDS, CUSTOM_TAGS)
 - Pydantic 스키마 작성 (모든 엔티티)
 - PostgreSQL JSONB 배열 검색 최적화 (`@>` 연산자)
 - API 문서 확인 (FastAPI `/docs`, OpenAPI 3.1.0)
@@ -103,7 +101,7 @@
 
 ### 참고 파일
 
-- **상세 계획**: `v1_TODOs.md` (Phase 1, 2 전체 상세 내용)
+- **상세 계획**: `TODOs_v0.md` (Phase 1 전체 상세 내용)
 - **API 문서**: `http://localhost:8000/docs` (FastAPI 자동 생성)
 - **테스트 결과**: `backend/tests/results/` (E2E 테스트 결과 JSON 파일)
 - **커서룰**: `.cursor/rules/` (10개 규칙 파일)
@@ -118,95 +116,256 @@
 
 ---
 
-## Phase 2: 프론트엔드 UI ✅ (완료)
+## Phase 2: 프론트엔드 UI
 
-### 완료 요약
+### 2.1 Next.js 프로젝트 설정
+- [x] `frontend/` 디렉토리 생성
+- [x] Next.js 14 프로젝트 초기화 (`npx create-next-app@latest frontend --typescript --tailwind --app --no-src-dir`)
+- [x] TypeScript 설정 확인
+- [x] Tailwind CSS 설정 확인
+- [x] `frontend/package.json` 의존성 추가:
+  - `@tanstack/react-query`: 데이터 페칭 및 캐싱
+  - `axios`: HTTP 클라이언트
+  - `date-fns`: 날짜 포맷팅
+  - `react-flow` 또는 `@reactflow/core`: 관계 그래프 시각화 (선택사항)
+- [x] `frontend/.env.local.example` 생성 (`NEXT_PUBLIC_API_URL=http://localhost:8000`)
+- [x] 기본 디렉토리 구조 생성:
+  - `frontend/lib/api.ts`: API 클라이언트 (axios 기반)
+  - `frontend/lib/types.ts`: TypeScript 타입 정의 (백엔드 스키마와 동기화)
+  - `frontend/lib/constants.ts`: 상수 정의 (FIELDS, CUSTOM_TAGS 등)
+  - `frontend/lib/validators.ts`: 런타임 검증 함수
+  - `frontend/components/`: 재사용 가능한 컴포넌트
+  - `frontend/app/`: Next.js App Router 페이지
+- [x] **백엔드 Constants API 구현** (API Contract 동기화):
+  - [x] `backend/app/api/constants.py` 생성
+  - [x] `GET /api/constants/fields`: FIELDS 목록 반환
+  - [x] `GET /api/constants/custom-tags`: CUSTOM_TAGS 목록 반환
+  - [x] `backend/app/main.py`에 라우터 등록
+- [x] API 클라이언트 구현 (`frontend/lib/api.ts`):
+  - [x] axios 인스턴스 생성 (baseURL: `process.env.NEXT_PUBLIC_API_URL`)
+  - [x] API 메서드 구현:
+    - `getItems()`: 아이템 목록 조회 (필터, 페이지네이션, 정렬)
+    - `getItem()`: 아이템 상세 조회
+    - `getItemGroup()`: 사건 그룹 타임라인 조회
+    - `getGroups()`: 그룹 목록 조회
+    - `getPersons()`: 인물 목록 조회
+    - `getPerson()`: 인물 상세 조회 (타임라인 포함)
+    - `getBookmarks()`: 북마크 목록 조회
+    - `createBookmark()`: 북마크 생성
+    - `getSources()`: 소스 목록 조회
+    - `getConstants()`: 상수 조회 (FIELDS, CUSTOM_TAGS)
+    - 기타 API 메서드
+  - [x] **중요**: 쿼리 파라미터는 snake_case 사용 (`date_from`, `date_to`, `page_size`, `order_by`, `order_desc` 등)
+- [x] 타입 정의 (`frontend/lib/types.ts`):
+  - [x] 백엔드 스키마와 일치하는 TypeScript 인터페이스 정의
+  - [x] `ItemResponse`, `ItemListResponse`, `PersonResponse`, `BookmarkResponse` 등
+  - [x] **체크리스트**: 필드명 일치 (snake_case), 타입 일치, Optional 필드 일치, 배열 타입 일치
+- [x] 상수 정의 (`frontend/lib/constants.ts`):
+  - [x] **옵션 B**: 정적 상수 정의 (백엔드와 수동 동기화) - 초기 구현
+  - [x] `FIELDS`: 분야 목록 (백엔드와 동기화)
+  - [x] `CUSTOM_TAGS`: 커스텀 태그 목록 (백엔드와 동기화)
+  - [x] `FIELD_LABELS`: 분야 한글 레이블 매핑
+  - [x] 타입 정의: `type Field = typeof FIELDS[number]`, `type CustomTag = typeof CUSTOM_TAGS[number]`
+- [x] 런타임 검증 함수 (`frontend/lib/validators.ts`):
+  - [x] `validateField()`: 분야 값 검증
+  - [x] `validateCustomTag()`: 커스텀 태그 값 검증
+  - [x] URL 파라미터 검증에 사용
+- [x] **UX 확인**:
+  - [x] 개발 서버 실행 (`npm run dev`) 및 기본 페이지 접근 확인
+  - [x] API 클라이언트 연결 테스트 (백엔드 API 호출 확인)
+  - [x] 에러 처리 및 로딩 상태 표시 확인
+  - [x] 반응형 디자인 확인 (모바일/데스크톱)
 
-**상태**: Phase 2.1 ~ Phase 2.6 전체 완료 ✅  
-**완료일**: 2025-11-19  
-**프로젝트 진행률**: 프론트엔드 UI 100% 완료
+### 2.2 홈/분야 탭 ✅
+- [x] 기본 레이아웃 (`frontend/app/layout.tsx`):
+  - [x] 네비게이션 바 (로고, 메뉴)
+  - [x] 기본 스타일링 (Tailwind CSS)
+  - [x] React Query Provider 설정
+- [x] 홈 페이지 (`frontend/app/page.tsx`):
+  - [x] "All" 옵션 추가 (모든 분야 아이템 표시)
+  - [x] 분야 탭 컴포넌트 포함
+  - [x] 아이템 리스트 표시
+- [x] 분야별 페이지 (`frontend/app/[field]/page.tsx`):
+  - [x] 동적 라우팅: `/research`, `/industry`, `/infra`, `/policy`, `/funding`
+  - [x] React Query로 해당 분야 아이템 조회
+  - [x] 페이지네이션 구현
+  - [x] **중요**: URL 파라미터 검증 (`validateField()` 사용)
+- [x] `FieldTabs` 컴포넌트 (`frontend/components/FieldTabs.tsx`):
+  - [x] "All" 옵션 추가
+  - [x] 5개 분야 탭 (Research, Industry, Infra, Policy, Funding)
+  - [x] 현재 선택된 분야 하이라이트
+  - [x] 클릭 시 해당 분야 페이지로 이동
+- [x] `ItemCard` 컴포넌트 (`frontend/components/ItemCard.tsx`):
+  - [x] 제목, 요약 표시
+  - [x] 태그 표시 (커스텀 태그)
+  - [x] 출처, 시간 표시 (date-fns 사용)
+  - [x] `dup_group_id`가 있으면 "동일 사건 N건" 표시
+  - [x] 클릭 시 원문 링크 이동 (새 탭)
+- [x] `TagFilter` 컴포넌트 (`frontend/components/TagFilter.tsx`):
+  - [x] 커스텀 태그 필터 (다중 선택 가능)
+  - [x] 필터 상태 관리 (React Query 쿼리 파라미터와 연동)
+  - [x] **중요**: 상수 파일의 CUSTOM_TAGS 사용 (하드코딩 금지)
+- [x] 페이지네이션 컴포넌트 (`frontend/components/Pagination.tsx`):
+  - [x] 페이지 번호 표시
+  - [x] 이전/다음 버튼
+  - [x] 총 아이템 수 표시
+- [x] **백엔드 field 필터 기능 추가**:
+  - [x] Item 모델에 `field` 컬럼 추가 (마이그레이션)
+  - [x] 분류 서비스에 `field` 추론 로직 추가
+  - [x] 백엔드 API에서 `field` 필터 활성화
+  - [x] 기존 아이템에 `field` 및 `custom_tags` 업데이트 스크립트 실행
+- [x] **UX 확인**:
+  - [x] 홈 페이지 로딩 및 아이템 표시 확인
+  - [x] "All" 탭 동작 확인
+  - [x] 분야 탭 전환 동작 확인 (Research/Industry/Infra/Policy/Funding)
+  - [x] 아이템 카드 클릭 시 원문 링크 이동 확인
+  - [x] 태그 필터 동작 확인 (다중 선택, 필터링 결과)
+  - [x] 페이지네이션 동작 확인 (이전/다음, 페이지 번호 클릭)
+  - [x] 로딩 상태 표시 확인 (데이터 로딩 중)
+  - [x] 에러 상태 표시 확인 (API 에러 발생 시)
+  - [x] 반응형 디자인 확인 (모바일/태블릿/데스크톱)
+  - [x] 태그 표시 확인
 
-### 주요 완료 항목
+### 2.3 사건 타임라인 ✅
+- [x] 사건 타임라인 페이지 (`frontend/app/story/[groupId]/page.tsx`):
+  - [x] 동적 라우팅: `/story/{dup_group_id}`
+  - [x] React Query로 그룹 아이템 조회 (`GET /api/items/group/{dup_group_id}`)
+  - [x] 시간순 정렬된 타임라인 표시
+- [x] `TimelineCard` 컴포넌트 (`frontend/components/TimelineCard.tsx`):
+  - [x] 타임라인 아이템 카드
+  - [x] 시간 표시 (date-fns)
+  - [x] 제목, 요약, 링크 표시
+  - [x] 최초 보도/후속 기사 구분 표시 ("Initial Report" 배지)
+- [x] 타임라인 레이아웃:
+  - [x] 수직 타임라인 UI (시간순)
+  - [x] 각 아이템을 카드로 표시
+  - [x] 반응형 디자인 (모바일/데스크톱)
+- [x] ItemCard에 "View story" 링크 추가:
+  - [x] `dup_group_id`가 있을 때만 표시
+  - [x] `/story/{dup_group_id}`로 이동
+- [x] **참고**: 중복 그룹화 실행 및 백필은 Phase 3.5에서 진행 (백엔드 작업)
+- [ ] **UX 확인** (dup_group_id가 있는 아이템 필요):
+  - [ ] 사건 타임라인 페이지 접근 확인 (`/story/{dup_group_id}`)
+  - [ ] 타임라인 아이템 시간순 정렬 확인
+  - [ ] 타임라인 카드 클릭 시 원문 링크 이동 확인
+  - [ ] 최초 보도/후속 기사 구분 표시 확인
+  - [ ] 로딩 상태 표시 확인
+  - [ ] 에러 상태 표시 확인 (그룹이 없거나 아이템이 없는 경우)
+  - [ ] 반응형 디자인 확인 (모바일/태블릿/데스크톱)
+  - [ ] 접근성 확인 (키보드 네비게이션)
 
-#### 2.1 Next.js 프로젝트 설정 ✅
-- Next.js 14 프로젝트 초기화 (TypeScript, Tailwind CSS, App Router)
-- 의존성 설치: `@tanstack/react-query`, `axios`, `date-fns`
-- API 클라이언트 구현 (`frontend/lib/api.ts`)
-- 타입 정의 (`frontend/lib/types.ts`) - 백엔드 스키마와 동기화
-- 상수 정의 (`frontend/lib/constants.ts`) - FIELDS, CUSTOM_TAGS
-- 런타임 검증 함수 (`frontend/lib/validators.ts`)
-- 백엔드 Constants API 구현 (`/api/constants/fields`, `/api/constants/custom-tags`)
+### 2.4 인물 페이지
+- [x] 인물 목록 페이지 (`frontend/app/persons/page.tsx`):
+  - [x] 인물 리스트 표시
+  - [x] 검색 기능 (이름 기반)
+  - [x] 정렬 (이름순, 최근 업데이트순)
+- [x] 인물 상세 페이지 (`frontend/app/persons/[id]/page.tsx`):
+  - [x] 인물 정보 표시 (이름, bio)
+  - [x] 타임라인 표시 (PersonTimeline 이벤트)
+  - [x] 관계 그래프 플레이스홀더 (Phase 3에서 구현 예정)
+- [x] `PersonCard` 컴포넌트 (`frontend/components/PersonCard.tsx`):
+  - [x] 인물 카드 (목록용)
+  - [x] 이름, bio 미리보기
+  - [x] 상세 페이지 링크
+- [ ] `RelationshipGraph` 컴포넌트 (`frontend/components/RelationshipGraph.tsx`):
+  - [ ] 인물-기술-기관-사건 관계 그래프
+  - [ ] react-flow 또는 d3.js 사용 (선택사항, Phase 3에서 구현)
+  - [ ] 노드 클릭 시 상세 정보 표시
+- [x] **UX 확인**:
+  - [x] 인물 목록 페이지 접근 및 표시 확인 (`/persons`)
+  - [x] 인물 검색 기능 동작 확인
+  - [x] 인물 정렬 기능 확인 (이름순, 최근 업데이트순)
+  - [x] 인물 상세 페이지 접근 확인 (`/persons/{id}`)
+  - [x] 인물 타임라인 표시 확인
+  - [x] 관계 그래프 플레이스홀더 표시 확인
+  - [x] 로딩 상태 표시 확인
+  - [x] 에러 상태 표시 확인 (인물이 없거나 데이터가 없는 경우)
+  - [x] 반응형 디자인 확인 (모바일/태블릿/데스크톱)
+  - [x] 접근성 확인 (키보드 네비게이션)
 
-#### 2.2 홈/분야 탭 ✅
-- 기본 레이아웃 및 네비게이션 바
-- 홈 페이지 ("All" 옵션 포함)
-- 분야별 페이지 (`/research`, `/industry`, `/infra`, `/policy`, `/funding`)
-- `FieldTabs` 컴포넌트 (분야 탭 네비게이션)
-- `ItemCard` 컴포넌트 (아이템 카드 표시)
-- `TagFilter` 컴포넌트 (태그 필터링)
-- `Pagination` 컴포넌트 (페이지네이션)
-- 백엔드 field 필터 기능 추가 및 백필
+### 2.5 저장함 (북마크)
+- [x] 저장함 페이지 (`frontend/app/saved/page.tsx`):
+  - [x] 북마크 목록 표시
+  - [x] 태그 필터링
+  - [x] 검색 기능 (제목/메모 기반)
+- [x] `BookmarkCard` 컴포넌트 (`frontend/components/BookmarkCard.tsx`):
+  - [x] 북마크 카드
+  - [x] 제목, 메모, 태그 표시
+  - [x] 원문 링크 이동
+  - [x] 삭제 버튼
+- [x] 북마크 추가 기능:
+  - [x] 아이템 카드에 "저장" 버튼 추가
+  - [x] 북마크 생성 모달 (`BookmarkModal` 컴포넌트)
+  - [x] 태그 추가/삭제 UI (모달 내)
+- [x] API 클라이언트 수정 (`updateBookmark` PUT 메서드로 수정)
+- [ ] **UX 확인**:
+  - [ ] 저장함 페이지 접근 및 북마크 목록 표시 확인 (`/saved`)
+  - [ ] 북마크 추가 기능 확인 (아이템 카드의 "저장" 버튼)
+  - [ ] 북마크 생성 모달/폼 동작 확인
+  - [ ] 북마크 태그 필터링 동작 확인
+  - [ ] 북마크 검색 기능 확인 (제목/메모 기반)
+  - [ ] 북마크 태그 추가/삭제 기능 확인 (모달 내)
+  - [ ] 북마크 삭제 기능 확인
+  - [ ] 북마크 원문 링크 이동 확인
+  - [ ] 로딩 상태 표시 확인
+  - [ ] 에러 상태 표시 확인 (북마크가 없거나 API 에러 발생 시)
+  - [ ] 반응형 디자인 확인 (모바일/태블릿/데스크톱)
+  - [ ] 접근성 확인 (키보드 네비게이션, 폼 접근성)
 
-#### 2.3 사건 타임라인 ✅
-- 사건 타임라인 페이지 (`/story/[groupId]`)
-- `TimelineCard` 컴포넌트
-- ItemCard에 "View story" 링크 추가
-- **참고**: 중복 그룹화 실행 및 백필은 Phase 6.5에서 진행
-
-#### 2.4 인물 페이지 ✅
-- 인물 목록 페이지 (`/persons`)
-- 인물 상세 페이지 (`/persons/[id]`)
-- `PersonCard` 컴포넌트
-- 검색 및 정렬 기능
-- 타임라인 표시
-- 관계 그래프 플레이스홀더 (Phase 6에서 구현 예정)
-
-#### 2.5 저장함 (북마크) ✅
-- 저장함 페이지 (`/saved`)
-- `BookmarkCard` 컴포넌트
-- `BookmarkModal` 컴포넌트 (북마크 생성)
-- ItemCard에 "저장" 버튼 추가
-- 태그 필터링 및 검색 기능
-- 기존 태그 자동완성 기능
-- 북마크 삭제 기능
-
-#### 2.6 설정 페이지 ✅
-- 설정 페이지 (`/settings`) - 탭으로 구분
-- `SourcesSection` 컴포넌트 (소스 관리)
-- `WatchRulesSection` 컴포넌트 (워치 규칙 관리)
-- 소스 추가/수정/삭제 기능
-- 소스 활성화/비활성화 토글
-- 워치 규칙 추가/수정/삭제 기능
-- 워치 규칙 JSON 편집 모드 (Form/JSON 전환)
-- Watch Rules 라벨을 인물 이름으로 자동 설정
-- Watch Rules 모달에서 인물 추가 기능
-
-### 주요 결과
-
-- **프론트엔드 구조**: Next.js 14 App Router 기반 완성
-- **페이지**: 6개 주요 페이지 구현 (홈, 분야별, 타임라인, 인물, 저장함, 설정)
-- **컴포넌트**: 15+ 재사용 가능한 컴포넌트 구현
-- **API 연동**: 모든 백엔드 API 엔드포인트 연동 완료
-- **UX 검증**: 모든 페이지 UX 확인 완료
-
-### 참고 파일
-
-- **상세 계획**: `v1_TODOs.md` (Phase 2 전체 상세 내용)
-- **프론트엔드 코드**: `frontend/` 디렉토리
+### 2.6 설정 페이지
+- [x] 설정 페이지 (`frontend/app/settings/page.tsx`):
+  - [x] 소스 관리 섹션
+  - [x] 워치 규칙 관리 섹션
+  - [x] 탭으로 구분
+- [x] 소스 관리 UI (`SourcesSection` 컴포넌트):
+  - [x] 소스 목록 표시 (`GET /api/sources`)
+  - [x] 소스 추가 폼 (`POST /api/sources`)
+  - [x] 소스 수정/삭제 (`PUT /DELETE /api/sources/{id}`)
+  - [x] 활성화/비활성화 토글
+  - [x] OPML Import/Export는 Phase 3에서 구현 예정
+- [x] 워치 규칙 관리 UI (`WatchRulesSection` 컴포넌트):
+  - [x] 규칙 목록 표시 (`GET /api/watch-rules`)
+  - [x] 규칙 추가 폼 (`POST /api/watch-rules`)
+  - [x] 규칙 수정/삭제 (`PATCH /DELETE /api/watch-rules/{id}`)
+  - [x] JSON 편집 모드 (Form/JSON 모드 전환)
+  - [x] required_keywords, optional_keywords, include_rules, exclude_rules 편집
+- [x] API 클라이언트 수정 (`updateSource` PUT 메서드로 수정)
+- [x] Watch Rules 라벨을 인물 이름으로 자동 설정
+- [x] Watch Rules 모달에서 인물 추가 기능
+- [x] **UX 확인**:
+  - [ ] 설정 페이지 접근 및 섹션 구분 확인 (`/settings`)
+  - [ ] 소스 관리 UI 동작 확인:
+    - [ ] 소스 목록 표시
+    - [ ] 소스 추가 폼 동작
+    - [ ] 소스 수정/삭제 동작
+    - [ ] 활성화/비활성화 토글 동작
+  - [ ] 워치 규칙 관리 UI 동작 확인:
+    - [ ] 규칙 목록 표시
+    - [ ] 규칙 추가 폼 동작
+    - [ ] 규칙 수정/삭제 동작
+    - [ ] JSON 편집기 동작 확인
+  - [ ] 폼 유효성 검증 확인 (필수 필드, 형식 검증)
+  - [ ] 성공/실패 피드백 확인 (저장 성공, 에러 메시지)
+  - [ ] 로딩 상태 표시 확인
+  - [ ] 에러 상태 표시 확인
+  - [ ] 반응형 디자인 확인 (모바일/태블릿/데스크톱)
+  - [ ] 접근성 확인 (키보드 네비게이션, 폼 접근성, 에러 메시지 접근성)
 
 ---
 
-## Phase 3: 통합 테스트 및 E2E 검증 ✅ (완료)
+## Phase 3: 통합 테스트 및 E2E 검증
 
 **참고**: 단위 테스트와 통합 테스트는 각 Phase(1, 2)의 서브섹션에 포함되어 있습니다.
 이 Phase 3는 전체 시스템 통합 테스트와 E2E 검증에 집중합니다.
 
-### 완료 요약
+### 3.1 백엔드-프론트엔드 연동 테스트
 
-**상태**: Phase 3.1 ~ Phase 3.2 전체 완료 ✅  
-**완료일**: 2025-11-20  
-**프로젝트 진행률**: 통합 테스트 및 E2E 검증 100% 완료
+- [ ] 백엔드-프론트엔드 API 연동 테스트
+- [ ] 전체 플로우 테스트 (RSS 수집 → 처리 → UI 표시)
+- [ ] 에러 처리 및 복구 테스트
+- [ ] CORS 및 인증 테스트
 
+### 3.2 전체 시스템 E2E 테스트
 **중요: E2E 테스트는 Supabase 실제 DB 데이터 사용 (필수)**
 - 모든 E2E 테스트는 테스트 DB가 아닌 **Supabase 실제 DB**에서 데이터를 가져와야 함
 - `backend/app/core/database.py`의 `SessionLocal()`을 사용하여 실제 DB 연결
@@ -214,65 +373,6 @@
 - DB에 데이터가 없는 경우: 수집 먼저 실행 또는 기존 데이터 활용
 - 모든 E2E 테스트 결과는 `backend/tests/results/`에 JSON 파일로 저장 (필수)
 
-### 3.1 백엔드-프론트엔드 연동 테스트
-
-#### 3.1.1 API 연동 테스트 ✅
-- [x] **파일**: `backend/tests/integration/test_frontend_backend_integration.py` 생성
-- [x] **내용**:
-  - 프론트엔드 API 클라이언트(`frontend/lib/api.ts`)와 백엔드 API 엔드포인트 연동 검증
-  - 모든 API 엔드포인트에 대한 요청/응답 형식 검증
-  - 타입 일치 검증 (Pydantic 스키마 ↔ TypeScript 타입)
-- [x] **검증 항목**:
-  - Items API: 목록 조회, 필터링, 페이지네이션, 정렬
-  - Sources API: CRUD 작업
-  - Persons API: 목록, 상세, 타임라인, 관계 그래프
-  - Bookmarks API: 생성, 조회, 삭제
-  - Watch Rules API: CRUD 작업
-  - Insights API: 주간 인사이트, 키워드 트렌드, 인물별 인사이트
-  - Constants API: FIELDS, CUSTOM_TAGS
-
-#### 3.1.2 전체 플로우 테스트 (RSS 수집 → 처리 → UI 표시) ✅
-- [x] **파일**: `backend/tests/e2e/test_full_pipeline_e2e.py` 생성
-- [x] **내용**:
-  - RSS 수집 → 요약 → 분류 → 엔티티 추출 → 그룹화 → 인물 트래킹 → API 조회 → 프론트엔드 표시 시뮬레이션
-  - 실제 DB 데이터를 사용하여 전체 파이프라인 검증
-  - 각 단계별 데이터 상태 확인
-- [x] **검증 항목**:
-  - 수집된 아이템이 DB에 저장되는지 확인
-  - 요약/분류/엔티티 추출이 정상 수행되는지 확인
-  - 그룹화가 정상 수행되는지 확인
-  - 인물 트래킹이 정상 수행되는지 확인
-  - API를 통해 데이터가 정상 조회되는지 확인
-  - 결과 JSON 파일 저장 (`backend/tests/results/`)
-
-#### 3.1.3 에러 처리 및 복구 테스트 ✅
-- [x] **파일**: `backend/tests/integration/test_error_handling.py` 생성
-- [x] **내용**:
-  - 잘못된 요청에 대한 에러 응답 검증
-  - 존재하지 않는 리소스 조회 시 404 검증
-  - 잘못된 필터 값에 대한 400 검증
-  - DB 연결 실패 시 에러 처리 검증
-  - OpenAI API 실패 시 폴백 로직 검증
-- [x] **검증 항목**:
-  - HTTP 상태 코드 정확성
-  - 에러 메시지 명확성
-  - 에러 발생 후 시스템 복구 가능 여부
-
-#### 3.1.4 CORS 및 인증 테스트 ✅
-- [x] **파일**: `backend/tests/integration/test_cors.py` 생성
-- [x] **내용**:
-  - CORS 설정 검증 (`backend/app/main.py`의 CORS 설정)
-  - 프론트엔드 도메인에서의 API 호출 시뮬레이션
-  - OPTIONS 요청 처리 검증
-  - 인증이 필요한 경우를 위한 준비 (현재는 인증 없음, 향후 확장 대비)
-- [x] **검증 항목**:
-  - 허용된 Origin에서의 요청 성공
-  - 허용되지 않은 Origin에서의 요청 차단
-  - CORS 헤더 정확성
-
-### 3.2 전체 시스템 E2E 테스트
-
-#### 완료된 E2E 테스트 (Phase 1에서 완료)
 - [x] 모든 E2E 테스트 결과는 `backend/tests/results/`에 JSON 파일로 저장 (필수)
 - [x] **RSS 수집 E2E**: 소스 등록 → 수집 → **Supabase 실제 DB** 저장 확인 (Phase 1.3에서 완료)
 - [x] **요약 E2E**: **실제 DB의 아이템** → 요약 생성 → 저장 확인 (Phase 1.4에서 완료)
@@ -280,115 +380,9 @@
 - [x] **엔티티 추출 E2E**: **실제 DB의 아이템** → 엔티티 추출 → 관계 저장 확인 (Phase 1.5에서 완료)
 - [x] **중복 그룹화 E2E**: **실제 DB의 아이템**으로 초기 백필(21일) + 증분(REF_DATE 이후) → 그룹/타임라인/메타 조회 확인 (Phase 1.7에서 완료)
 - [x] **인물 트래킹 E2E**: **실제 DB의 아이템**으로 워치 규칙 → 매칭 → 타임라인 생성 확인 (Phase 1.8에서 완료)
-
-#### 3.2.1 API 전체 플로우 E2E (실행 및 검증) ✅
-- [x] **파일**: `backend/tests/e2e/test_api_e2e.py` (이미 존재)
-- [x] **작업**:
-  - 테스트 실행 및 결과 검증
-  - 모든 엔드포인트가 정상 동작하는지 확인
-  - 결과 JSON 파일 검토 및 문제점 파악
-  - 필요 시 테스트 보완
-- [x] **실행 명령**: `poetry run python -m pytest backend/tests/e2e/test_api_e2e.py -v -s -m e2e_real_data`
-- [x] **검증 항목**:
-  - Items API: 목록, 상세, 필터, 그룹 조회
-  - Sources API: 목록, 상세
-  - Persons API: 목록, 상세, 타임라인, 관계 그래프
-  - Bookmarks API: 목록, 생성, 삭제
-  - Watch Rules API: 목록, 상세
-  - Insights API: 주간, 키워드, 인물별
-
-#### 3.2.2 폴링 작업자 E2E ✅
-- [x] **파일**: `backend/tests/e2e/test_worker_e2e.py` 생성
-- [x] **내용**:
-  - Worker 프로세스(`backend/scripts/worker.py`) 실행 시뮬레이션
-  - 스케줄러가 정상 시작되는지 확인
-  - RSS 수집 작업이 스케줄대로 실행되는지 확인
-  - 증분 그룹화 작업이 스케줄대로 실행되는지 확인
-  - 일일 백필 작업이 스케줄대로 실행되는지 확인
-  - Worker 프로세스 종료 시 정상 종료되는지 확인
-- [x] **검증 항목**:
-  - 스케줄러 시작/종료 정상 동작
-  - RSS 수집 작업 실행 (20분 간격)
-  - arXiv 수집 작업 실행 (하루 2회)
-  - 증분 그룹화 작업 실행 (20분 간격)
-  - 일일 백필 작업 실행 (UTC 00:00)
-  - 결과 JSON 파일 저장
-
-#### 3.2.3 성능 테스트 ✅
-- [x] **파일**: `backend/tests/e2e/test_performance_e2e.py` 생성
-- [x] **내용**:
-  - 대량 데이터 처리 성능 검증 (1000+ 아이템)
-  - API 응답 시간 측정
-  - 페이지네이션 성능 검증
-  - 필터링 성능 검증
-  - 정렬 성능 검증
-  - 동시 요청 처리 성능 검증
-- [x] **검증 항목**:
-  - 1000+ 아이템 조회 시 응답 시간 < 2초
-  - 페이지네이션 응답 시간 < 1초
-  - 필터링 응답 시간 < 1초
-  - 정렬 응답 시간 < 1초
-  - 동시 요청(10개) 처리 성능
-  - 결과 JSON 파일 저장 (성능 메트릭 포함)
-
-### 테스트 실행 전략
-
-#### 필수 준수 사항
-1. **실제 DB 데이터 사용**: 모든 E2E 테스트는 Supabase 실제 DB 사용 (`SessionLocal()`)
-2. **데이터 준비**: 소스 확인/생성 → 기존 아이템 조회 → 없으면 수집
-3. **결과 저장**: 모든 E2E 테스트 결과는 `backend/tests/results/`에 JSON 파일로 저장
-4. **아이템 0개 금지**: 테스트 시작 전 반드시 아이템 존재 확인
-
-#### 테스트 실행 순서
-1. API 전체 플로우 E2E 실행 및 검증
-2. 백엔드-프론트엔드 연동 테스트 작성 및 실행
-3. 전체 플로우 테스트 작성 및 실행
-4. 에러 처리 테스트 작성 및 실행
-5. CORS 테스트 작성 및 실행
-6. 폴링 작업자 E2E 작성 및 실행
-7. 성능 테스트 작성 및 실행
-
-### 예상 결과물
-
-#### 테스트 파일
-- `backend/tests/integration/test_frontend_backend_integration.py`
-- `backend/tests/integration/test_error_handling.py`
-- `backend/tests/integration/test_cors.py`
-- `backend/tests/e2e/test_full_pipeline_e2e.py`
-- `backend/tests/e2e/test_worker_e2e.py`
-- `backend/tests/e2e/test_performance_e2e.py`
-
-#### 결과 파일
-- `backend/tests/results/full_pipeline_e2e_*.json`
-- `backend/tests/results/worker_e2e_*.json`
-- `backend/tests/results/performance_e2e_*.json`
-
-### 완료 조건
-
-- [x] 모든 통합 테스트 통과
-- [x] 모든 E2E 테스트 통과 (실제 DB 데이터 사용)
-- [x] 모든 테스트 결과 JSON 파일 저장
-- [x] 성능 테스트 통과 (목표 성능 달성)
-- [x] Phase 3 완료 처리 (TODOs.md 업데이트)
-
-### 주요 결과
-
-- **통합 테스트**: 3개 테스트 파일 작성 및 통과
-  - API 연동 테스트: 프론트엔드-백엔드 계약 검증
-  - 에러 처리 테스트: 404, 400, 422 등 에러 시나리오 검증
-  - CORS 테스트: CORS 설정 및 OPTIONS 요청 검증
-- **E2E 테스트**: 3개 E2E 테스트 파일 작성 및 통과
-  - 전체 플로우 테스트: RSS 수집 → 처리 → API 조회 파이프라인 검증
-  - Worker E2E: 스케줄러 시작/종료 및 작업 등록 검증
-  - 성능 테스트: 대량 데이터 처리 및 동시 요청 성능 검증
-- **API 전체 플로우 E2E**: 기존 테스트 실행 및 검증 완료
-- **테스트 결과**: 모든 E2E 테스트 결과 JSON 파일 저장 (`backend/tests/results/`)
-
-### 참고 파일
-
-- **통합 테스트**: `backend/tests/integration/` (3개 파일)
-- **E2E 테스트**: `backend/tests/e2e/` (3개 파일 추가)
-- **테스트 결과**: `backend/tests/results/` (E2E 테스트 결과 JSON 파일)
+- [ ] **API 전체 플로우 E2E**: 소스 추가 → 수집 → 처리 → API 조회 (모든 필터/정렬) - **실제 DB 데이터 사용**
+- [ ] **폴링 작업자 E2E**: 스케줄러 실행 → 자동 수집 → 처리 파이프라인 확인 - **실제 DB 데이터 사용**
+- [ ] **성능 테스트**: 대량 데이터 처리 (1000+ 아이템) - **실제 DB 데이터 사용**
 
 ---
 
@@ -605,16 +599,16 @@
 
 ## 진행 상황 추적
 
-**마지막 업데이트**: 2025-11-20 (Phase 1 완료 ✅, Phase 2 완료 ✅, Phase 3 완료 ✅)
+**마지막 업데이트**: 2025-11-19 (Phase 1 완료 ✅, Phase 2 완료 ✅)
 
-**프로젝트 진행률**: 백엔드 기반 구조 100% 완료, 프론트엔드 UI 100% 완료, 통합 테스트 및 E2E 검증 100% 완료
+**프로젝트 진행률**: 백엔드 기반 구조 100% 완료, 프론트엔드 Phase 2 완료
 
-**현재 단계**: Phase 4 (프로덕션 준비) 시작 준비
+**현재 단계**: Phase 3 (통합 테스트 및 E2E 검증) 시작 준비
 
 **Phase 구조** (MVP 우선 전략):
 - **Phase 1**: 백엔드 기반 구조 ✅ (완료)
 - **Phase 2**: 프론트엔드 UI ✅ (완료)
-- **Phase 3**: 통합 테스트 및 E2E 검증 ✅ (완료)
+- **Phase 3**: 통합 테스트 및 E2E 검증
 - **Phase 4**: 프로덕션 준비
 - **Phase 5**: 배포 (MVP)
 - **Phase 6**: 고급 기능 (배포 후 진행)
@@ -637,7 +631,7 @@
 - ✅ **E2E 테스트**: Supabase 실제 DB에서 데이터 가져오기 (`SessionLocal()` 사용)
 - ✅ **단위/통합 테스트**: 테스트 DB 사용 (격리된 테스트 환경)
 
-상세 내용은 `v1_TODOs.md` 및 `.cursor/rules/testing-strategy.mdc`를 참고하세요.
+상세 내용은 `TODOs_v0.md` 및 `.cursor/rules/testing-strategy.mdc`를 참고하세요.
 
 ---
 
@@ -649,39 +643,40 @@
 ### 필수 체크리스트
 
 #### 백엔드 Constants API 구현 (Phase 2.1)
-- [x] `backend/app/api/constants.py` 생성
-- [x] `GET /api/constants/fields`: FIELDS 목록 반환
-- [x] `GET /api/constants/custom-tags`: CUSTOM_TAGS 목록 반환
-- [x] `backend/app/main.py`에 라우터 등록
+- [ ] `backend/app/api/constants.py` 생성
+- [ ] `GET /api/constants/fields`: FIELDS 목록 반환
+- [ ] `GET /api/constants/custom-tags`: CUSTOM_TAGS 목록 반환
+- [ ] `backend/app/main.py`에 라우터 등록
 
 #### 프론트엔드 상수 정의 전략
-- [x] **옵션 B**: 정적 상수 정의 (백엔드와 수동 동기화)
-- [x] `frontend/lib/constants.ts`에 상수 정의
-- [x] 타입 정의: `type Field = typeof FIELDS[number]`, `type CustomTag = typeof CUSTOM_TAGS[number]`
+- [ ] **옵션 A (권장)**: Constants API 사용 (런타임 동기화)
+- [ ] **옵션 B**: 정적 상수 정의 (백엔드와 수동 동기화)
+- [ ] `frontend/lib/constants.ts`에 상수 정의
+- [ ] 타입 정의: `type Field = typeof FIELDS[number]`, `type CustomTag = typeof CUSTOM_TAGS[number]`
 
 #### 타입 정의 동기화
-- [x] 필드명 일치 (camelCase vs snake_case 주의 - 백엔드는 snake_case)
-- [x] 타입 일치 (string, number, boolean, Date → string)
-- [x] Optional 필드 일치
-- [x] 배열 타입 일치 (List[str] → string[])
+- [ ] 필드명 일치 (camelCase vs snake_case 주의 - 백엔드는 snake_case)
+- [ ] 타입 일치 (string, number, boolean, Date → string)
+- [ ] Optional 필드 일치
+- [ ] 배열 타입 일치 (List[str] → string[])
 
 #### API 클라이언트 쿼리 파라미터 동기화
-- [x] 백엔드는 snake_case 사용, 프론트엔드도 동일하게 사용
-- [x] `date_from`, `date_to`, `page_size`, `order_by`, `order_desc` 등
-- [x] axios가 자동으로 snake_case 유지
+- [ ] 백엔드는 snake_case 사용, 프론트엔드도 동일하게 사용
+- [ ] `date_from`, `date_to`, `page_size`, `order_by`, `order_desc` 등
+- [ ] axios가 자동으로 snake_case 유지
 
 #### 런타임 검증 함수
-- [x] `frontend/lib/validators.ts` 생성
-- [x] `validateField()`: 분야 값 검증
-- [x] `validateCustomTag()`: 커스텀 태그 값 검증
-- [x] URL 파라미터 검증에 사용
+- [ ] `frontend/lib/validators.ts` 생성
+- [ ] `validateField()`: 분야 값 검증
+- [ ] `validateCustomTag()`: 커스텀 태그 값 검증
+- [ ] URL 파라미터 검증에 사용
 
 #### Common Pitfalls 방지
-- [x] 하드코딩된 문자열 사용 금지 (상수 파일 사용)
-- [x] camelCase vs snake_case 혼용 금지
-- [x] 태그 값 대소문자 일치 확인 (예: "agents" vs "Agents")
-- [x] Query 파라미터 이름 일치 확인
-- [x] Enum 값 문자열 일치 확인
+- [ ] 하드코딩된 문자열 사용 금지 (상수 파일 사용)
+- [ ] camelCase vs snake_case 혼용 금지
+- [ ] 태그 값 대소문자 일치 확인 (예: "agents" vs "Agents")
+- [ ] Query 파라미터 이름 일치 확인
+- [ ] Enum 값 문자열 일치 확인
 
 ### 동기화 검증 방법
 - **타입 체크**: TypeScript 컴파일 시 타입 불일치 감지
