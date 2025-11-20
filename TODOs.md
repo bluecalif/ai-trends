@@ -720,8 +720,12 @@ backend/
 - [x] `frontend/tsconfig.json` baseUrl 설정 추가
 
 #### 5.2.3 환경변수 설정
-- [ ] Vercel 대시보드에서 환경변수 설정:
-  - `NEXT_PUBLIC_API_URL`: 백엔드 API URL (Railway URL 확인 후 설정 필요)
+- [ ] **현재 상태**: Vercel 대시보드에서 환경변수 설정 필요
+  - [ ] `NEXT_PUBLIC_API_URL`: 백엔드 API URL (Railway URL 확인 후 설정 필요)
+    - **현재 문제**: 이 환경변수가 설정되지 않아 API 호출 시 404 오류 발생
+    - **설정 방법**: Vercel 프로젝트 → Settings → Environment Variables → Add
+    - **값 형식**: `https://your-api.railway.app` (Railway 백엔드 URL)
+    - **주의**: `http://` 또는 `https://` 포함하여 전체 URL 입력
   - 기타 프론트엔드 환경변수 (필요 시)
 
 #### 5.2.4 배포 문제 해결
@@ -753,9 +757,23 @@ backend/
 #### 5.2.5 배포 및 검증
 - [x] 파일 Git 추가 및 커밋 완료
 - [x] 자동 배포 확인 (GitHub push 시 자동 배포)
-- [ ] 빌드 성공 확인 (TypeScript 타입 오류 해결 필요)
+- [x] 빌드 성공 확인 (TypeScript 타입 오류 해결 완료)
+- [x] Vercel 배포 성공 확인
+- [x] CORS 설정 완료 (백엔드 Railway URL을 CORS_ORIGINS에 추가)
+- [ ] **현재 문제**: 프론트엔드에서 API 호출 시 404 오류 발생
+  - **오류 메시지**: "Request failed with status code 404"
+  - **발생 위치**: 아이템 목록 조회 시 (`/api/items`)
+  - **가능한 원인**:
+    1. `NEXT_PUBLIC_API_URL` 환경변수가 Vercel에 설정되지 않았거나 잘못된 값
+    2. 백엔드 API 경로가 잘못되었을 수 있음 (예: `/api/items` vs `/items`)
+    3. Railway 백엔드 URL이 변경되었을 수 있음
+  - **다음 단계**:
+    - [ ] Vercel 대시보드에서 `NEXT_PUBLIC_API_URL` 환경변수 확인
+    - [ ] Railway 백엔드 URL 확인 및 업데이트
+    - [ ] 브라우저 개발자 도구에서 실제 API 호출 URL 확인
+    - [ ] 백엔드 API 엔드포인트 직접 테스트 (Railway URL + `/api/items`)
 - [ ] 도메인 설정 (선택사항)
-- [ ] 프론트엔드-백엔드 연동 테스트
+- [ ] 프론트엔드-백엔드 연동 테스트 (404 오류 해결 후)
 
 ### 5.3 백엔드 API 배포 (Railway)
 
@@ -1030,9 +1048,16 @@ ai-trend/
 - 프로덕션 준비 100% 완료 ✅
 - 배포 진행 중 🔄
   - 백엔드 API (Railway): 배포 완료 ✅
-  - 프론트엔드 (Vercel): 배포 진행 중
+    - ✅ Health check 통과 (`/health` 엔드포인트 정상)
+    - ✅ CORS 설정 완료 (프론트엔드 URL 추가)
+  - 프론트엔드 (Vercel): 배포 완료 ✅
     - ✅ Module not found 오류 해결 (파일 Git 추가 완료)
-    - 🔄 TypeScript 타입 오류 해결 필요 (`SourcesSection.tsx`)
+    - ✅ TypeScript 타입 오류 해결 완료 (`SourcesSection.tsx`, `WatchRulesSection.tsx`)
+    - ✅ 빌드 성공 및 Vercel 배포 완료
+    - ⚠️ **현재 문제**: API 호출 시 404 오류 발생
+      - 오류: "Request failed with status code 404" (`/api/items` 호출 시)
+      - 가능한 원인: `NEXT_PUBLIC_API_URL` 환경변수 미설정 또는 잘못된 값
+      - 다음 단계: Vercel 환경변수 확인 및 Railway 백엔드 URL 설정
 
 **현재 단계**: Phase 5 (배포) 진행 중 🔄
 
@@ -1043,9 +1068,11 @@ ai-trend/
 - **Phase 4**: 프로덕션 준비 ✅ (완료)
 - **Phase 5**: 배포 (MVP) 🔄 (진행 중)
   - 5.3 백엔드 API 배포: 완료 ✅
-  - 5.2 프론트엔드 배포: 진행 중
+  - 5.2 프론트엔드 배포: 거의 완료 (API 연동 404 오류 해결 필요)
     - ✅ 파일 Git 추가 완료
-    - 🔄 TypeScript 타입 오류 해결 필요
+    - ✅ TypeScript 타입 오류 해결 완료
+    - ✅ Vercel 배포 성공
+    - ⚠️ API 연동 404 오류 해결 필요
   - 5.4 스케줄러 워커 배포: 대기 중
   - 5.5 데이터베이스 마이그레이션: 대기 중
   - 5.6 배포 후 검증: 대기 중
