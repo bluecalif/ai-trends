@@ -44,13 +44,28 @@ app = FastAPI(
 
 # CORS 설정
 cors_origins = settings.CORS_ORIGINS if isinstance(settings.CORS_ORIGINS, list) else [origin.strip() for origin in settings.CORS_ORIGINS.split(",")]
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=cors_origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# Filter out empty strings
+cors_origins = [origin for origin in cors_origins if origin]
+logger.info(f"CORS origins configured: {cors_origins}")
+
+# If CORS_ORIGINS is empty or not set, allow all Vercel origins (for development/debugging)
+if not cors_origins:
+    logger.warning("CORS_ORIGINS not set or empty, allowing all Vercel origins via regex")
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origin_regex=r"https://.*\.vercel\.app",
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+else:
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=cors_origins,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
 # Register routers
 app.include_router(rss.router, prefix="/api/rss")
