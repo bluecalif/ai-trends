@@ -11,6 +11,7 @@ import sys
 import io
 import signal
 import logging
+import asyncio
 
 # Fix Windows PowerShell encoding
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
@@ -35,27 +36,22 @@ def signal_handler(sig, frame):
     sys.exit(0)
 
 
-def main():
-    """Main entry point for the worker process."""
+async def run_scheduler():
+    """Run the scheduler in an async context."""
     settings = get_settings()
     logger.info(f"[Worker] Starting scheduler worker...")
     logger.info(f"[Worker] DATABASE_URL={settings.DATABASE_URL}")
     logger.info(f"[Worker] RSS_COLLECTION_INTERVAL_MINUTES={settings.RSS_COLLECTION_INTERVAL_MINUTES}")
     
-    # Register signal handlers for graceful shutdown
-    signal.signal(signal.SIGINT, signal_handler)
-    signal.signal(signal.SIGTERM, signal_handler)
-    
     try:
-        # Start the scheduler
+        # Start the scheduler (requires running event loop)
         start_scheduler()
         logger.info("[Worker] Scheduler started successfully")
         
         # Keep the process alive
-        # The scheduler runs in background threads, so we just wait
-        import time
+        # Wait indefinitely while scheduler runs
         while True:
-            time.sleep(60)  # Sleep for 1 minute and check again
+            await asyncio.sleep(60)  # Sleep for 1 minute and check again
             
     except KeyboardInterrupt:
         logger.info("[Worker] Keyboard interrupt received")
@@ -64,6 +60,23 @@ def main():
     finally:
         stop_scheduler()
         logger.info("[Worker] Worker process stopped")
+
+
+def main():
+    """Main entry point for the worker process."""
+    # Register signal handlers for graceful shutdown
+    signal.signal(signal.SIGINT, signal_handler)
+    signal.signal(signal.SIGTERM, signal_handler)
+    
+    # Run the scheduler in an async event loop
+    try:
+        asyncio.run(run_scheduler())
+    except KeyboardInterrupt:
+        logger.info("[Worker] Keyboard interrupt received")
+        stop_scheduler()
+    except Exception as e:
+        logger.error(f"[Worker] Fatal error: {e}", exc_info=True)
+        stop_scheduler()
 
 
 if __name__ == "__main__":
