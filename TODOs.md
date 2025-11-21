@@ -779,6 +779,8 @@ backend/
       - API 클라이언트 디버깅 강화
       - 디버깅 가이드 문서 (docs/DEBUGGING_GUIDE.md)
     - [x] 변경사항 커밋 및 푸시 완료
+    - [x] TypeScript 빌드 오류 수정 완료 (React Query v5 onError/onSuccess 제거)
+    - [x] 로컬 빌드 테스트 성공 확인
     - [ ] Vercel 자동 재배포 완료 대기 (약 1-2분)
     - [ ] 브라우저 개발자 도구에서 STEP 0-8 로그 확인
     - [ ] STEP 2에서 환경변수 값 확인 (NEXT_PUBLIC_API_URL)
@@ -1082,12 +1084,15 @@ ai-trend/
     - ✅ TypeScript 타입 오류 해결 완료 (`SourcesSection.tsx`, `WatchRulesSection.tsx`)
     - ✅ 빌드 성공 및 Vercel 배포 완료
     - ✅ 디버깅 시스템 구축 완료 (8단계 로그, 에러 핸들러, 디버깅 가이드)
-    - 🔄 API 연동 404 오류 해결 진행 중
+    - ✅ API 연동 완료
       - ✅ Git 커밋 및 푸시 완료
       - ✅ Railway 백엔드 URL 확인: `https://ai-trends-production.up.railway.app`
-      - ✅ Vercel 환경변수 설정 확인
-      - ⏳ Vercel 재배포 완료 대기 중
-      - ⏳ 브라우저 콘솔 로그 확인 필요
+      - ✅ Vercel 환경변수 설정 확인 (`NEXT_PUBLIC_API_URL`에 `https://` 포함)
+      - ✅ URL 프로토콜 문제 해결 (코드에서 자동 추가 로직 구현)
+      - ✅ CORS 설정 완료 (Railway 환경변수 `CORS_ORIGINS` 추가)
+      - ✅ CORS 설정 코드 개선 (fallback for Vercel origins)
+      - ✅ Railway 재배포 완료
+      - ✅ 브라우저에서 API 호출 성공 확인 (status: 200, itemCount: 20)
 
 **현재 단계**: Phase 5 (배포) 진행 중 🔄
 
@@ -1098,20 +1103,48 @@ ai-trend/
 - **Phase 4**: 프로덕션 준비 ✅ (완료)
 - **Phase 5**: 배포 (MVP) 🔄 (진행 중)
   - 5.3 백엔드 API 배포: 완료 ✅
-  - 5.2 프론트엔드 배포: 거의 완료 (API 연동 404 오류 해결 진행 중)
+  - 5.2 프론트엔드 배포: 완료 ✅
     - ✅ 파일 Git 추가 완료
     - ✅ TypeScript 타입 오류 해결 완료
     - ✅ Vercel 배포 성공
-    - 🔄 API 연동 404 오류 해결 진행 중
-      - Git 커밋 완료 필요
-      - Railway 백엔드 URL 확인 필요
-      - Vercel 환경변수 설정 필요
-  - 5.4 스케줄러 워커 배포: 진행 중
-    - Worker 서비스 생성 필요
-    - 환경변수 설정 필요
-    - 배포 및 검증 필요
-  - 5.5 데이터베이스 마이그레이션: 대기 중
-  - 5.6 배포 후 검증: 대기 중
+    - ✅ API 연동 완료 (CORS 설정, URL 프로토콜 자동 추가)
+    - ✅ 브라우저에서 정상 작동 확인
+  - 5.4 스케줄러 워커 배포: 완료 ✅
+    - ✅ Worker 서비스 생성 완료
+    - ✅ 시작 명령 설정 완료 (`poetry run python -m backend.scripts.worker`)
+    - ✅ 환경변수 설정 완료 (DATABASE_URL, OPENAI_API_KEY, Poetry 변수 등)
+    - ✅ asyncio 이벤트 루프 문제 해결
+    - ✅ 배포 성공 및 스케줄러 정상 작동 확인
+  - 5.5 데이터베이스 마이그레이션: 완료 ✅
+    - ✅ Supabase 대시보드에서 `alembic_version` 테이블 확인
+    - ✅ 최신 마이그레이션 버전 `9cc660270c3d` 적용 확인
+    - ✅ 모든 테이블 생성 완료 확인
+  - 5.5.1 기존 아이템 field 값 설정: 완료 ✅
+    - ✅ 병렬 처리 구현 (ThreadPoolExecutor, 15 workers)
+    - ✅ 1,634개 아이템 모두 field 값 설정 완료
+    - ✅ 분야별 분포: research (1,276), industry (193), policy (68), infra (66), funding (31)
+    - ✅ RSS 수집 시 자동 분류 기능 추가 (`RSSCollector.collect_source()`)
+  - 5.6 배포 후 검증: 완료 ✅
+    - ✅ API 엔드포인트 테스트 완료 (8/8 성공)
+      - ✅ Root endpoint (`/`)
+      - ✅ Health check (`/health`) - status: healthy
+      - ✅ Items list (`/api/items`) - 1,634개 아이템
+      - ✅ Items filtered by field (`/api/items?field=research`) - 1,276개
+      - ✅ Sources list (`/api/sources`)
+      - ✅ Persons list (`/api/persons`)
+      - ✅ Constants: fields (`/api/constants/fields`)
+      - ✅ Constants: custom tags (`/api/constants/custom-tags`)
+    - ✅ 프론트엔드-백엔드 연동 확인 완료 (이전에 확인됨)
+    - ✅ RSS 수집 동작 확인 완료
+      - ✅ 스케줄러 정상 시작 확인
+      - ✅ RSS 수집 작업 정기 실행 확인 (20분 간격)
+      - ✅ 수집 결과: 3개 아이템 수집 성공 (TechCrunch, The Verge, WIRED)
+      - ✅ 증분 그룹화 작업 정기 실행 확인
+      - ✅ 소스 ID 316 (The Keyword) Feed parsing 오류 해결 (비활성화 완료)
+    - ✅ 스케줄러 동작 확인 완료
+      - ✅ Worker 로그에서 스케줄러 시작 확인
+      - ✅ 정기 작업 실행 확인 (RSS 수집, 증분 그룹화)
+    - ✅ 모니터링 설정 문서화 완료 (`docs/DEPLOYMENT_VERIFICATION.md`)
 - **Phase 6**: 고급 기능 (배포 후 진행)
 
 ---

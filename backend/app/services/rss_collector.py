@@ -173,6 +173,10 @@ class RSSCollector:
             
             count = 0
             
+            # Import classifier service (lazy import to avoid circular dependencies)
+            from backend.app.services.classifier import ClassifierService
+            classifier = ClassifierService()
+            
             for entry in entries:
                 if self.check_duplicate(entry["link"]):
                     continue
@@ -180,6 +184,26 @@ class RSSCollector:
                 normalized = self.normalize_item(entry, source)
                 item = Item(**normalized)
                 self.db.add(item)
+                self.db.flush()  # Flush to get item.id
+                
+                # Automatically classify new items (set field, tags, etc.)
+                try:
+                    classification = classifier.classify(
+                        item.title,
+                        item.summary_short or ""
+                    )
+                    item.field = classification.get("field")
+                    item.iptc_topics = classification.get("iptc_topics", [])
+                    item.iab_categories = classification.get("iab_categories", [])
+                    item.custom_tags = classification.get("custom_tags", [])
+                except Exception as e:
+                    # Log error but don't fail the collection
+                    import logging
+                    logger = logging.getLogger(__name__)
+                    logger.warning(f"[RSS] Failed to classify item {item.id}: {e}")
+                    # Set default field if classification fails
+                    item.field = "research"  # Default fallback
+                
                 count += 1
             
             self.db.commit()

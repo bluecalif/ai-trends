@@ -28,13 +28,29 @@ import type {
 } from './types'
 import type { Field, CustomTag } from './constants'
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+// Normalize API base URL: ensure it has a protocol
+const normalizeApiUrl = (url: string | undefined): string => {
+  if (!url) {
+    return 'http://localhost:8000'
+  }
+  
+  // If URL already has protocol, return as is
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    return url
+  }
+  
+  // Otherwise, add https:// prefix
+  return `https://${url}`
+}
+
+const API_BASE_URL = normalizeApiUrl(process.env.NEXT_PUBLIC_API_URL)
 
 // Debug: Log API base URL (only in browser)
 if (typeof window !== 'undefined') {
   DebugLogger.step(3, 'API Client Initialized', {
     API_BASE_URL,
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+    normalized: API_BASE_URL,
   })
 }
 
