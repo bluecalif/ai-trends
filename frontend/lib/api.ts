@@ -53,7 +53,7 @@ apiClient.interceptors.request.use(
       DebugLogger.step(8, 'API Request', {
         method: config.method?.toUpperCase(),
         url: config.url,
-        fullURL: config.baseURL + config.url,
+        fullURL: (config.baseURL || API_BASE_URL) + (config.url || ''),
       })
     }
     return config
@@ -83,7 +83,7 @@ apiClient.interceptors.response.use(
         status: error.response?.status,
         statusText: error.response?.statusText,
         url: error.config?.url,
-        fullURL: error.config?.baseURL + error.config?.url,
+        fullURL: (error.config?.baseURL || API_BASE_URL) + (error.config?.url || ''),
         message: error.message,
         data: error.response?.data,
       })

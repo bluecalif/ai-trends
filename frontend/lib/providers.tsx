@@ -8,15 +8,12 @@ export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
     () => {
       DebugLogger.step(2, 'Creating QueryClient')
-      return new QueryClient({
+      return       new QueryClient({
         defaultOptions: {
           queries: {
             staleTime: 60 * 1000, // 1 minute
             refetchOnWindowFocus: false,
             retry: 1, // Reduce retries for faster error detection
-            onError: (error) => {
-              DebugLogger.query('Query Error', error)
-            },
           },
         },
       })

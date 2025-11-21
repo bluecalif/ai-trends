@@ -42,13 +42,17 @@ function HomePageContent() {
         order_desc: true,
       })
     },
-    onError: (err) => {
-      DebugLogger.error('useQuery Error', err)
-    },
-    onSuccess: (data) => {
-      DebugLogger.step(7, 'useQuery Success', { itemCount: data.items.length })
-    },
   })
+
+  // React Query v5: onError/onSuccess 대신 useEffect 사용
+  useEffect(() => {
+    if (error) {
+      DebugLogger.error('useQuery Error', error)
+    }
+    if (data) {
+      DebugLogger.step(7, 'useQuery Success', { itemCount: data.items.length })
+    }
+  }, [error, data])
 
   useEffect(() => {
     DebugLogger.step(7, 'Query State Changed', { isLoading, hasError: !!error, hasData: !!data })

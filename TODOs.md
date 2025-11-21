@@ -772,9 +772,17 @@ backend/
     - [x] Railway 백엔드 URL 확인: `https://ai-trends-production.up.railway.app`
     - [x] Vercel 환경변수 설정 확인: `NEXT_PUBLIC_API_URL` = `https://ai-trends-production.up.railway.app`
     - [x] Railway 백엔드 API 직접 테스트: Health check OK, Items API 정상 확인
-    - [x] 디버깅 로그 추가 완료 (API 호출 추적용)
-    - [ ] Vercel 재배포 확인 (디버깅 로그 포함된 최신 코드 배포)
-    - [ ] 브라우저 개발자 도구에서 실제 API 호출 URL 확인 (콘솔 로그 확인)
+    - [x] 디버깅 시스템 구축 완료:
+      - 8단계 로그 시스템 (STEP 0-8)
+      - 전역 에러 핸들러 및 React Error Boundary
+      - 중앙화된 디버깅 유틸리티 (frontend/lib/debug.ts)
+      - API 클라이언트 디버깅 강화
+      - 디버깅 가이드 문서 (docs/DEBUGGING_GUIDE.md)
+    - [x] 변경사항 커밋 및 푸시 완료
+    - [ ] Vercel 자동 재배포 완료 대기 (약 1-2분)
+    - [ ] 브라우저 개발자 도구에서 STEP 0-8 로그 확인
+    - [ ] STEP 2에서 환경변수 값 확인 (NEXT_PUBLIC_API_URL)
+    - [ ] STEP 8에서 API 요청 URL 확인
     - [ ] 프론트엔드에서 API 호출 성공 확인
 - [ ] 도메인 설정 (선택사항)
 - [ ] 프론트엔드-백엔드 연동 테스트 (404 오류 해결 후)
@@ -1058,7 +1066,7 @@ ai-trend/
 
 ## 진행 상황 추적
 
-**마지막 업데이트**: 2025-11-21 (Phase 1 완료 ✅, Phase 2 완료 ✅, Phase 3 완료 ✅, Phase 4 완료 ✅, Phase 5 진행 중 🔄)
+**마지막 업데이트**: 2025-11-21 (Phase 1 완료 ✅, Phase 2 완료 ✅, Phase 3 완료 ✅, Phase 4 완료 ✅, Phase 5 진행 중 🔄 - 디버깅 시스템 구축 완료)
 
 **프로젝트 진행률**: 
 - 백엔드 기반 구조 100% 완료 ✅
@@ -1073,10 +1081,13 @@ ai-trend/
     - ✅ Module not found 오류 해결 (파일 Git 추가 완료)
     - ✅ TypeScript 타입 오류 해결 완료 (`SourcesSection.tsx`, `WatchRulesSection.tsx`)
     - ✅ 빌드 성공 및 Vercel 배포 완료
-    - ⚠️ **현재 문제**: API 호출 시 404 오류 발생
-      - 오류: "Request failed with status code 404" (`/api/items` 호출 시)
-      - 가능한 원인: `NEXT_PUBLIC_API_URL` 환경변수 미설정 또는 잘못된 값
-      - 다음 단계: Vercel 환경변수 확인 및 Railway 백엔드 URL 설정
+    - ✅ 디버깅 시스템 구축 완료 (8단계 로그, 에러 핸들러, 디버깅 가이드)
+    - 🔄 API 연동 404 오류 해결 진행 중
+      - ✅ Git 커밋 및 푸시 완료
+      - ✅ Railway 백엔드 URL 확인: `https://ai-trends-production.up.railway.app`
+      - ✅ Vercel 환경변수 설정 확인
+      - ⏳ Vercel 재배포 완료 대기 중
+      - ⏳ 브라우저 콘솔 로그 확인 필요
 
 **현재 단계**: Phase 5 (배포) 진행 중 🔄
 
