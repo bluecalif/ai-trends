@@ -771,9 +771,10 @@ backend/
     - [x] Git 변경사항 커밋 완료 (수정된 파일, 이상한 파일명 파일들 정리)
     - [x] Railway 백엔드 URL 확인: `https://ai-trends-production.up.railway.app`
     - [x] Vercel 환경변수 설정 확인: `NEXT_PUBLIC_API_URL` = `https://ai-trends-production.up.railway.app`
-    - [ ] Vercel 재배포 확인 (환경변수 변경 후 재배포 필요)
-    - [ ] 브라우저 개발자 도구에서 실제 API 호출 URL 확인
-    - [ ] Railway 백엔드 API 직접 테스트 (`/health`, `/api/items`)
+    - [x] Railway 백엔드 API 직접 테스트: Health check OK, Items API 정상 확인
+    - [x] 디버깅 로그 추가 완료 (API 호출 추적용)
+    - [ ] Vercel 재배포 확인 (디버깅 로그 포함된 최신 코드 배포)
+    - [ ] 브라우저 개발자 도구에서 실제 API 호출 URL 확인 (콘솔 로그 확인)
     - [ ] 프론트엔드에서 API 호출 성공 확인
 - [ ] 도메인 설정 (선택사항)
 - [ ] 프론트엔드-백엔드 연동 테스트 (404 오류 해결 후)

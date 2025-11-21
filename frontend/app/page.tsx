@@ -1,6 +1,6 @@
 'use client'
 
-import { Suspense } from 'react'
+import { Suspense, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
 import { api } from '@/lib/api'
@@ -8,10 +8,15 @@ import { FieldTabs } from '@/components/FieldTabs'
 import { ItemCard } from '@/components/ItemCard'
 import { TagFilter } from '@/components/TagFilter'
 import { Pagination } from '@/components/Pagination'
+import { DebugLogger } from '@/lib/debug'
 import type { CustomTag } from '@/lib/constants'
 
 function HomePageContent() {
   const searchParams = useSearchParams()
+
+  useEffect(() => {
+    DebugLogger.step(6, 'HomePageContent Rendered')
+  }, [])
 
   // Get query parameters
   const page = parseInt(searchParams.get('page') || '1', 10)
@@ -20,11 +25,13 @@ function HomePageContent() {
   const dateFrom = searchParams.get('date_from') || undefined
   const dateTo = searchParams.get('date_to') || undefined
 
+  DebugLogger.step(6, 'Query Parameters Parsed', { page, pageSize, customTag, dateFrom, dateTo })
+
   // Fetch items (no field filter for "All")
   const { data, isLoading, error } = useQuery({
     queryKey: ['items', 'all', page, pageSize, customTag, dateFrom, dateTo],
     queryFn: () => {
-      console.log('[HomePage] Fetching items...')
+      DebugLogger.step(7, 'useQuery queryFn Executing')
       return api.getItems({
         custom_tag: customTag || undefined,
         date_from: dateFrom,
@@ -36,11 +43,19 @@ function HomePageContent() {
       })
     },
     onError: (err) => {
-      console.error('[HomePage] Query error:', err)
+      DebugLogger.error('useQuery Error', err)
+    },
+    onSuccess: (data) => {
+      DebugLogger.step(7, 'useQuery Success', { itemCount: data.items.length })
     },
   })
 
+  useEffect(() => {
+    DebugLogger.step(7, 'Query State Changed', { isLoading, hasError: !!error, hasData: !!data })
+  }, [isLoading, error, data])
+
   if (isLoading) {
+    DebugLogger.step(7, 'Rendering Loading State')
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <FieldTabs />
@@ -53,6 +68,7 @@ function HomePageContent() {
   }
 
   if (error) {
+    DebugLogger.error('HomePageContent Error State', error)
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <FieldTabs />
@@ -61,6 +77,9 @@ function HomePageContent() {
           <p className="text-red-600 text-sm mt-1">
             {error instanceof Error ? error.message : 'Unknown error occurred'}
           </p>
+          <pre className="mt-2 text-xs bg-red-100 p-2 rounded overflow-auto">
+            {JSON.stringify(error, null, 2)}
+          </pre>
         </div>
       </div>
     )
@@ -104,16 +123,26 @@ function HomePageContent() {
 }
 
 export default function HomePage() {
+  useEffect(() => {
+    DebugLogger.step(5, 'HomePage Component Mounted')
+  }, [])
+
   return (
     <Suspense
       fallback={
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <FieldTabs />
-          <div className="flex items-center justify-center py-12">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-            <span className="ml-3 text-gray-600">Loading...</span>
+        <>
+          {(() => {
+            DebugLogger.step(5, 'Suspense Fallback Rendering')
+            return null
+          })()}
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <FieldTabs />
+            <div className="flex items-center justify-center py-12">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+              <span className="ml-3 text-gray-600">Loading...</span>
+            </div>
           </div>
-        </div>
+        </>
       }
     >
       <HomePageContent />

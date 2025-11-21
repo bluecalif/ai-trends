@@ -6,6 +6,7 @@
  */
 
 import axios, { AxiosInstance } from 'axios'
+import { DebugLogger } from './debug'
 import type {
   ItemListResponse,
   ItemResponse,
@@ -31,8 +32,10 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
 
 // Debug: Log API base URL (only in browser)
 if (typeof window !== 'undefined') {
-  console.log('[API] API_BASE_URL:', API_BASE_URL)
-  console.log('[API] NEXT_PUBLIC_API_URL env:', process.env.NEXT_PUBLIC_API_URL)
+  DebugLogger.step(3, 'API Client Initialized', {
+    API_BASE_URL,
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+  })
 }
 
 // Create axios instance
@@ -47,13 +50,18 @@ const apiClient: AxiosInstance = axios.create({
 apiClient.interceptors.request.use(
   (config) => {
     if (typeof window !== 'undefined') {
-      console.log('[API] Request:', config.method?.toUpperCase(), config.url)
-      console.log('[API] Full URL:', config.baseURL + config.url)
+      DebugLogger.step(8, 'API Request', {
+        method: config.method?.toUpperCase(),
+        url: config.url,
+        fullURL: config.baseURL + config.url,
+      })
     }
     return config
   },
   (error) => {
-    console.error('[API] Request error:', error)
+    if (typeof window !== 'undefined') {
+      DebugLogger.error('API Request Error', error)
+    }
     return Promise.reject(error)
   }
 )
@@ -62,18 +70,22 @@ apiClient.interceptors.request.use(
 apiClient.interceptors.response.use(
   (response) => {
     if (typeof window !== 'undefined') {
-      console.log('[API] Response:', response.status, response.config.url)
+      DebugLogger.step(8, 'API Response Success', {
+        status: response.status,
+        url: response.config.url,
+      })
     }
     return response
   },
   (error) => {
     if (typeof window !== 'undefined') {
-      console.error('[API] Response error:', {
+      DebugLogger.error('API Response Error', {
         status: error.response?.status,
         statusText: error.response?.statusText,
         url: error.config?.url,
         fullURL: error.config?.baseURL + error.config?.url,
         message: error.message,
+        data: error.response?.data,
       })
     }
     return Promise.reject(error)
