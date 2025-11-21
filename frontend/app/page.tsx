@@ -23,8 +23,9 @@ function HomePageContent() {
   // Fetch items (no field filter for "All")
   const { data, isLoading, error } = useQuery({
     queryKey: ['items', 'all', page, pageSize, customTag, dateFrom, dateTo],
-    queryFn: () =>
-      api.getItems({
+    queryFn: () => {
+      console.log('[HomePage] Fetching items...')
+      return api.getItems({
         custom_tag: customTag || undefined,
         date_from: dateFrom,
         date_to: dateTo,
@@ -32,7 +33,11 @@ function HomePageContent() {
         page_size: pageSize,
         order_by: 'published_at',
         order_desc: true,
-      }),
+      })
+    },
+    onError: (err) => {
+      console.error('[HomePage] Query error:', err)
+    },
   })
 
   if (isLoading) {

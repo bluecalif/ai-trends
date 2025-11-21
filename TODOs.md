@@ -768,10 +768,13 @@ backend/
     2. 백엔드 API 경로가 잘못되었을 수 있음 (예: `/api/items` vs `/items`)
     3. Railway 백엔드 URL이 변경되었을 수 있음
   - **해결 단계**:
-    - [ ] Git 변경사항 커밋 완료 (수정된 파일, 이상한 파일명 파일들 정리)
-    - [ ] Railway 백엔드 URL 확인 (Railway 대시보드 → API 서비스 → Settings → Networking → 도메인)
-    - [ ] Vercel 환경변수 설정 (`NEXT_PUBLIC_API_URL`에 Railway 백엔드 URL 설정)
-    - [ ] API 호출 테스트 (Railway 백엔드 직접 테스트 및 프론트엔드에서 확인)
+    - [x] Git 변경사항 커밋 완료 (수정된 파일, 이상한 파일명 파일들 정리)
+    - [x] Railway 백엔드 URL 확인: `https://ai-trends-production.up.railway.app`
+    - [x] Vercel 환경변수 설정 확인: `NEXT_PUBLIC_API_URL` = `https://ai-trends-production.up.railway.app`
+    - [ ] Vercel 재배포 확인 (환경변수 변경 후 재배포 필요)
+    - [ ] 브라우저 개발자 도구에서 실제 API 호출 URL 확인
+    - [ ] Railway 백엔드 API 직접 테스트 (`/health`, `/api/items`)
+    - [ ] 프론트엔드에서 API 호출 성공 확인
 - [ ] 도메인 설정 (선택사항)
 - [ ] 프론트엔드-백엔드 연동 테스트 (404 오류 해결 후)
 

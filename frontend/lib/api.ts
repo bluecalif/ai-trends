@@ -29,6 +29,12 @@ import type { Field, CustomTag } from './constants'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
 
+// Debug: Log API base URL (only in browser)
+if (typeof window !== 'undefined') {
+  console.log('[API] API_BASE_URL:', API_BASE_URL)
+  console.log('[API] NEXT_PUBLIC_API_URL env:', process.env.NEXT_PUBLIC_API_URL)
+}
+
 // Create axios instance
 const apiClient: AxiosInstance = axios.create({
   baseURL: API_BASE_URL,
@@ -36,6 +42,43 @@ const apiClient: AxiosInstance = axios.create({
     'Content-Type': 'application/json',
   },
 })
+
+// Add request interceptor for debugging
+apiClient.interceptors.request.use(
+  (config) => {
+    if (typeof window !== 'undefined') {
+      console.log('[API] Request:', config.method?.toUpperCase(), config.url)
+      console.log('[API] Full URL:', config.baseURL + config.url)
+    }
+    return config
+  },
+  (error) => {
+    console.error('[API] Request error:', error)
+    return Promise.reject(error)
+  }
+)
+
+// Add response interceptor for debugging
+apiClient.interceptors.response.use(
+  (response) => {
+    if (typeof window !== 'undefined') {
+      console.log('[API] Response:', response.status, response.config.url)
+    }
+    return response
+  },
+  (error) => {
+    if (typeof window !== 'undefined') {
+      console.error('[API] Response error:', {
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        url: error.config?.url,
+        fullURL: error.config?.baseURL + error.config?.url,
+        message: error.message,
+      })
+    }
+    return Promise.reject(error)
+  }
+)
 
 // API methods
 export const api = {
