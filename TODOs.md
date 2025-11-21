@@ -760,18 +760,18 @@ backend/
 - [x] 빌드 성공 확인 (TypeScript 타입 오류 해결 완료)
 - [x] Vercel 배포 성공 확인
 - [x] CORS 설정 완료 (백엔드 Railway URL을 CORS_ORIGINS에 추가)
-- [ ] **현재 문제**: 프론트엔드에서 API 호출 시 404 오류 발생
+- [ ] **현재 작업**: 프론트엔드에서 API 호출 시 404 오류 해결
   - **오류 메시지**: "Request failed with status code 404"
   - **발생 위치**: 아이템 목록 조회 시 (`/api/items`)
   - **가능한 원인**:
     1. `NEXT_PUBLIC_API_URL` 환경변수가 Vercel에 설정되지 않았거나 잘못된 값
     2. 백엔드 API 경로가 잘못되었을 수 있음 (예: `/api/items` vs `/items`)
     3. Railway 백엔드 URL이 변경되었을 수 있음
-  - **다음 단계**:
-    - [ ] Vercel 대시보드에서 `NEXT_PUBLIC_API_URL` 환경변수 확인
-    - [ ] Railway 백엔드 URL 확인 및 업데이트
-    - [ ] 브라우저 개발자 도구에서 실제 API 호출 URL 확인
-    - [ ] 백엔드 API 엔드포인트 직접 테스트 (Railway URL + `/api/items`)
+  - **해결 단계**:
+    - [ ] Git 변경사항 커밋 완료 (수정된 파일, 이상한 파일명 파일들 정리)
+    - [ ] Railway 백엔드 URL 확인 (Railway 대시보드 → API 서비스 → Settings → Networking → 도메인)
+    - [ ] Vercel 환경변수 설정 (`NEXT_PUBLIC_API_URL`에 Railway 백엔드 URL 설정)
+    - [ ] API 호출 테스트 (Railway 백엔드 직접 테스트 및 프론트엔드에서 확인)
 - [ ] 도메인 설정 (선택사항)
 - [ ] 프론트엔드-백엔드 연동 테스트 (404 오류 해결 후)
 
@@ -838,18 +838,33 @@ backend/
 
 #### 5.4.1 Worker 서비스 생성
 - [ ] Railway 프로젝트에 새 서비스 추가 (Worker)
+  - Railway 대시보드 → "New" 클릭
+  - "GitHub Repo" 선택
+  - 동일한 저장소 선택 (현재 저장소)
+  - 서비스 이름: `worker` (또는 `scheduler-worker`)
 - [ ] GitHub 저장소 연결 (동일 저장소)
 - [ ] 빌드 설정 확인 (동일 Dockerfile 사용)
-- [ ] 시작 명령 설정: `poetry run python -m backend.scripts.worker`
+- [ ] 시작 명령 설정 (Railway 대시보드 → Settings → Deploy):
+  ```
+  poetry run python -m backend.scripts.worker
+  ```
 
 #### 5.4.2 Worker 환경변수 설정
-- [ ] Railway 대시보드에서 환경변수 설정:
-  - API 서버와 동일한 환경변수 설정
-  - `DATABASE_URL`, `OPENAI_API_KEY` 등
+- [ ] Railway 대시보드에서 환경변수 설정 (Worker 서비스 → Variables):
+  - `DATABASE_URL`: Supabase PostgreSQL 연결 문자열 (API 서버와 동일)
+  - `OPENAI_API_KEY`: OpenAI API 키 (API 서버와 동일)
+  - `DEBUG`: `false`
+  - `RSS_COLLECTION_INTERVAL_MINUTES`: `20`
+  - **참고**: Worker는 `CORS_ORIGINS`와 `PORT` 불필요
 
 #### 5.4.3 배포 및 검증
-- [ ] Worker 서비스 배포
-- [ ] 스케줄러 시작 확인 (로그 확인)
+- [ ] Worker 서비스 배포 (자동 또는 수동)
+- [ ] 배포 로그 확인 (Railway 대시보드 → Worker → Logs)
+- [ ] 스케줄러 시작 확인:
+  ```
+  [Worker] Starting scheduler worker...
+  [Worker] Scheduler started successfully
+  ```
 - [ ] RSS 수집 작업 실행 확인 (20분 간격)
 - [ ] 증분 그룹화 작업 실행 확인 (20분 간격)
 - [ ] 로그 확인 (Railway 대시보드)
@@ -1039,7 +1054,7 @@ ai-trend/
 
 ## 진행 상황 추적
 
-**마지막 업데이트**: 2025-11-20 (Phase 1 완료 ✅, Phase 2 완료 ✅, Phase 3 완료 ✅, Phase 4 완료 ✅, Phase 5 진행 중 🔄)
+**마지막 업데이트**: 2025-11-21 (Phase 1 완료 ✅, Phase 2 완료 ✅, Phase 3 완료 ✅, Phase 4 완료 ✅, Phase 5 진행 중 🔄)
 
 **프로젝트 진행률**: 
 - 백엔드 기반 구조 100% 완료 ✅
@@ -1068,12 +1083,18 @@ ai-trend/
 - **Phase 4**: 프로덕션 준비 ✅ (완료)
 - **Phase 5**: 배포 (MVP) 🔄 (진행 중)
   - 5.3 백엔드 API 배포: 완료 ✅
-  - 5.2 프론트엔드 배포: 거의 완료 (API 연동 404 오류 해결 필요)
+  - 5.2 프론트엔드 배포: 거의 완료 (API 연동 404 오류 해결 진행 중)
     - ✅ 파일 Git 추가 완료
     - ✅ TypeScript 타입 오류 해결 완료
     - ✅ Vercel 배포 성공
-    - ⚠️ API 연동 404 오류 해결 필요
-  - 5.4 스케줄러 워커 배포: 대기 중
+    - 🔄 API 연동 404 오류 해결 진행 중
+      - Git 커밋 완료 필요
+      - Railway 백엔드 URL 확인 필요
+      - Vercel 환경변수 설정 필요
+  - 5.4 스케줄러 워커 배포: 진행 중
+    - Worker 서비스 생성 필요
+    - 환경변수 설정 필요
+    - 배포 및 검증 필요
   - 5.5 데이터베이스 마이그레이션: 대기 중
   - 5.6 배포 후 검증: 대기 중
 - **Phase 6**: 고급 기능 (배포 후 진행)

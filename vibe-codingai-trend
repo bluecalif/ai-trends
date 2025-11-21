@@ -1,5 +1,0 @@
-warning: in the working copy of 'TODOs.md', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'backend/alembic/versions/9cc660270c3d_add_field_to_items.py', LF will be replaced by CRLF the next time Git touches it
-TODOs.md
-backend/alembic/versions/9cc660270c3d_add_field_to_items.py
-frontend/components/ItemCard.tsx
